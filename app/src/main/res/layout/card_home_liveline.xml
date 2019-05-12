@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_home_liveline"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dimen_common"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginEnd="@dimen/dimen_common"
+    android:layout_marginBottom="@dimen/dimen_common_small"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/card_home_liveline_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/dimen_common_small"
+            android:text="@string/card_home_liveline_title"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_home_liveline_title"
+            android:id="@+id/card_home_plan_data"
+            android:layout_margin="@dimen/dimen_common_very_small">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/livelinechart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+            </com.github.mikephil.charting.charts.LineChart>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loadlinechart"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/livelinechart"
+                android:layout_margin="@dimen/dimen_common_small"
+                android:text="加载图表"/>
+            <!--<RelativeLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/card_home_plan_completed_layout"-->
+                <!--android:layout_centerHorizontal="true">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/card_home_plan_completed"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="@dimen/dimen_common"-->
+                    <!--android:layout_marginTop="@dimen/dimen_common"-->
+                    <!--android:layout_marginEnd="@dimen/dimen_common"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:text="@string/card_home_plan_completed"-->
+                    <!--android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />-->
+                <!--<TextView-->
+                    <!--android:id="@+id/card_home_plan_completed_title"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@id/card_home_plan_completed"-->
+                    <!--android:adjustViewBounds="true"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:layout_margin="@dimen/dimen_common_very_small"-->
+                    <!--android:text="@string/card_home_plan_completed_title"-->
+                    <!--android:scaleType="centerCrop" />-->
+            <!--</RelativeLayout>-->
+
+        </RelativeLayout>
+
+
+        <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/btn_card_1_action1"-->
+        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/tv_card_1_subtitle"-->
+        <!--android:layout_margin="@dimen/dimen_common_small"/>-->
+
+        <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/btn_card_1_action2"-->
+        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/tv_card_1_subtitle"-->
+        <!--android:layout_marginTop="@dimen/dimen_common_small"-->
+        <!--android:layout_marginBottom="@dimen/dimen_common_small"-->
+        <!--android:layout_toEndOf="@id/btn_card_1_action1"/>-->
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

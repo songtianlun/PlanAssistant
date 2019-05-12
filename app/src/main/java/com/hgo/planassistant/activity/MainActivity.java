@@ -1,5 +1,6 @@
 package com.hgo.planassistant.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.MenuItem;
@@ -37,40 +38,25 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-
         initView();
     }
     private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // navigationView.setItemIconTintList(null);
         View headerView = navigationView.getHeaderView(0);
         LinearLayout nav_header = headerView.findViewById(R.id.nav_header);
         nav_header.setOnClickListener(this);
+
         fab = findViewById(R.id.fab_main);
         fab.setOnClickListener(this);
 
@@ -91,8 +77,28 @@ public class MainActivity extends AppCompatActivity
         FragmentAdapter mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
         mViewPager.setAdapter(mFragmentAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-//        mViewPager.addOnPageChangeListener(pageChangeListener);
+        mViewPager.addOnPageChangeListener(pageChangeListener);
     }
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (position == 2) {
+                fab.show();
+            } else {
+                fab.hide();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -116,14 +122,32 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        Intent intent = new Intent();
+        switch (item.getItemId()) {
+            case R.id.action_main_about:
+//                Intent aboutIntent = new Intent(this, AboutActivity.class);
+//                startActivity(aboutIntent);
+                intent.setClass(this, AboutActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_main_settings:
+                intent.setClass(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+//            case R.id.action_main_feedback:
+//                Intent myAppsIntent = new Intent(this, MyAppsActivity.class);
+//                startActivity(myAppsIntent);
+//                break;
         }
-
         return super.onOptionsItemSelected(item);
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -153,6 +177,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.fab_main:
+                Snackbar.make(v, getString(R.string.main_snack_bar), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.main_snack_bar_action), view -> {
+                        }).show();
+                break;
+        }
     }
 }
