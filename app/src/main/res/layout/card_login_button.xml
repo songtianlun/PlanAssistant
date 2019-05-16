@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_login_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="32dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox_login_showcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:checked="false"
+            android:text="@string/card_login_button_showcode" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/checkbox_login_showcode">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_login_login"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_common_small"
+                android:text="@string/card_login_button_login"
+                android:clickable="true" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_login_signout"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_common_small"
+                android:text="@string/card_login_button_signout"
+                android:clickable="true"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_login_skip"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_common_small"
+                android:text="@string/card_login_button_skip"
+                android:clickable="true"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_register_avuser"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_card_register_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:hint="@string/card_register_avuser_user"
+            android:drawableStart="@drawable/account"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_common"
+            android:textStyle="italic"
+            android:maxLength="20" />
+
+        <EditText
+            android:id="@+id/et_card_register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawableStart="@drawable/key"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_common"
+            android:password="true"
+            android:hint="@string/card_register_avuser_passwd"
+            android:textStyle="italic"
+            android:maxLength="20"/>
+
+        <EditText
+            android:id="@+id/et_card_register_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawableStart="@drawable/key_change"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_common"
+            android:password="true"
+            android:hint="@string/card_register_avuser_confirm"
+            android:textStyle="italic"
+            android:maxLength="20"/>
+
+        <EditText
+            android:id="@+id/et_card_register_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawableStart="@drawable/email"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_common"
+            android:hint="@string/card_register_avuser_email"
+            android:textStyle="italic"
+            android:maxLength="40"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

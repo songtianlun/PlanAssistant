@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Plan Assistant</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic29uZ3RpYW5sdW4iLCJhIjoiY2p2bDFnMnptMGtoNjRicGkwdm8zcWcxaiJ9.xsbaOoC2MRNNVpKG_g9iCQ</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">PlanAssistant User</string>
+    <string name="nav_header_subtitle">Welcome, i wish you a happy use.</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="action_settings">Settings</string>
@@ -53,6 +55,9 @@
     <string name="card_home_liveline_title">精力曲线</string>
     <string name="title_activity_about">AboutActivity</string>
 
+    <!--card_home_map-->
+    <string name="card_home_map_title">个人地图</string>
+
     <!--card_about_1-->
     <string name="about_card1_message">Hey, glad to see you!</string>
 
@@ -87,6 +92,8 @@
     <string name="main_popup_menu">Popup Menu</string>
 
     <!-- Strings related to Settings -->
+    <string name="settings_category_location">定位设置</string>
+
     <string name="settings_category_basic">Basic Settings</string>
     <string name="settings_category_advanced">Advanced Settings</string>
     <string name="settings_category_other">Other Settings</string>
@@ -108,4 +115,44 @@
     <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="pref_on_preference_click">onPreferenceClick</string>
+
+    <!--String related to login-->
+    <string name="card_login_avuser_user">User Name</string>
+    <string name="card_login_avuser_passwd">PassWord</string>
+
+    <string name="title_activity_login">登录</string>
+    <string name="card_login_button_login">登录</string>
+    <string name="card_login_button_signout">注册</string>
+    <string name="card_login_button_skip">skip</string>
+    <string name="card_login_button_showcode">显示密码</string>
+
+    <!--String relater to register-->
+
+    <string name="card_register_avuser_user">User Name</string>
+    <string name="card_register_avuser_passwd">PassWord</string>
+    <string name="card_register_avuser_nickname">Name</string>
+    <string name="card_register_avuser_confirm">Confirm</string>
+    <string name="card_register_avuser_email">E-mail</string>
+    <string name="card_register_avuser_tage">Tage</string>
+    <string name="card_register_avuser_sex">sex</string>
+    <string name="card_register_avuser_birth">birth</string>
+
+    <string name="title_activity_register">注册</string>
+    <string name="card_register_button_finish">完成</string>
+    <string name="card_register_button_back">返回</string>
+    <string name="card_register_button_skip">skip</string>
+
+    <!--register info-->
+    <string name="error_invalid_email">邮件格式错误</string>
+    <string name="error_invalid_password">密码大于 4 位</string>
+    <string name="error_inconsistant_password">两次密码不一致</string>
+    <string name="error_incorrect_password">密码错误</string>
+    <string name="error_field_required">这个是必填项</string>
+
+    <!--nav_menu-->
+    <string name="nav_menu_login">登录</string>
+    <string name="nav_menu_personinfo">个人信息</string>
+    <string name="nav_menu_changepassword">重置密码</string>
+    <string name="nav_menu_logout">注销账户</string>
+
 </resources>

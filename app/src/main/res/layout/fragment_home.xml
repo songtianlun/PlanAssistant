@@ -6,21 +6,18 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:text="@string/hello_blank_fragment" />-->
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <include layout="@layout/card_home_location" />
+        <include layout="@layout/card_home_location" />
 
-    <include layout="@layout/card_home_plan" />
+        <include layout="@layout/card_home_plan" />
 
-    <include layout="@layout/card_home_liveline" />
+        <include layout="@layout/card_home_liveline" />
 
-</LinearLayout>
+        <include layout="@layout/card_home_map" />
+
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

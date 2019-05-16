@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_login_avuser"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_card_about_2_1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/dimen_common"-->
+            <!--android:text="@string/about_card2_message"-->
+            <!--android:textColor="@color/colorAccent"-->
+            <!--android:textStyle="bold" />-->
+
+        <!--<View-->
+            <!--android:id="@+id/view_card_about_2_line"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#EEEEEE" />-->
+
+        <EditText
+            android:id="@+id/et_card_login_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:hint="@string/card_login_avuser_user"
+            android:drawableStart="@drawable/account"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_common"
+            android:textStyle="italic"
+            android:maxLength="20" />
+
+        <EditText
+            android:id="@+id/et_card_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawableStart="@drawable/key"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_common"
+            android:password="true"
+            android:hint="@string/card_login_avuser_passwd"
+            android:textStyle="italic"
+            android:maxLength="20"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

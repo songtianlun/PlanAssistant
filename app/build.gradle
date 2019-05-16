@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'mtj-circle-plugin' // 百度统计
 
 android {
     compileSdkVersion 28
@@ -20,19 +21,59 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+    //LeanCloud - 为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha06'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha5'
+    implementation 'com.google.android.material:material:1.1.0-alpha05'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.13-beta-2'
     androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
-
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.preference:preference:1.1.0-alpha04'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+//    implementation 'com.github.bumptech.glide:glide:4.8.0'
+
+    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:7.3.2') {
+        exclude group: 'group_name', module: 'module_name'
+    }
+
+
+    // LeanCloud 基础包
+    implementation('cn.leancloud.android:avoscloud-sdk:4.7.10')
+
+    // 推送与即时通讯需要的包
+//    compile ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
+
+    // Android 混合推送需要的包
+//    compile ('cn.leancloud.android:avoscloud-mixpush:4.7.10@aar'){transitive = true}
+
+    // LeanCloud 用户反馈包
+    implementation('cn.leancloud.android:avoscloud-feedback:4.7.10@aar')
+
+    // LeanCloud 应用内搜索包
+//    compile ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
+}
+
+
+// 百度统计
+MtjCirclePluginConfig {
+    // 设置appkey
+    appkey = 'b07b10e77f'
+    // 设置debug 开关，如果需要查看日志则打开开关，为避免影响性能建议上线前关闭（设置为false）
+    debug = true
+    // 默认启动此插件，如果开发者不需要可以禁用（设置为false）
+    enabled = true
 }

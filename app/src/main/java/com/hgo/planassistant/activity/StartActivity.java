@@ -76,7 +76,7 @@ public class StartActivity extends AppCompatActivity {
 
         @Override
         public void onFinish() {
-            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+            Intent intent = new Intent(StartActivity.this, LoginActivity.class);
             startActivity(intent);
             overridePendingTransition(-1, R.anim.activity_exit_alpha);
             finish();

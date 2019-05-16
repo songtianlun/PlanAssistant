@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    android:id="@+id/nav_menu">
 
     <group android:checkableBehavior="single">
         <item
@@ -22,17 +23,33 @@
             android:title="@string/menu_tools" />
     </group>
 
-    <item android:title="Communicate">
+    <group
+        android:title="account"
+        android:id="@+id/nav_account">
         <menu>
+
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
+                android:id="@+id/nav_changepassword"
+                android:icon="@drawable/key_change"
+                android:title="@string/nav_menu_changepassword" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
+                android:id="@+id/nav_info"
+                android:icon="@drawable/information_outline"
+                android:title="@string/nav_menu_personinfo" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/logout"
+                android:title="@string/nav_menu_logout" />
         </menu>
-    </item>
+    </group>
+
+    <group
+        android:id="@+id/nav_non_account"
+        android:title="account">
+        <item
+            android:id="@+id/nav_menu_login"
+            android:icon="@drawable/login"
+            android:title="@string/nav_menu_login"/>
+    </group>
 
 </menu>

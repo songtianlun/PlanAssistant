@@ -39,59 +39,27 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loadlinechart"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/livelinechart"
                 android:layout_margin="@dimen/dimen_common_small"
-                android:text="加载图表"/>
-            <!--<RelativeLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/card_home_plan_completed_layout"-->
-                <!--android:layout_centerHorizontal="true">-->
-                <!--<TextView-->
-                    <!--android:id="@+id/card_home_plan_completed"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginStart="@dimen/dimen_common"-->
-                    <!--android:layout_marginTop="@dimen/dimen_common"-->
-                    <!--android:layout_marginEnd="@dimen/dimen_common"-->
-                    <!--android:layout_centerHorizontal="true"-->
-                    <!--android:text="@string/card_home_plan_completed"-->
-                    <!--android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />-->
-                <!--<TextView-->
-                    <!--android:id="@+id/card_home_plan_completed_title"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_below="@id/card_home_plan_completed"-->
-                    <!--android:adjustViewBounds="true"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--android:layout_margin="@dimen/dimen_common_very_small"-->
-                    <!--android:text="@string/card_home_plan_completed_title"-->
-                    <!--android:scaleType="centerCrop" />-->
-            <!--</RelativeLayout>-->
+                android:text="刷新图表"
+                android:clickable="true"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/savetogallary"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/livelinechart"
+                android:layout_toEndOf="@id/loadlinechart"
+                android:layout_margin="@dimen/dimen_common_small"
+                android:text="存到相册"
+                android:clickable="true"/>
+
 
         </RelativeLayout>
-
-
-        <!--<com.google.android.material.button.MaterialButton-->
-        <!--android:id="@+id/btn_card_1_action1"-->
-        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/tv_card_1_subtitle"-->
-        <!--android:layout_margin="@dimen/dimen_common_small"/>-->
-
-        <!--<com.google.android.material.button.MaterialButton-->
-        <!--android:id="@+id/btn_card_1_action2"-->
-        <!--style="@style/Widget.MaterialComponents.Button.TextButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/tv_card_1_subtitle"-->
-        <!--android:layout_marginTop="@dimen/dimen_common_small"-->
-        <!--android:layout_marginBottom="@dimen/dimen_common_small"-->
-        <!--android:layout_toEndOf="@id/btn_card_1_action1"/>-->
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

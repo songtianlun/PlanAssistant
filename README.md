@@ -6,7 +6,13 @@ This software is developed for people who like to record their lives.
 
 - [x] Android X
 - [x] start ui
-- [ ] login
+- [x] chart
+- [x] setting ui
+- [x] about ui
+- [x] BaiDu Statistic
+- [x] login
+- [x] sign out
+- [x] change password
 - [ ] ui
 - [ ] sql
 - [ ] location
