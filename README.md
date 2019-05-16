@@ -13,6 +13,8 @@ This software is developed for people who like to record their lives.
 - [x] login
 - [x] sign out
 - [x] change password
+- [x] change info
+- [x] personal info ui
 - [ ] ui
 - [ ] sql
 - [ ] location
