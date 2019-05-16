@@ -116,10 +116,10 @@ public class MainActivity extends AppCompatActivity
 
             //移除登录相关菜单
             navigationView.getMenu().removeGroup(R.id.nav_non_account);
-            Log.i("MainActivity","用户名: " + AVUser.getCurrentUser().getUsername());
-            Log.i("MainActivity","简介: " + AVUser.getCurrentUser().getString("introduction"));
+//            Log.i("MainActivity","用户名: " + AVUser.getCurrentUser().getUsername());
+//            Log.i("MainActivity","简介: " + AVUser.getCurrentUser().getString("introduction"));
             // 设置用户名和简介
-            tv_nickname.setText(AVUser.getCurrentUser().getUsername());
+            tv_nickname.setText(AVUser.getCurrentUser().get("nickname").toString());
             tv_introduction.setText(AVUser.getCurrentUser().get("introduction").toString());
         }else{
             //移除账户相关菜单
@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity
                 });
                 break;
             case R.id.nav_info:
+                startActivity(new Intent(MainActivity.this, PersonInfoActivity.class));
                 break;
             case R.id.nav_logout:
                 AVUser.getCurrentUser().logOut();

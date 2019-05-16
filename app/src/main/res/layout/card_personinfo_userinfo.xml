@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_register_avuser"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="32dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/card_personalinfo_userinfo_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:layout_margin="@dimen/dimen_common"
+        android:text="@string/title_activity_personinfo_user"
+        android:scaleType="centerCrop"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card_home_location_length_layout"
+        android:layout_below="@id/card_personalinfo_userinfo_title">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_personalinfo_userinfo_nickname_layout">
+            <TextView
+                android:id="@+id/card_personalinfo_userinfo_nickname_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/dimen_common"
+                android:layout_marginEnd="@dimen/dimen_common"
+                android:adjustViewBounds="true"
+                android:text="@string/card_personinfo_userinfo_nickname" />
+            <TextView
+                android:id="@+id/card_personalinfo_userinfo_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:drawableStart="@drawable/account"
+                android:drawablePadding="@dimen/dimen_common"
+                android:drawableTint="@color/gray"
+                android:padding="@dimen/dimen_common"
+                android:text="null"
+                android:layout_below="@id/card_personalinfo_userinfo_nickname_title"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_personalinfo_userinfo_birth_layout"
+            android:layout_below="@id/card_personalinfo_userinfo_nickname_layout">
+            <TextView
+                android:id="@+id/card_personalinfo_userinfo_birth_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/dimen_common"
+                android:layout_marginEnd="@dimen/dimen_common"
+                android:adjustViewBounds="true"
+                android:text="@string/card_personinfo_userinfo_birth" />
+            <TextView
+                android:id="@+id/card_personalinfo_userinfo_birth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:drawableStart="@drawable/cake"
+                android:drawablePadding="@dimen/dimen_common"
+                android:drawableTint="@color/gray"
+                android:padding="@dimen/dimen_common"
+                android:text="null"
+                android:layout_below="@id/card_personalinfo_userinfo_birth_title"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_personalinfo_userinfo_sex_layout"
+            android:layout_below="@id/card_personalinfo_userinfo_birth_layout">
+            <TextView
+                android:id="@+id/card_personalinfo_userinfo_sex_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/dimen_common"
+                android:layout_marginEnd="@dimen/dimen_common"
+                android:adjustViewBounds="true"
+                android:text="@string/card_personinfo_userinfo_sex" />
+            <TextView
+                android:id="@+id/card_personalinfo_userinfo_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:drawableStart="@drawable/human_male_female"
+                android:drawablePadding="@dimen/dimen_common"
+                android:drawableTint="@color/gray"
+                android:padding="@dimen/dimen_common"
+                android:text="null"
+                android:layout_below="@id/card_personalinfo_userinfo_sex_title"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+</RelativeLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>

@@ -65,6 +65,8 @@ dependencies {
 
     // LeanCloud 应用内搜索包
 //    compile ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
+
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
 }
 
 

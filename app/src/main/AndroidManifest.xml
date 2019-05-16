@@ -20,7 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.PersonInfoActivity"></activity>
+        <activity
+            android:name=".activity.PersonInfoActivity"
+            android:label="@string/title_activity_personinfo"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".activity.MainActivity"></activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:label="@string/title_activity_register"

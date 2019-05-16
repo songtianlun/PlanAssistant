@@ -155,4 +155,27 @@
     <string name="nav_menu_changepassword">重置密码</string>
     <string name="nav_menu_logout">注销账户</string>
 
+    <!--personal info-->
+    <string name="title_activity_personinfo_user">用户信息</string>
+    <string name="card_personinfo_userinfo_nickname">昵称</string>
+    <string name="card_personinfo_userinfo_location">位置</string>
+    <string name="card_personinfo_userinfo_birth">生日</string>
+    <string name="card_personinfo_userinfo_sex">性别</string>
+    <string name="card_personinfo_userinfo_tage">标签</string>
+
+
+    <string name="title_activity_personinfo_introduction">用户简介</string>
+    <string name="card_personinfo_userinfo_introduction">简介</string>
+
+    <string name="title_activity_personinfo">账户信息</string>
+    <string name="card_personinfo_userinfo_username">账号</string>
+    <string name="card_personinfo_userinfo_email">邮箱</string>
+    <string name="card_personinfo_userinfo_phone">电话</string>
+    <string name="card_personinfo_userinfo_emailVerified">邮箱验证</string>
+
+    <!--perosin_info_button-->
+    <string name="card_personinfo_button_finish">完成</string>
+    <string name="card_personinfo_button_back">返回</string>
+    <string name="card_personinfo_button_restore">刷新</string>
+
 </resources>
