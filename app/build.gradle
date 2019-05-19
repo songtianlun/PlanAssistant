@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'mtj-circle-plugin' // 百度统计
 
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -10,6 +11,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//        ndk {
+//            //高德定位相关
+//            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+//            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
+//        }
     }
     buildTypes {
         release {
@@ -21,6 +27,7 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
     //LeanCloud - 为了解决部分第三方库重复打包了META-INF的问题
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -29,10 +36,17 @@ android {
     lintOptions {
         abortOnError false
     }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs' //设置so文件位置
+        }
+    }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha05'
@@ -42,31 +56,30 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.preference:preference:1.1.0-alpha04'
-
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-//    implementation 'com.github.bumptech.glide:glide:4.8.0'
-
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:7.3.2') {
         exclude group: 'group_name', module: 'module_name'
     }
-
-
     // LeanCloud 基础包
-    implementation('cn.leancloud.android:avoscloud-sdk:4.7.10')
-
+    implementation 'cn.leancloud.android:avoscloud-sdk:4.7.10'
     // 推送与即时通讯需要的包
-//    compile ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
-
+    //    compile ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
     // Android 混合推送需要的包
-//    compile ('cn.leancloud.android:avoscloud-mixpush:4.7.10@aar'){transitive = true}
-
+    //    compile ('cn.leancloud.android:avoscloud-mixpush:4.7.10@aar'){transitive = true}
     // LeanCloud 用户反馈包
-    implementation('cn.leancloud.android:avoscloud-feedback:4.7.10@aar')
-
+    implementation 'cn.leancloud.android:avoscloud-feedback:4.7.10@aar'
     // LeanCloud 应用内搜索包
-//    compile ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
-
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    //    compile ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
+    //    // 高德地图
+    //    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //    //3D地图so及jar
+    //    implementation 'com.amap.api:3dmap:latest.integration'
+    //    //定位功能
+    //    implementation 'com.amap.api:location:latest.integration'
+    //    //搜索功能
+    //    implementation 'com.amap.api:search:latest.integration'
+    implementation files('libs/TencentLocationSdk_v7.1.6.1_r67ba7298_20190409_142648.jar')
 }
 
 

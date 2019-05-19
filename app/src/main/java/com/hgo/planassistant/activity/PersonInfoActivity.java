@@ -37,7 +37,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
     private TextView tv_nickname, tv_birth, tv_sex, tv_introduction, tv_username, tv_email, tv_emailverfied;
     private Button bt_finish,bt_refresh;
-    private EditText et_change;
+    private EditText et_nickname, et_introduction, et_email;
     private Context personinfo_context;
     private Calendar calendar;
     @Override
@@ -109,7 +109,9 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         bt_finish.setOnClickListener(this);
         bt_refresh.setOnClickListener(this);
 
-        et_change = new EditText(this);
+        et_nickname = new EditText(this);
+        et_email = new EditText(this);
+        et_introduction = new EditText(this);
     }
 
     @Override
@@ -117,19 +119,19 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.card_personalinfo_userinfo_nickname:
 //                Log.i("PersonInfoActivity","点击昵称！");
-                et_change.setText(AVUser.getCurrentUser().get("nickname").toString());
+                et_nickname.setText(AVUser.getCurrentUser().get("nickname").toString());
                 new AlertDialog.Builder(personinfo_context)
                         .setMessage("修改昵称")
                         .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 //                                Log.i("PersonInfoActivity",et_change.getText().toString());
-                                AVUser.getCurrentUser().put("nickname", et_change.getText().toString());
+                                AVUser.getCurrentUser().put("nickname", et_nickname.getText().toString());
                                 AVUser.getCurrentUser().saveInBackground();
                                 refresh();
                             }
                         })
-                        .setView(et_change)
+                        .setView(et_nickname)
                         .show();
                 break;
             case R.id.card_personalinfo_userinfo_sex:
@@ -168,33 +170,33 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 datePickerDialog.show();
                 break;
             case R.id.card_personalinfo_introduction:
-                et_change.setText(AVUser.getCurrentUser().get("introduction").toString());
+                et_introduction.setText(AVUser.getCurrentUser().get("introduction").toString());
                 new AlertDialog.Builder(personinfo_context)
                         .setMessage("修改个人简介")
                         .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 //                                Log.i("PersonInfoActivity",et_change.getText().toString());
-                                AVUser.getCurrentUser().put("introduction", et_change.getText().toString());
+                                AVUser.getCurrentUser().put("introduction", et_introduction.getText().toString());
                                 AVUser.getCurrentUser().saveInBackground();
                                 refresh();
                             }
                         })
-                        .setView(et_change)
+                        .setView(et_introduction)
                         .show();
                 break;
             case R.id.card_personalinfo_userinfo_username:
                 break;
             case R.id.card_personalinfo_userinfo_email:
-                et_change.setText(AVUser.getCurrentUser().getEmail());
+                et_email.setText(AVUser.getCurrentUser().getEmail());
                 new AlertDialog.Builder(personinfo_context)
                         .setMessage("修改邮箱")
                         .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 //                                Log.i("PersonInfoActivity",et_change.getText().toString());
-                                if(!et_change.getText().toString().equals(AVUser.getCurrentUser().getEmail())){
-                                    AVUser.getCurrentUser().setEmail(et_change.getText().toString());
+                                if(!et_email.getText().toString().equals(AVUser.getCurrentUser().getEmail())){
+                                    AVUser.getCurrentUser().setEmail(et_email.getText().toString());
                                     AVUser.getCurrentUser().saveInBackground();
                                     refresh();
                                     dialog.dismiss();
@@ -207,7 +209,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                                 }
                             }
                         })
-                        .setView(et_change)
+                        .setView(et_email)
                         .show();
                 break;
             case R.id.card_personalinfo_userinfo_emailverfied:

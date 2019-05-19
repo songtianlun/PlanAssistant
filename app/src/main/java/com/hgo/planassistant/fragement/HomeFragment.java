@@ -3,6 +3,7 @@ package com.hgo.planassistant.fragement;
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -30,6 +31,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -55,6 +57,10 @@ import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.MainActivity;
 import com.hgo.planassistant.custom.MyMarkerView;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -64,17 +70,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static android.content.Context.MODE_MULTI_PROCESS;
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class HomeFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
         SeekBar.OnSeekBarChangeListener ,OnChartValueSelectedListener {
     // liveLinechart
     private LineChart chart;
-    private Button loadlinechart,savetogallary;
+    private Button loadlinechart,savetogallary,bt_start_location;
     private CardView card__home_liveline, card__home_location, card__home_plan;
     NestedScrollView nestedScrollView;
     private static final int PERMISSION_STORAGE = 0;
 
+    private TextView tv_card_home_location_station;
+
+
     MapView mapView;
+    SharedPreferences SP_setting = App.getContext().getSharedPreferences("setting",MODE_PRIVATE);
 
     @Nullable
     @Override
@@ -85,11 +98,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         // Inflate the layout for this fragment
         nestedScrollView = (NestedScrollView) inflater.inflate(R.layout.fragment_home, container, false);
         loadlinechart = nestedScrollView.findViewById(R.id.loadlinechart);
+        bt_start_location = nestedScrollView.findViewById(R.id.bt_card_home_map_location);
         savetogallary = nestedScrollView.findViewById(R.id.savetogallary);
         card__home_liveline = nestedScrollView.findViewById(R.id.card_home_liveline);
         card__home_location = nestedScrollView.findViewById(R.id.card_home_location);
         card__home_plan = nestedScrollView.findViewById(R.id.card_home_plan);
         mapView = (MapView) nestedScrollView.findViewById(R.id.mapView);
+
+        tv_card_home_location_station = nestedScrollView.findViewById(R.id.card_home_location_station);
         Initchart(nestedScrollView);
 
         return nestedScrollView;
@@ -110,12 +126,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         card__home_location.setOnTouchListener(this);
         card__home_plan.setOnTouchListener(this);
 
+        bt_start_location.setOnClickListener(this);
+
+        if(SP_setting.getBoolean("pref_location_background_switch",false)){
+            tv_card_home_location_station.setText("已开启");
+        }else{
+            tv_card_home_location_station.setText("未开启");
+        }
+
+
         LoadLinechart();
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
+                mapboxMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(34.833774, 113.537698))
+                        .title("Eiffel Tower"));
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
@@ -140,6 +168,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 break;
             case R.id.savetogallary:
                 chartsavetogallary();
+                break;
+            case R.id.bt_card_home_map_location:
                 break;
             default:
                 Log.i("HomeFragement","HomeFragementClick!");

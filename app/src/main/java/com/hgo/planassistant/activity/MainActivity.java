@@ -1,23 +1,32 @@
 package com.hgo.planassistant.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
 import android.view.Menu;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -32,35 +41,56 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.Tencent_Location;
 import com.hgo.planassistant.adapter.FragmentAdapter;
 import com.hgo.planassistant.fragement.HomeFragment;
 import com.hgo.planassistant.fragement.PlanFragment;
 import com.hgo.planassistant.fragement.RecordFragment;
+import com.hgo.planassistant.service.TencentLocationService;
+import com.tencent.map.geolocation.TencentLocation;
+import com.tencent.map.geolocation.TencentLocationListener;
+import com.tencent.map.geolocation.TencentLocationManager;
+import com.tencent.map.geolocation.TencentLocationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hgo.planassistant.App.getContext;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,TencentLocationListener {
 
     private DrawerLayout drawer;
     private FloatingActionButton fab;
+    private FloatingActionButton bt_feedback;
 
     private NavigationView navigationView;
     private View headview;
-
     private TextView tv_nickname, tv_introduction;
-
     private Context mainactivity_context;
+
+
+    // 要申请的权限
+    private String[] permissions = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE
+    };
+    private AlertDialog dialog;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
-        initnavi_view();
+
+        initView(); // 初始化View
+        initnavi_view(); // 初始化NaviView
+        initPermission(); // 动态获取权限
+        loadsetting(); // 载入设置
     }
 
     private void initView() {
@@ -85,6 +115,9 @@ public class MainActivity extends AppCompatActivity
 
         fab = findViewById(R.id.fab_main);
         fab.setOnClickListener(this);
+
+//        bt_feedback = findViewById(R.id.action_main_feedback);
+//        bt_feedback.setOnClickListener(this);
 
         TabLayout mTabLayout = findViewById(R.id.tab_layout_main);
         ViewPager mViewPager = findViewById(R.id.view_pager_main);
@@ -126,6 +159,126 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().removeGroup(R.id.nav_account);
         }
     }
+
+    private void initPermission(){
+        // 版本判断。当手机系统大于 23 时，才有必要去判断权限是否获取
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for(int j=0; j<permissions.length;j++){
+                // 检查该权限是否已经获取
+                int i = ContextCompat.checkSelfPermission(this, permissions[j]);
+                // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
+                if (i != PackageManager.PERMISSION_GRANTED) {
+                    // 如果没有授予该权限，就去提示用户请求
+                    showDialogTipUserRequestPermission();
+                }
+            }
+
+        }
+    }
+    // 提示用户该请求权限的弹出框
+    private void showDialogTipUserRequestPermission() {
+
+        new AlertDialog.Builder(this)
+                .setTitle("有权限需要您授权")
+                .setMessage("由于规划助手需要获取您的位置并存储在本地，为你存储个人信息；\n否则，您将无法正常使用规划助手")
+                .setPositiveButton("立即开启", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startRequestPermission();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setCancelable(false).show();
+    }
+
+    // 开始提交请求权限
+    private void startRequestPermission() {
+        ActivityCompat.requestPermissions(this, permissions, 321);
+    }
+
+    // 用户权限 申请 的回调方法
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 321) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    // 判断用户是否 点击了不再提醒。(检测该权限是否还可以申请)
+                    boolean b = shouldShowRequestPermissionRationale(permissions[0]);
+                    if (!b) {
+                        // 用户还是想用我的 APP 的
+                        // 提示用户去应用设置界面手动开启权限
+                        showDialogTipUserGoToAppSettting();
+                    } else
+                        finish();
+                } else {
+                    Toast.makeText(this, "权限获取成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    // 提示用户去应用设置界面手动开启权限
+
+    private void showDialogTipUserGoToAppSettting() {
+
+        dialog = new AlertDialog.Builder(this)
+                .setTitle("存储权限不可用")
+                .setMessage("请在-应用设置-权限-中，允许规划助手使用存储权限来保存用户数据")
+                .setPositiveButton("立即开启", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 跳转到应用设置界面
+                        goToAppSetting();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setCancelable(false).show();
+    }
+
+    // 跳转到当前应用的设置界面
+    private void goToAppSetting() {
+        Intent intent = new Intent();
+
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+
+        startActivityForResult(intent, 123);
+    }
+
+    //
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123) {
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // 检查该权限是否已经获取
+                int i = ContextCompat.checkSelfPermission(this, permissions[0]);
+                // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
+                if (i != PackageManager.PERMISSION_GRANTED) {
+                    // 提示用户应该去应用设置界面手动开启权限
+                    showDialogTipUserGoToAppSettting();
+                } else {
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(this, "权限获取成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -182,22 +335,11 @@ public class MainActivity extends AppCompatActivity
                 intent.setClass(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-//            case R.id.action_main_feedback:
-//                Intent myAppsIntent = new Intent(this, MyAppsActivity.class);
-//                startActivity(myAppsIntent);
-//                break;
+            case R.id.action_main_feedback:
+                break;
         }
         return super.onOptionsItemSelected(item);
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -240,12 +382,25 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 MainActivity.this.finish();
                 break;
+            case R.id.nav_menu_track:
+                startActivity(new Intent(MainActivity.this, TrackActivity.class));
+                break;
+            case R.id.nav_menu_mymap:
+                startActivity(new Intent(MainActivity.this, MyMapActivity.class));
+                break;
+            case R.id.nav_menu_liveline:
+                startActivity(new Intent(MainActivity.this, LiveLineActivity.class));
+                break;
+            case R.id.nav_menu_plan:
+                startActivity(new Intent(MainActivity.this, PlanActivity.class));
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public void onClick(View v) {
@@ -259,5 +414,85 @@ public class MainActivity extends AppCompatActivity
                 Log.i("MainActitvity","MainActivity Click！");
                 break;
         }
+    }
+
+    private void loadsetting(){
+        //获取一个 SharedPreferences对象
+        //第一个参数：指定文件的名字，只会续写不会覆盖
+        //第二个参数：MODE_PRIVATE只有当前应用程序可以续写
+        //MODE_MULTI_PROCESS 允许多个进程访问同一个SharedPrecferences
+        SharedPreferences SP_setting = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE);
+        Boolean FirsrUse = SP_setting.getBoolean("PlanAssistant_FirstUse",false); // 软件是否首次使用
+        Boolean Background = SP_setting.getBoolean("pref_location_background_switch",false); //检测服务是否启动
+
+        SharedPreferences.Editor SP_editor = SP_setting.edit();
+
+//        Log.i("MainActivity","本次是第 " + SP_setting.getInt("PlanAssistant_Frequency",1) + " 次启动.");
+
+//        Log.i("MainActivity",String.valueOf(Background));
+        // 初始化服务状态
+//           SP_setting.getBoolean("pref_location_background_switch",false)
+
+
+        if(FirsrUse){
+            // 首次使用，初始化设置
+            //向其中添加数据，是什么数据类型就put什么，前面是键，后面是数据
+
+            SP_editor.putBoolean("PlanAssistant_FirstUse",false); // 清除首次使用标记
+            SP_editor.putInt("PlanAssistant_Frequency",1); // 设置软件使用次数为1
+
+            //定位相关设置
+            SP_editor.putBoolean("pref_location_switch",true); // 定位服务
+            SP_editor.putBoolean("pref_location_background_switch",false); // 后台定位服务
+            SP_editor.putString("pref_list_location_type","Battery_Saving"); // 定位模式
+            SP_editor.putInt("pref_list_location_time",4000); // 定位间隔
+            SP_editor.putBoolean("pref_location_usegps",false); // 是否使用GPS
+            SP_editor.putBoolean("pref_location_indoor",false); // 是否室内定位
+
+            // 调用apply方法将添加的数据提交，从而完成存储的动作
+            SP_editor.commit();// 提交
+            Log.i("MainActivity","首次启动，初始化设置项。");
+        }else{
+            // 非第一次使用
+            int frequency = SP_setting.getInt("PlanAssistant_Frequency",1);
+            Log.i("MainActivity","非首次启动，本次是第 " + frequency + " 次启动.");
+            frequency++;
+            SP_editor.putInt("PlanAssistant_Frequency",frequency);// 启动次数+1
+        }
+        if(Background){
+            Log.i("MainActivity","允许后台启动，正在启动服务。");
+            //如果设置启动服务，则激活服务
+            Intent startIntent = new Intent(this, TencentLocationService.class);
+            startService(startIntent);
+        }
+//        SP_editor.putInt("pref_list_location_time",4000); // 定位间隔
+        SP_editor.commit();// 提交
+
+    }
+
+    @Override
+    public void onLocationChanged(TencentLocation tencentLocation, int i, String s) {
+        String msg = null;
+        if (i == TencentLocation.ERROR_OK) {
+            // 定位成功
+            StringBuilder sb = new StringBuilder();
+            sb.append("(纬度=").append(tencentLocation.getLatitude()).append(",经度=")
+                    .append(tencentLocation.getLongitude()).append(",精度=")
+                    .append(tencentLocation.getAccuracy()).append("), 来源=")
+                    .append(tencentLocation.getProvider()).append(", 地址=")
+                    // 注意, 根据国家相关法规, wgs84坐标下无法提供地址信息
+                    .append("{84坐标下不提供地址!}");
+            msg = sb.toString();
+            Toast.makeText(App.getContext(),msg,Toast.LENGTH_LONG).show();
+        } else {
+            // 定位失败
+            msg = "定位失败: " + s;
+        }
+        Log.i("MainActivity",msg);
+    }
+
+    @Override
+    public void onStatusUpdate(String s, int i, String s1) {
+
     }
 }

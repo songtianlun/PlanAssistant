@@ -15,6 +15,10 @@ This software is developed for people who like to record their lives.
 - [x] change password
 - [x] change info
 - [x] personal info ui
+- [x] tencent location
+- [x] data to leancloud background
+- [x] load data to mapbox
+- [x] location setting
 - [ ] ui
 - [ ] sql
 - [ ] location

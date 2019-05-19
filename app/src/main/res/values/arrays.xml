@@ -14,6 +14,34 @@
         <item>保密</item>
     </string-array>
 
+    <string-array name="settings_list_location_type_title">
+        <item>低功耗模式</item>
+        <item>仅设备模式</item>
+        <item>高精度模式</item>
+    </string-array>
+
+    <string-array name="settings_list_location_type_values">
+        <item>Battery_Saving</item>
+        <item>Device_Sensors</item>
+        <item>Hight_Accuracy</item>
+
+
+    </string-array>
+
+    <string-array name="settings_list_location_time_interval_title">
+        <item>1000ms</item>
+        <item>4000ms</item>
+        <item>10000ms</item>
+        <item>20000ms</item>
+    </string-array>
+
+    <string-array name="settings_list_location_time_interval_values">
+        <item>1000</item>
+        <item>4000</item>
+        <item>10000</item>
+        <item>20000</item>
+    </string-array>
+
     <string-array name="spinner_array">
         <item>spinner item 1</item>
         <item>spinner item 2</item>

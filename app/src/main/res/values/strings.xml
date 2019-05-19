@@ -92,7 +92,18 @@
     <string name="main_popup_menu">Popup Menu</string>
 
     <!-- Strings related to Settings -->
-    <string name="settings_category_location">定位设置</string>
+    <string name="settings_location_title">定位设置</string>
+    <string name="settings_location_switch">轨迹记录功能</string>
+    <string name="settings_location_description">使用先进的定位手段在应用前台记录您的轨迹.</string>
+    <string name="settings_location_switch_background">后台轨迹记录</string>
+    <string name="settings_location_background_description">在系统后台运行记录服务.</string>
+    <string name="settings_location_type">定位类型</string>
+    <string name="settings_location_time_interval">定位周期</string>
+    <string name="settings_location_usegps">GPS</string>
+    <string name="settings_location_usegps_description">是否允许软件使用GPS定位，开启获得更高精度，反之软件功耗更低。</string>
+    <string name="settings_location_indoor">室内定位</string>
+    <string name="settings_location_indoor_description">是否启用室内定位模式，提高室内定位效能。</string>
+
 
     <string name="settings_category_basic">Basic Settings</string>
     <string name="settings_category_advanced">Advanced Settings</string>
@@ -154,6 +165,11 @@
     <string name="nav_menu_personinfo">个人信息</string>
     <string name="nav_menu_changepassword">重置密码</string>
     <string name="nav_menu_logout">注销账户</string>
+
+    <string name="nav_menu_track">轨迹记录</string>
+    <string name="nav_menu_map">个人地图</string>
+    <string name="nav_menu_liveline">精力曲线</string>
+    <string name="nav_menu_plan">规划事件</string>
 
     <!--personal info-->
     <string name="title_activity_personinfo_user">用户信息</string>
