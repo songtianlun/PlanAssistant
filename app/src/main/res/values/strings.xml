@@ -194,4 +194,14 @@
     <string name="card_personinfo_button_back">返回</string>
     <string name="card_personinfo_button_restore">刷新</string>
 
+    <!--card_activity_track_info_title-->
+    <string name="title_activity_track">轨迹记录</string>
+    <string name="card_activity_track_info_title">数据信息</string>
+    <string name="card_activity_track_info_start">开始</string>
+    <string name="card_activity_track_info_end">结束</string>
+    <string name="card_activity_track_info_info">信息</string>
+    <string name="card_activity_track_info_button_quare">开始查询</string>
+    <string name="card_activity_track_info_button_save">保存地图</string>
+    <string name="card_activity_track_info_button_theme">切换风格</string>
+
 </resources>

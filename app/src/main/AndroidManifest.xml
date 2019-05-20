@@ -26,10 +26,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.PlanActivity"></activity>
-        <activity android:name=".activity.LiveLineActivity" />
-        <activity android:name=".activity.MyMapActivity" />
-        <activity android:name=".activity.TrackActivity" />
+        <activity
+            android:name=".activity.PlanActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.LiveLineActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.MyMapActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.TrackActivity"
+            android:label="@string/title_activity_track"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".service.TencentLocationService"

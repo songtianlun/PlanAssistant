@@ -30,8 +30,11 @@ import com.hgo.planassistant.R;
 import com.hgo.planassistant.util.AppUtils;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 public class PersonInfoActivity extends BaseActivity implements View.OnClickListener{
 
@@ -84,6 +87,14 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         bt_refresh = findViewById(R.id.button_personinfo_restore);
 
         calendar = Calendar.getInstance();
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy年MM月dd日");
+        Date birthday = null;
+        try {
+            birthday = sdf.parse(AVUser.getCurrentUser().get("birth").toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        calendar.setTime(birthday);
 
         tv_nickname.setText(AVUser.getCurrentUser().get("nickname").toString());
 
@@ -98,6 +109,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         tv_username.setText(AVUser.getCurrentUser().getUsername());
         tv_email.setText(AVUser.getCurrentUser().getEmail());
         tv_emailverfied.setText(AVUser.getCurrentUser().get("emailVerified").toString());
+
 
         tv_nickname.setOnClickListener(this);
         tv_sex.setOnClickListener(this);
@@ -158,11 +170,20 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                         .show();
                 break;
             case R.id.card_personalinfo_userinfo_birth:
+                tv_introduction.setText(AVUser.getCurrentUser().get("introduction").toString());
                 DatePickerDialog datePickerDialog = new DatePickerDialog(personinfo_context, (view1, year, monthOfYear, dayOfMonth) -> {
                     calendar.set(Calendar.YEAR, year);
                     calendar.set(Calendar.MONTH, monthOfYear);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     String date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
+                    //DateFormate 的前后转换
+//                    try {
+//                        Date odate = DateFormat.getDateInstance(DateFormat.MEDIUM).parse(date);
+//                        Log.i("PersonInfoActivity","old:"+calendar.getTime() + "\n new:"+odate);
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+                    Log.i("PersonInfoActivity",date);
                     AVUser.getCurrentUser().put("birth", date);
                     AVUser.getCurrentUser().saveInBackground();
                     refresh();
@@ -273,5 +294,13 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         tv_username.setText(AVUser.getCurrentUser().getUsername());
         tv_email.setText(AVUser.getCurrentUser().getEmail());
         tv_emailverfied.setText(AVUser.getCurrentUser().get("emailVerified").toString());
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy年MM月dd日");
+        Date birthday = null;
+        try {
+            birthday = sdf.parse(AVUser.getCurrentUser().get("birth").toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        calendar.setTime(birthday);
     }
 }

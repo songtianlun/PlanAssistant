@@ -19,6 +19,8 @@ This software is developed for people who like to record their lives.
 - [x] data to leancloud background
 - [x] load data to mapbox
 - [x] location setting
+- [x] track map
+- [x] quare track to show hot map
 - [ ] ui
 - [ ] sql
 - [ ] location

@@ -46,7 +46,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha05'
@@ -80,6 +80,7 @@ dependencies {
     //    //搜索功能
     //    implementation 'com.amap.api:search:latest.integration'
     implementation files('libs/TencentLocationSdk_v7.1.6.1_r67ba7298_20190409_142648.jar')
+    implementation files('libs/gt-geojson-19.4.jar')
 }
 
 

@@ -62,8 +62,8 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         tv_card_about_2_website.setOnClickListener(this);
         tv_card_about_source_licenses.setOnClickListener(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab_about_share);
-        fab.setOnClickListener(this);
+//        FloatingActionButton fab = findViewById(R.id.fab_about_share);
+//        fab.setOnClickListener(this);
 
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(300);
@@ -120,12 +120,12 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
                 break;
 
-            case R.id.fab_about_share:
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
-                intent.setType("text/plain");
-                startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
-                break;
+//            case R.id.fab_about_share:
+//                intent.setAction(Intent.ACTION_SEND);
+//                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
+//                intent.setType("text/plain");
+//                startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
+//                break;
         }
     }
 
