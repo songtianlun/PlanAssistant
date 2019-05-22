@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +19,10 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
@@ -43,6 +47,8 @@ import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,6 +83,13 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
     private Button BT_save,BT_quare,BT_theme;
     private TextView TV_start_calendar, TV_start_time,TV_stop_calendar,TV_stop_time,TV_info;
+
+    private List<AVObject> now_list;
+
+    private Context track_context;
+
+    //MarkerQuare
+    public int range_point_num_max = 0; //范围查询时的最大点个数，中间变量
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +130,9 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
         start_time = Calendar.getInstance();
         end_time = Calendar.getInstance();
-        start_time.add(Calendar.HOUR_OF_DAY, -12); //讲起始时间推算为当前时间前１２小时
+        start_time.add(Calendar.HOUR_OF_DAY, -6); //讲起始时间推算为当前时间前n小时
+
+        track_context = this;
 
         refresh();
         //Log.i("TrackActivity",start_time.get(Calendar.YEAR) + "-" + start_time.get(Calendar.MONTH) + "-" + start_time.get(Calendar.DATE));
@@ -141,6 +156,9 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                         mapboxMap.animateCamera(
                                 CameraUpdateFactory.newCameraPosition(cameraPositionForFragmentMap), 2600);
                         AVQuery<AVObject> query = new AVQuery<>("trajectory");
+                        // 启动查询缓存
+                        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+                        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
                         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                         query.whereGreaterThan("time",start_time.getTime());
                         query.whereLessThan("time",end_time.getTime());
@@ -152,7 +170,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                             public void done(List<AVObject> list, AVException e) {
                                 Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                                 Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-
+                                now_list = list;//暂时存储当前查询结果
                                 TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
                                         "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
                                         "数据总数: "+ list.size());
@@ -160,6 +178,8 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                 map_style.removeSource(HEATMAP_SOURCE_ID);
                                 map_style.addSource(new GeoJsonSource(HEATMAP_SOURCE_ID,
                                         FeatureCollection.fromFeatures(genetateGeoStringFromAvobject(list))));
+//                                RagesQuare(list);// 分析范围内的点
+//                                MarkerQuare();//确定marker
 //                        for (AVObject obj: list){
 ////                            AVObject point = obj.getAVObject("point");
 //                            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
@@ -187,6 +207,10 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 mapfresh();
                 break;
             case R.id.card_activity_track_info_button_save:
+                //以当前时间命名地图
+                String start_time_string = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS")).format(start_time.getTime());
+                String end_time_string = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS")).format(end_time.getTime());
+                SaveToMymap(now_list,start_time_string+" 至 "+end_time_string + "轨迹点");
                 break;
             case R.id.card_activity_track_info_button_theme:
                 index++;
@@ -272,6 +296,8 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                         Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                         Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
 
+                        now_list = list;//暂时存储当前查询结果
+
                         TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
                                 "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
                                 "数据总数: "+ list.size());
@@ -295,34 +321,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 addHeatmapLayer(style);
             }
         });
-//        AVQuery<AVObject> query = new AVQuery<>("trajectory");
-//        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-//        query.whereGreaterThan("time",start_time.getTime());
-//        query.whereLessThan("time",end_time.getTime());
-//        query.whereLessThan("precision",50);
-//        query.selectKeys(Arrays.asList("point", "time", "precision"));
-//        query.limit(1000);
-//        query.findInBackground(new FindCallback<AVObject>() {
-//            @Override
-//            public void done(List<AVObject> list, AVException e) {
-//                Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
-//                Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-//
-//                map_style.removeSource(HEATMAP_SOURCE_ID);
-//                HEATMAP_SOURCE_ID += "_1";
-//                map_style.addSource(new GeoJsonSource(HEATMAP_SOURCE_ID,
-//                        FeatureCollection.fromFeatures(genetateGeoStringFromAvobject(list))));
-////                        for (AVObject obj: list){
-//////                            AVObject point = obj.getAVObject("point");
-////                            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-//////                            Log.i("TrackActivity",geopoint.toString());
-////                            mapboxMap.addMarker(new MarkerOptions()
-////                                    .position(new LatLng(geopoint.getLatitude(),geopoint.getLongitude())));
-////
-////                        }
-//            }
-//        });
-//        mapView.refreshDrawableState();
+
     }
     private void refresh(){
         TV_start_calendar.setText(start_time.get(Calendar.YEAR)+"年"+(start_time.get(Calendar.MONTH)+1)+"月"+start_time.get(Calendar.DATE)+"日");
@@ -343,6 +342,221 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         }
         return features;
     }
+    private void SaveToMymap(List<AVObject> map_list, String map_name){
+        // 第一步：创建空的个人地图
+        // 第二步：将数据提交到当前的个人地图
+        // 第三步：存储当前地图风格
+
+        // 构造方法传入的参数，对应的就是控制台中的 Class Name
+        AVObject mymap = new AVObject("personalmap");
+//        AVObject mappoint = new AVObject("mappoint");
+        ArrayList<AVObject> mappoints = new ArrayList<AVObject>();
+
+        // no.1
+        mymap.put("name",map_name);//地图名称
+        mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
+        mymap.put("mapstyle_index",index);//风格编号
+        mymap.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    // 存储成功
+//                    Toast.makeText(track_context,map_name + "地图创建成功!",Toast.LENGTH_LONG).show();
+
+                    for (AVObject mappoint : map_list) {
+                        AVObject point = new AVObject("mappoint");
+                        point.put("point",mappoint.getAVGeoPoint("point"));
+                        point.put("altutude",mappoint.get("altitude"));
+                        point.put("MapId",mymap.getObjectId());
+                        mappoints.add(point);
+                    }
+
+                    AVObject.saveAllInBackground(mappoints, new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e != null) {
+                                // 出现错误
+                                mymap.deleteInBackground();
+                                Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                            } else {
+                                // 保存成功
+//                                Toast.makeText(track_context,"地图存储成功!",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+
+                } else {
+                    // 失败的话，请检查网络环境以及 SDK 配置是否正确
+                    Toast.makeText(track_context,map_name + "地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+//        ArrayList<AVObject> save_mappoints = (ArrayList<AVObject>) map_list;
+
+
+        
+
+//        for (AVObject obj: map_list){
+//            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+//            geopoint.getLongitude();
+//            geopoint.getLatitude();
+//
+//
+//
+//        }
+
+    }
+    private void RagesQuare(List<AVObject> list){
+        int i=0;
+        double range_num = 0.2;
+
+//        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
+        Log.i("TrackActivity","开始分析时空点个数");
+        for (AVObject obj: list){
+            //查询指定范围内个数，并更新到字段ranges中
+            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+            AVQuery<AVObject> query = new AVQuery<>("trajectory");
+            AVGeoPoint point = new AVGeoPoint(geopoint.getLatitude(), geopoint.getLongitude());
+            query.limit(1000); //最多为1000
+            query.whereGreaterThan("time",start_time.getTime());
+            query.whereLessThan("time",end_time.getTime());
+            query.whereWithinKilometers("point", point, range_num);//查询范围
+            // 得到点总个数
+            query.countInBackground(new CountCallback() {
+                @Override
+                public void done(int i, AVException e) {
+                    if (e == null) {
+                        // 查询成功，输出计数
+//                        Log.d("TrackActivity", "该点"+ range_num +"范围内共有" + i + "个点.");
+                        // 第一参数是 className,第二个参数是 objectId
+                        AVObject point_range = AVObject.createWithoutData("trajectory", obj.getObjectId());
+                        // 修改 content
+                        point_range.put("ranges",i);
+                        // 保存到云端
+                        point_range.saveInBackground();
+                    } else {
+                        // 查询失败
+                    }
+
+                }
+            });
+        }
+//        MarkerQuare();
+    }
+
+
+    private void MarkerQuare(){
+        double rang_point_num_per = 0.8; // 设置时空点个数为最多点的百分率
+        int range_point_num = 0; // 分析点个数
+        double range_marker = 1; //设置marker间至少间距0.2km
+
+//        for (AVObject obj: list){
+//            //查询指定范围内个数，并更新到字段ranges中
+//            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+            AVQuery<AVObject> query = new AVQuery<>("trajectory");
+//            AVGeoPoint point = new AVGeoPoint(geopoint.getLatitude(), geopoint.getLongitude());
+            query.limit(1000); //最多为1000
+            query.whereGreaterThan("time",start_time.getTime());
+            query.whereLessThan("time",end_time.getTime());
+            // 按时空范围点个数，降序排列
+            query.orderByDescending("ranges");
+            //第一步：确定时空范围点合适的个数
+            // 查询空间范围点个数最多的个数
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    // object 就是符合条件的第一个 AVObject
+                    range_point_num_max = Integer.parseInt(avObject.get("ranges").toString());
+                    Log.i("TrackActivity","范围点降序排列后的最大值为："+range_point_num_max);
+                }
+            });
+            range_point_num = (int) (range_point_num_max * rang_point_num_per); //设置成为marker点的最少时空范围点
+//            range_point_num = 80;
+            query.whereGreaterThan("ranges",range_point_num);//设置查询结果ranges大于range_point_num
+
+            Log.i("TrackActivity","时空范围点最少个数为："+range_point_num);
+            //第二步：确定范围内marker仅有一个，给符合条件的点赋值marker
+            int finalRange_point_num = range_point_num;
+            query.findInBackground(new FindCallback<AVObject>() {
+                @Override
+                public void done(List<AVObject> list, AVException e) {
+                    Log.i("TrackActivity","确认marker，共查询到：" + list.size() + "条数据。");
+//                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
+                    //将指定范围内第一个出现的marker赋值marker
+                    for (AVObject obj: list){
+                        int obj_ranges_num = (int)Integer.parseInt(obj.get("ranges").toString());
+                        AVGeoPoint geopoint = obj.getAVGeoPoint("point");// 获取点point对象
+                        final Boolean[] marker_exit = {false};//默认存在
+                        if (obj_ranges_num>= finalRange_point_num){
+                            // 空间查询，周围是否存在marker
+                            AVQuery<AVObject> query = new AVQuery<>("trajectory");
+                            query.limit(1000); //最多为1000
+                            query.whereGreaterThan("time",start_time.getTime());
+                            query.whereLessThan("time",end_time.getTime());
+                            query.whereWithinKilometers("point", geopoint, range_marker);//查询范围
+                            query.findInBackground(new FindCallback<AVObject>() {
+                                @Override
+                                public void done(List<AVObject> list, AVException e) {
+                                    Log.i("TrackActivity","确定周围是否有marker，共查询到：" + list.size() + "条数据。");
+//                                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
+                                    for(AVObject mark_obj: list){
+                                        if(Boolean.valueOf(mark_obj.get("marker").toString())){
+                                            //存在marker
+                                            marker_exit[0] = true;
+                                            Log.i("TrackActivity","存在marker");
+                                            break;
+                                        }
+                                    }
+                                    //不存在，则更新marker为true
+                                    if(!marker_exit[0]){
+                                        // 第一参数是 className,第二个参数是 objectId
+                                        AVObject point_range = AVObject.createWithoutData("trajectory", obj.getObjectId());
+                                        // 修改 content
+                                        point_range.put("marker",true);
+                                        // 保存到云端
+                                        point_range.saveInBackground();
+                                        Log.i("TrackActivity","添加marker!");
+
+                                        AVGeoPoint mark_point = obj.getAVGeoPoint("point");
+                                        mapboxmap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(mark_point.getLatitude(), mark_point.getLongitude()))
+                                                .title("您貌似在这里停留过"));
+                                    }
+                                }
+                            });
+                        }
+
+
+                    }
+
+                }
+            });
+
+
+            // 得到点总个数
+//            query.countInBackground(new CountCallback() {
+//                @Override
+//                public void done(int i, AVException e) {
+//                    if (e == null) {
+//                        // 查询成功，输出计数
+////                        Log.d("TrackActivity", "该点"+ range_num +"范围内共有" + i + "个点.");
+//
+//                        // 第一参数是 className,第二个参数是 objectId
+//                        AVObject point_range = AVObject.createWithoutData("trajectory", obj.getObjectId());
+//                        // 修改 content
+//                        point_range.put("ranges",i);
+//                        // 保存到云端
+//                        point_range.saveInBackground();
+//                    } else {
+//                        // 查询失败
+//                    }
+//                }
+//            });
+//        }
+
+    }
 
     private String loadGeoJsonFromAsset(String filename) {
         try {
@@ -361,7 +575,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             return null;
         }
     }
-    private void initHeatmapColors() {
+    public void initHeatmapColors() {
         listOfHeatmapColors = new Expression[] {
                 // 0
                 interpolate(
@@ -507,9 +721,14 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 // 0
                 interpolate(
                         linear(), zoom(),
-                        literal(6), literal(50),
-                        literal(20), literal(100)
+                        literal(1), literal(30),
+                        literal(6), literal(60)
                 ),
+//                interpolate(
+//                        linear(), zoom(),
+//                        literal(6), literal(50),
+//                        literal(20), literal(100)
+//                ),
                 // 1
                 interpolate(
                         linear(), zoom(),
@@ -607,7 +826,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 0.5f
         };
     }
-    private void addHeatmapLayer(@NonNull Style loadedMapStyle) {
+    public void addHeatmapLayer(@NonNull Style loadedMapStyle) {
         // Create the heatmap layer
         HeatmapLayer layer = new HeatmapLayer(HEATMAP_LAYER_ID, HEATMAP_SOURCE_ID);
 

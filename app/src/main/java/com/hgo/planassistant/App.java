@@ -31,7 +31,7 @@ public class App extends Application {
         // 初始化参数依次为 this, AppId, AppKey
         AVOSCloud.initialize(this,"eR1JFxB61gInL1GhmaURGdAx-gzGzoHsz","1nddY6z37rpVV2OzxXuWPdSI");
         // 正式发布前去除
-        AVOSCloud.setDebugLogEnabled(true);
+        AVOSCloud.setDebugLogEnabled(false);
     }
 
     public void runOnUi(Runnable runnable) {

@@ -42,8 +42,6 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
 
         initView();
 
-
-
         // 测试 SDK 是否正常工作的代码
 //        AVObject testObject = new AVObject("TestObject");
 //        testObject.put("words","Hello World!");
