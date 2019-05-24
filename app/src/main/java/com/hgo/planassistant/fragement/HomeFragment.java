@@ -34,6 +34,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -67,6 +72,9 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -135,7 +143,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         }
 
 
-        LoadLinechart();
+        LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -164,7 +172,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             case R.id.loadlinechart:
                 Log.i("HomeFragement","clickLoadChart");
                 Snackbar.make(v, "加载图表", Snackbar.LENGTH_SHORT).show();
-                LoadLinechart();
+                LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
                 break;
             case R.id.savetogallary:
                 chartsavetogallary();
@@ -295,6 +303,80 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             yAxis.addLimitLine(ll2);
             //xAxis.addLimitLine(llXAxis);
         }
+    }
+    private int[] LoadLinechartData(){
+        int[] chareData = new int[24];
+        Arrays.fill(chareData,0);//数组的批量赋值。
+
+        AVQuery<AVObject> query = new AVQuery<>("liveline");
+        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query.limit(1000);
+        query.orderByDescending("createdAt");// 按时间，降序排列
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
+                for (AVObject obj: list){
+                    Calendar livetime = Calendar.getInstance();
+                    livetime.setTime((Date)obj.get("livetime"));//获取时间
+                    int hour = livetime.get(Calendar.HOUR_OF_DAY);
+                    int score = (int)obj.get("score");
+//                    Log.i("HomeFragement",hour+"时刻的精力值为："+score);
+                    if(chareData[hour]==0){
+                        chareData[hour] = score;
+                    }else{
+                        chareData[hour] = (score+chareData[hour])/2;
+                    }
+//                    Log.i("HomeFragement",hour+"时刻的精力值修改为："+chareData[hour]);
+                }
+                LoadLinechart(chareData);
+            }
+        });
+        return chareData;
+    }
+    private void LoadLinechart(int[] chartdata){
+        Log.i("HomeFragement","Load liveline chart");
+
+
+        //1.设置x轴和y轴的点
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < 24; i++){
+
+//            entries.add(new Entry(i,new Random().nextInt(100)));
+            entries.add(new Entry(i,chartdata[i]));
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
+
+
+        //3.chart设置数据
+        LineData lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate(); // refresh
+
+        List<ILineDataSet> sets = chart.getData()
+                .getDataSets();
+        for (ILineDataSet iSet : sets) {
+
+            // 绘制
+            LineDataSet set = (LineDataSet) iSet;
+            if (set.isDrawFilledEnabled())
+                set.setDrawFilled(false);
+            else
+                set.setDrawFilled(true);
+
+            //平滑
+            set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
+                    ? LineDataSet.Mode.LINEAR
+                    :  LineDataSet.Mode.CUBIC_BEZIER);
+        }
+        chart.invalidate();
+
+        //动画
+        chart.animateXY(2000, 2000);
+
     }
     private void LoadLinechart(){
         Log.i("HomeFragement","Load liveline chart");

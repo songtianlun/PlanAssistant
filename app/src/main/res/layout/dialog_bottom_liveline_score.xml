@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/google_assistant_background"
+    android:paddingStart="@dimen/zero_margin_when_normal"
+    android:paddingEnd="@dimen/zero_margin_when_normal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<ImageView-->
+            <!--android:id="@+id/img_bottom_dialog"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:adjustViewBounds="true"-->
+            <!--android:scaleType="fitXY" />-->
+
+        <TextView
+            android:id="@+id/dialog_button_liveline_score_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/dimen_common"
+            android:text="@string/dialog_button_liveline_score_title"
+            android:scaleType="centerCrop"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/dialog_button_liveline_score_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/dialog_button_liveline_score_title"
+            android:text="@string/dialog_button_liveline_score_time_title" />
+        <TextView
+            android:id="@+id/dialog_button_liveline_score_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dimen_common"
+            android:layout_marginRight="@dimen/dimen_common"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawableStart="@drawable/clock_outline"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:padding="@dimen/dimen_common"
+            android:text="null"
+            android:layout_below="@id/dialog_button_liveline_score_time_title"/>
+        <TextView
+            android:id="@+id/dialog_button_liveline_score_score_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/dialog_button_liveline_score_time"
+            android:text="@string/dialog_button_liveline_score_score_title" />
+
+        <com.warkiz.widget.IndicatorSeekBar
+            android:id="@+id/dialog_button_liveline_score_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_common"
+            android:layout_marginRight="@dimen/dimen_common"
+            android:layout_below="@id/dialog_button_liveline_score_score_title"
+
+            app:isb_max="100"
+            app:isb_min="0"
+            app:isb_progress="50"
+            app:isb_seek_smoothly="true"
+            app:isb_show_thumb_text="true"
+            app:isb_thumb_text_color="@color/green_primary"
+            app:isb_show_tick_marks_type="oval"
+            app:isb_tick_marks_size="13dp"
+            app:isb_tick_marks_drawable="@mipmap/ic_launcher"
+            app:isb_show_tick_texts="true"
+            app:isb_tick_texts_size="15sp"
+            app:isb_tick_texts_color="@color/app_blue"
+            app:isb_thumb_color="@color/app_green"
+            app:isb_thumb_size="20dp"
+            app:isb_show_indicator="rounded_rectangle"
+            app:isb_indicator_color="@color/gray"
+            app:isb_indicator_text_color="@color/colorAccent"
+            app:isb_indicator_text_size="18sp"
+            app:isb_track_background_color="@color/gray"
+            app:isb_track_background_size="2dp"
+            app:isb_track_progress_color="@color/app_blue"
+            app:isb_track_progress_size="4dp"
+            app:isb_only_thumb_draggable="false"
+            />
+        <TextView
+            android:id="@+id/dialog_button_liveline_score_remark_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/dialog_button_liveline_score_score"
+            android:text="@string/dialog_button_liveline_score_remark_title" />
+
+        <TextView
+            android:id="@+id/dialog_button_liveline_score_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:layout_gravity="center_vertical"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawableStart="@drawable/information_outline"
+            android:drawablePadding="@dimen/dimen_common"
+            android:drawableTint="@color/gray"
+            android:layout_below="@id/dialog_button_liveline_score_remark_title"
+            android:padding="@dimen/dimen_common"
+            android:text="不动声色"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_bottom_sheet_ok"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_button_liveline_score_remark"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_common_very_small"
+            android:layout_marginBottom="@dimen/dimen_common_very_small"
+            android:text="@string/dialog_ok" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_bottom_sheet_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_button_liveline_score_remark"
+            android:layout_marginEnd="@dimen/dimen_common_very_small"
+            android:layout_marginBottom="@dimen/dimen_common_very_small"
+            android:layout_toStartOf="@+id/btn_dialog_bottom_sheet_ok"
+            android:text="@string/dialog_cancel" />
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

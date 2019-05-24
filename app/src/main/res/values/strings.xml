@@ -74,6 +74,7 @@
 
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_delete">Delete</string>
     <string name="dialog_neutral">Neutral</string>
     <string name="dialog_close">Close</string>
     <string name="main_dialog_simple">Simple dialog</string>
@@ -203,5 +204,24 @@
     <string name="card_activity_track_info_button_quare">开始查询</string>
     <string name="card_activity_track_info_button_save">保存地图</string>
     <string name="card_activity_track_info_button_theme">切换风格</string>
+
+    <!--activity of livelint-->
+    <string name="title_activity_liveline">精力曲线</string>
+    <string name="fab_adddata_liveline">精力评价</string>
+    <string name="dialog_button_liveline_score_title">评价精力</string>
+    <string name="dialog_button_liveline_score_time_title">时间</string>
+    <string name="dialog_button_liveline_score_score_title">精力评分</string>
+    <string name="dialog_button_liveline_score_remark_title">备注</string>
+
+
+
+    <string name="item_swipe_dismissed">Dismissed</string>
+    <string name="item_swipe_undo">Undo</string>
+    <string name="no_more_data">No more data</string>
+    <string name="succefully">成功！</string>
+
+    <string name="tv_recycler_item_1">Swipe down to refresh</string>
+    <string name="tv_recycler_item_2">Swipe left or right to dismiss it</string>
+    <string name="tv_recycler_item_3">Drag up or down to move it</string>
 
 </resources>

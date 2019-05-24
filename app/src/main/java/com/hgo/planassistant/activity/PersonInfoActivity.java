@@ -40,7 +40,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
     private TextView tv_nickname, tv_birth, tv_sex, tv_introduction, tv_username, tv_email, tv_emailverfied;
     private Button bt_finish,bt_refresh;
-    private EditText et_nickname, et_introduction, et_email;
     private Context personinfo_context;
     private Calendar calendar;
     @Override
@@ -121,9 +120,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         bt_finish.setOnClickListener(this);
         bt_refresh.setOnClickListener(this);
 
-        et_nickname = new EditText(this);
-        et_email = new EditText(this);
-        et_introduction = new EditText(this);
     }
 
     @Override
@@ -131,6 +127,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.card_personalinfo_userinfo_nickname:
 //                Log.i("PersonInfoActivity","点击昵称！");
+                EditText et_nickname = new EditText(this);
                 et_nickname.setText(AVUser.getCurrentUser().get("nickname").toString());
                 new AlertDialog.Builder(personinfo_context)
                         .setMessage("修改昵称")
@@ -191,6 +188,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 datePickerDialog.show();
                 break;
             case R.id.card_personalinfo_introduction:
+                EditText et_introduction = new EditText(this);
                 et_introduction.setText(AVUser.getCurrentUser().get("introduction").toString());
                 new AlertDialog.Builder(personinfo_context)
                         .setMessage("修改个人简介")
@@ -209,6 +207,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             case R.id.card_personalinfo_userinfo_username:
                 break;
             case R.id.card_personalinfo_userinfo_email:
+                EditText et_email = new EditText(this);
                 et_email.setText(AVUser.getCurrentUser().getEmail());
                 new AlertDialog.Builder(personinfo_context)
                         .setMessage("修改邮箱")
@@ -234,6 +233,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                         .show();
                 break;
             case R.id.card_personalinfo_userinfo_emailverfied:
+
                 if(AVUser.getCurrentUser().get("emailVerified").equals(false)){
                     new AlertDialog.Builder(personinfo_context)
                             .setMessage("是否发送邮箱激活邮件到您的邮箱，以激活您的邮箱？")
