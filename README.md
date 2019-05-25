@@ -1,6 +1,6 @@
 # Plan-Assistant
 
-[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)[![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)
+[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)  [![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)
 
 This software is developed for people who like to record their lives.
 https://img.shields.io/badge/%E5%AE%8B%E5%A4%A9%E4%BC%A6-frytea.com-green.svg
