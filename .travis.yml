@@ -6,7 +6,7 @@ android:
   components:
     - tools
     - build-tools-25.0.2
-    - android-28
+    - android-21
     - extra-android-m2repository
     - extra-android-support
   licenses:
