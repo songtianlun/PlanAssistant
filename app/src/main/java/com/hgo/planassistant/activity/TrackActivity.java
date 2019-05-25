@@ -155,6 +155,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                 .build();
                         mapboxMap.animateCamera(
                                 CameraUpdateFactory.newCameraPosition(cameraPositionForFragmentMap), 2600);
+
                         AVQuery<AVObject> query = new AVQuery<>("trajectory");
                         // 启动查询缓存
                         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -716,7 +717,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         };
     }
 
-    private void initHeatmapRadiusStops() {
+    public void initHeatmapRadiusStops() {
         listOfHeatmapRadiusStops = new Expression[] {
                 // 0
                 interpolate(
@@ -798,7 +799,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         };
     }
 
-    private void initHeatmapIntensityStops() {
+    public void initHeatmapIntensityStops() {
         listOfHeatmapIntensityStops = new Float[] {
                 // 0
                 0.06f,

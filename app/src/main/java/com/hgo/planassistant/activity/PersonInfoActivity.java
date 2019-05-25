@@ -42,6 +42,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     private Button bt_finish,bt_refresh;
     private Context personinfo_context;
     private Calendar calendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

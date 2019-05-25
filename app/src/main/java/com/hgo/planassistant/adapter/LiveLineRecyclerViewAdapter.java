@@ -68,7 +68,6 @@ public class LiveLineRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
     public void Updatelist(List<AVObject> list){
-//        this.mItems.clear();
         this.mItems = list;
         notifyDataSetChanged();
     }
@@ -91,10 +90,10 @@ public class LiveLineRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         mItems.remove(position);
         notifyItemRemoved(position);
     }
-    public void changeItem(int position, AVObject insertData) {
-        mItems.remove(position);
-        notifyItemChanged(position,insertData);
-    }
+//    public void changeItem(int position, AVObject insertData) {
+//        mItems.remove(position);
+//        notifyItemChanged(position,insertData);
+//    }
 //
 //    public void addItems(List<AVObject> data) {
 ////        mItems.add(HEADER);
@@ -386,22 +385,22 @@ public class LiveLineRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private class FooterViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar progress_bar_load_more;
-
-        private FooterViewHolder(View itemView) {
-            super(itemView);
-            progress_bar_load_more = itemView.findViewById(R.id.progress_bar_load_more);
-        }
-    }
-
-    private class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private TextView header_text;
-
-        private HeaderViewHolder(View itemView) {
-            super(itemView);
-            header_text = itemView.findViewById(R.id.header_text);
-        }
-    }
+//    private class FooterViewHolder extends RecyclerView.ViewHolder {
+//        private ProgressBar progress_bar_load_more;
+//
+//        private FooterViewHolder(View itemView) {
+//            super(itemView);
+//            progress_bar_load_more = itemView.findViewById(R.id.progress_bar_load_more);
+//        }
+//    }
+//
+//    private class HeaderViewHolder extends RecyclerView.ViewHolder {
+//        private TextView header_text;
+//
+//        private HeaderViewHolder(View itemView) {
+//            super(itemView);
+//            header_text = itemView.findViewById(R.id.header_text);
+//        }
+//    }
 
 }

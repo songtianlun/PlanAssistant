@@ -1,6 +1,9 @@
 # Plan-Assistant
 
+[![作者\](https:\//img.shields.io\/badge\/%E4%BD%9C%E8%80%85-gdky005-7AD6FD.svg)\](http:\//www.gdky005.com)
+
 This software is developed for people who like to record their lives.
+https://img.shields.io/badge/%E5%AE%8B%E5%A4%A9%E4%BC%A6-frytea.com-green.svg
 
 ## To-do
 
@@ -23,6 +26,7 @@ This software is developed for people who like to record their lives.
 - [x] quare track to show hot map
 - [x] show liveline
 - [x] manager liveline data
+- [x] show personal map
 - [ ] unverified account processing
 - [ ] analyse track
 - [ ] ui

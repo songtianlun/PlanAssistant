@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_item_mymap_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dimen_common_small"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginEnd="@dimen/dimen_common_small"
+    android:layout_marginBottom="@dimen/dimen_common_small"
+    android:foreground="?attr/selectableItemBackground">
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/imrv_mapView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            mapbox:mapbox_cameraTargetLat="34.833488"
+            mapbox:mapbox_cameraTargetLng="113.543419"
+            mapbox:mapbox_cameraTilt="20"
+            mapbox:mapbox_cameraZoom="12"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_common"
+        android:layout_below="@id/imrv_mapView">
+
+
+
+        <RelativeLayout
+            android:id="@+id/rela_round"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:background="@drawable/round"
+            android:backgroundTint="@color/gray_light"
+            android:transitionName="shareView" />
+
+        <TextView
+            android:id="@+id/tv_mymap_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/rela_round"
+            android:text="@string/tv_recycler_item_1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+        <TextView
+            android:id="@+id/tv_mymap_item_remarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_mymap_item_title"
+            android:layout_marginTop="@dimen/dimen_common_very_small"
+            android:layout_toEndOf="@id/rela_round"
+            android:text="@string/tv_recycler_item_2" />
+
+        <TextView
+            android:id="@+id/tv_mymap_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_mymap_item_remarks"
+            android:layout_marginTop="@dimen/dimen_common_very_small"
+            android:layout_toEndOf="@id/rela_round"
+            android:text="@string/tv_recycler_item_3" />
+
+    </RelativeLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

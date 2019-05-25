@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DetailPMapActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolbar_detailpmap_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_detailpmap"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <!--<include-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/activity_track_layout_map"-->
+        <!--android:layout_marginTop="?attr/actionBarSize"-->
+        <!--layout="@layout/card_activity_track_map" />-->
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/activity_dpmap_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        mapbox:mapbox_cameraTargetLat="34.833488"
+        mapbox:mapbox_cameraTargetLng="113.543419"
+        mapbox:mapbox_cameraTilt="20"
+        mapbox:mapbox_cameraZoom="12"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
