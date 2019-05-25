@@ -1,9 +1,24 @@
 # Plan-Assistant
 
-[![作者\](https:\//img.shields.io\/badge\/%E4%BD%9C%E8%80%85-gdky005-7AD6FD.svg)\](http:\//www.gdky005.com)
+[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)[![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)
 
 This software is developed for people who like to record their lives.
 https://img.shields.io/badge/%E5%AE%8B%E5%A4%A9%E4%BC%A6-frytea.com-green.svg
+
+## Environment
+
+- Dev-Platform 
+    - ThinkPad-E450
+    - Deepin-15.10.1
+- Dev-Environment
+    - Android Studio 3.4.1
+    - java: 1.8.0_152_release
+    - gradle: 3.4.0
+    - Gradle Version: 5.1.1
+    - buildToolsVersion: 29.0.0-rc3
+    - compileSdkVersion: 28
+    - minSdkVersion: 21
+
 
 ## To-do
 
