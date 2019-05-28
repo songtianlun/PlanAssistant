@@ -1,20 +1,20 @@
-# 快速开始 / Quick Start
+# Quick Start / 快速开始
 ---
-## 第一步 / Step-First
+## Step-First / 第一步
 
 Download app. And Just to sign up.
 
 >Get apk: [Release Apks](https://raw.githubusercontent.com/songtianlun/PlanAssistant/master/app/release/app-release.apk)
 
-## 第二步 / Step-Second
+## Step-Second / 第二步
 
 Login software and Enter the main interface.
 
-## 第三步 / Step-Third
+## Step-Third / 第三步
 
 Enjoy it.
 
-## 主要功能 / The main function.
+## The main function. / 主要功能
 
 ### SignUp
 

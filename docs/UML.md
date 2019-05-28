@@ -1,9 +1,9 @@
-# Plan-Assistant-UML
+# Plan-Assistant-UML / 规划助手
 
-## Use Case Model
+## Use Case Model / 用例模型
 
 
-### Use Case View
+### Use Case View / 用例图
 
 #### Main
 
@@ -15,13 +15,12 @@
 
 #### Vigor-Plan
 
+### Use Case Specification / 用规约
 
-### Use Case Specification
+## Design Model / 设计模型
 
-## Design Model
+### Time View / 时序图
 
-### Time View
+### Class View / 类图
 
-### Class View
-
-### Database All of E-R
+### Database All of E-R / 数据库设计

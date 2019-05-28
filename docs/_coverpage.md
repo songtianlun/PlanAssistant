@@ -5,9 +5,9 @@
 
 > Help you achieve effective work.
 
-- Map by MapBox
-- Ui by Material
-- Data by LeanCloud
+- Map by MapBox / 地图
+- Ui by Material / 设计材料
+- Data by LeanCloud / 对象数据库
 
 [GitHub](https://github.com/songtianlun/PlanAssistant)
 [Get Started](Quick-Start.md)
