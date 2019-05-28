@@ -9,14 +9,14 @@ The produce include：
 [http://www.gnu.org/licenses/gpl-3.0.html](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
-#### Material Components Android
+## Material Components Android
 
 Copyright © 2017 The Android Open Source Project. All rights reserved.
 
 [https://material.io/develop/android/](https://material.io/develop/android/)
 
 
-#### Glide
+## Glide
 
 Copyright © 2014 Google, Inc. All rights reserved.
 [https://github.com/bumptech/glide](https://github.com/bumptech/glide)
@@ -31,7 +31,7 @@ Copyright © Google, Inc. All rights reserved.
 [https://material.io/icons/](https://material.io/icons/)
 
 
-#### MPAndroidChart
+## MPAndroidChart
 
 Copyright © 2019 Philipp Jahoda.
 
@@ -41,7 +41,7 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 
-#### IndicatorSeekBar
+## IndicatorSeekBar
 
 Copyright © 2017 zhuangguangquan(庄广权).
 

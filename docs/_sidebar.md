@@ -1,10 +1,10 @@
 
-- [Quick Start](Quick-Start.md)
-- [Technology](Technology.md)
-- [Architecture](Architecture.md)
-- [UML](UML.md)
-- [OpenSource Statement](OpenSource-Statement.md)
-- [About](About.md)
+- [Quick Start / 快速开始](Quick-Start.md)
+- [Technology / 相关技术](Technology.md)
+- [Architecture / 系统架构](Architecture.md)
+- [UML / 软件工程](UML.md)
+- [OpenSource Statement / 开源声明](OpenSource-Statement.md)
+- [About / 关于](About.md)
 
 ---
 - **Links**

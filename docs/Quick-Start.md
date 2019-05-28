@@ -4,6 +4,8 @@
 
 Download app. And Just to sign up.
 
+>Get apk: [Release Apks](https://raw.githubusercontent.com/songtianlun/PlanAssistant/master/app/release/app-release.apk)
+
 ## 第二步 / Step-Second
 
 Login software and Enter the main interface.
