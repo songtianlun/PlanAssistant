@@ -36,8 +36,9 @@
     <string name="card_home_location_title">位置记录</string>
     <string name="card_home_location_station">已关闭</string>
     <string name="card_home_location_station_title">状态</string>
-    <string name="card_home_location_length">×××m</string>
-    <string name="card_home_location_length_title">距离</string>
+    <string name="card_home_location_station_location">定位状态</string>
+    <string name="card_home_location_length">×××个</string>
+    <string name="card_home_location_data_title">6小时数据</string>
     <string name="card_home_location_quantity">××××</string>
     <string name="card_home_location_quantity_title">数量</string>
     <string name="card_home_location_date">××××年××月××日</string>
@@ -227,5 +228,21 @@
     <string name="title_activity_mymap">个人地图</string>
     <string name="fab_adddata_mymmap">增加地图</string>
 
+    <!--card_fragement_plan_vigor-->
+    <string name="card_fragement_plan_vigor_title">小贴士</string>
+    <string name="card_fragement_plan_vigor_head">根据您的记录，您当前的精力状况评分为：</string>
+    <string name="card_fragement_plan_vigor_score">**分</string>
+    <string name="card_fragement_plan_vigor_suggest">建议您当前。</string>
+    <string name="tv_card_fragement_plan_vigor_description">注：若数值不准，请修改或添加记录以尽可能拟合您的精力曲线。</string>
+
+
+
+    <!--<string name="card_home_location_station">已关闭</string>-->
+    <!--<string name="card_home_location_station_title">状态</string>-->
+    <!--<string name="card_home_location_length">×××m</string>-->
+    <!--<string name="card_home_location_length_title">距离</string>-->
+    <!--<string name="card_home_location_quantity">××××</string>-->
+    <!--<string name="card_home_location_quantity_title">数量</string>-->
+    <!--<string name="card_home_location_date">××××年××月××日</string>-->
 
 </resources>

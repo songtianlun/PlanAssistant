@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -91,7 +93,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     NestedScrollView nestedScrollView;
     private static final int PERMISSION_STORAGE = 0;
 
-    private TextView tv_card_home_location_station;
+    private TextView tv_card_home_location_station,tv_card_home_location_date;
+    private TextView card_home_location_station_location,card_home_location_data;
+    private Calendar now_calendar;
 
 
     MapView mapView;
@@ -114,7 +118,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         mapView = (MapView) nestedScrollView.findViewById(R.id.mapView);
 
         tv_card_home_location_station = nestedScrollView.findViewById(R.id.card_home_location_station);
+        tv_card_home_location_date = nestedScrollView.findViewById(R.id.tv_card_home_location_date);
+        card_home_location_station_location = nestedScrollView.findViewById(R.id.card_home_location_station_location);
+        card_home_location_data = nestedScrollView.findViewById(R.id.card_home_location_data);
         Initchart(nestedScrollView);
+
+        now_calendar = Calendar.getInstance();//获取当前时间
 
         return nestedScrollView;
     }
@@ -122,6 +131,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        String date_str = now_calendar.get(Calendar.YEAR) + "年" + (now_calendar.get(Calendar.MONTH)+1) + "月" + now_calendar.get(Calendar.DATE) + "日";
 
 //        loadlinechart.setOnClickListener(v -> {
 //            Log.i("HomeFragement","clickLoadChart");
@@ -141,6 +151,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         }else{
             tv_card_home_location_station.setText("未开启");
         }
+        tv_card_home_location_date.setText(date_str);
+
+        Log.i("HomeFragement",LocadLocationState());
+        if(LocadLocationState().equals("AMapLocationMode.Battery_Saving")){
+            card_home_location_station_location.setText("节能");
+        }else{
+            card_home_location_station_location.setText("高精度");
+        }
+        LoadDataTital(-6);
 
 
         LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
@@ -469,5 +488,44 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     @Override
     public void onNothingSelected() {
 
+    }
+
+    private String LocadLocationState(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+
+//        Log.i("HomeFragement",preferences.getString("pref_list_location_time", ""));
+        return preferences.getString("pref_list_location_type", "");
+
+    }
+
+    private void LoadDataTital(int hour){
+        Calendar start_time;
+        Calendar end_time;
+        start_time = Calendar.getInstance();
+        end_time = Calendar.getInstance();
+        start_time.add(Calendar.HOUR_OF_DAY, hour); //讲起始时间推算为当前时间前n小时
+
+        AVQuery<AVObject> query = new AVQuery<>("trajectory");
+        // 启动查询缓存
+        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query.whereGreaterThan("time",start_time.getTime());
+        query.whereLessThan("time",end_time.getTime());
+        query.whereLessThan("precision",50);
+        query.selectKeys(Arrays.asList("point", "time", "precision"));
+        query.limit(1000);
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int i, AVException e) {
+                if (e == null) {
+                    // 查询成功，输出计数
+                    Log.d("HomeFragement", hour+"小时内共记录了" + i + "条轨迹记录。");
+                    card_home_location_data.setText(i+"条");
+                } else {
+                    // 查询失败
+                }
+            }
+        });
     }
 }

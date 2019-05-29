@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_home_map"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +10,11 @@
     android:layout_marginEnd="@dimen/dimen_common"
     android:layout_marginBottom="@dimen/dimen_common_small"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:outlineAmbientShadowColor="@color/black"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"

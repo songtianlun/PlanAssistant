@@ -27,6 +27,7 @@ import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static android.app.PendingIntent.getActivity;
@@ -129,6 +130,19 @@ public class TencentLocationService extends Service implements
         Log.i("TencentLocationService","位置改变回调！");
         String msg = null;
         if (i == TencentLocation.ERROR_OK) {
+            Calendar now = Calendar.getInstance();
+            String now_str;
+            now_str = now.get(Calendar.YEAR)+"年";
+            if((now.get(Calendar.MONTH)+1)<10){
+                now_str+="0"+(now.get(Calendar.MONTH)+1)+"月";
+            }else{
+                now_str +=(now.get(Calendar.MONTH)+1)+"月";
+            }
+            if(now.get(Calendar.DATE)<10){
+                now_str+="0"+now.get(Calendar.DATE)+"日";
+            }else{
+                now_str+=now.get(Calendar.DATE)+"日";
+            }//格式化格式，保证2位
             // 定位成功
             StringBuilder sb = new StringBuilder();
             sb.append("(纬度=").append(tencentLocation.getLatitude()).append(",经度=")
@@ -149,6 +163,7 @@ public class TencentLocationService extends Service implements
             track_record.put("altitude",tencentLocation.getAltitude()); //设置高程
             track_record.put("type",tencentLocation.getProvider()); //设置类型
             track_record.put("precision",tencentLocation.getAccuracy()); //精度
+            track_record.put("createDate",now_str); //文本日期
 //            track_record.saveInBackground();// 保存到服务端
             track_record.saveEventually();// 离线保存
         } else {

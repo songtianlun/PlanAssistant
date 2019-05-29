@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_home_location"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dimen_common"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginEnd="@dimen/dimen_common"
+    android:layout_marginBottom="@dimen/dimen_common_small"
+    android:clickable="true"
+    android:outlineAmbientShadowColor="@color/black"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_blue_primary">
+
+        <TextView
+            android:id="@+id/card_fragement_plan_vigor_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/dimen_common_small"
+            android:text="@string/card_fragement_plan_vigor_title"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:scaleType="centerCrop"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/card_fragement_plan_vigor_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/card_fragement_plan_vigor_title"
+            android:layout_marginBottom="@dimen/dimen_common_small"
+            android:adjustViewBounds="true"
+            android:text="@string/card_fragement_plan_vigor_head"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_card_fragement_plan_vigor_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/card_fragement_plan_vigor_head"
+            android:text="@string/card_fragement_plan_vigor_score"
+            android:textColor="@color/white"
+            android:textSize="40dp"
+            android:scaleType="centerCrop"
+            android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/tv_card_fragement_plan_vigor_suggest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_card_fragement_plan_vigor_score"
+            android:layout_marginBottom="@dimen/dimen_common_small"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:text="@string/card_fragement_plan_vigor_suggest"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_card_fragement_plan_vigor_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_card_fragement_plan_vigor_suggest"
+            android:layout_marginBottom="@dimen/dimen_common_small"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/dimen_common"
+            android:text="@string/tv_card_fragement_plan_vigor_description"
+            android:textColor="@color/white"
+            android:textSize="10dp"/>
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>
