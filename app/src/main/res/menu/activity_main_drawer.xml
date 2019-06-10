@@ -21,6 +21,10 @@
             android:id="@+id/nav_menu_plan"
             android:icon="@drawable/calendar_text"
             android:title="@string/nav_menu_plan" />
+        <item
+            android:id="@+id/nav_menu_indoor"
+            android:icon="@drawable/home_map_marker"
+            android:title="@string/nav_menu_indoor" />
     </group>
 
     <group

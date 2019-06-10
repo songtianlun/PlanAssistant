@@ -89,7 +89,10 @@ dependencies {
     //    implementation 'com.amap.api:search:latest.integration'
     implementation files('libs/TencentLocationSdk_v7.1.6.1_r67ba7298_20190409_142648.jar')
     implementation files('libs/gt-geojson-19.4.jar')
-    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2' //seekbar with bubble
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
+    //seekbar with bubble
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+    implementation files('libs/fengmap-2.2.0.jar')
 }
 
 

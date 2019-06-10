@@ -132,16 +132,16 @@ public class TencentLocationService extends Service implements
         if (i == TencentLocation.ERROR_OK) {
             Calendar now = Calendar.getInstance();
             String now_str;
-            now_str = now.get(Calendar.YEAR)+"年";
+            now_str = now.get(Calendar.YEAR)+"-";
             if((now.get(Calendar.MONTH)+1)<10){
-                now_str+="0"+(now.get(Calendar.MONTH)+1)+"月";
+                now_str+="0"+(now.get(Calendar.MONTH)+1)+"-";
             }else{
-                now_str +=(now.get(Calendar.MONTH)+1)+"月";
+                now_str +=(now.get(Calendar.MONTH)+1)+"-";
             }
             if(now.get(Calendar.DATE)<10){
-                now_str+="0"+now.get(Calendar.DATE)+"日";
+                now_str+="0"+now.get(Calendar.DATE)+"";
             }else{
-                now_str+=now.get(Calendar.DATE)+"日";
+                now_str+=now.get(Calendar.DATE)+"";
             }//格式化格式，保证2位
             // 定位成功
             StringBuilder sb = new StringBuilder();

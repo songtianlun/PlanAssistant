@@ -394,6 +394,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_menu_plan:
                 startActivity(new Intent(MainActivity.this, PlanActivity.class));
                 break;
+            case R.id.nav_menu_indoor:
+                startActivity(new Intent(MainActivity.this, IndoorActivity.class));
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -27,16 +27,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.DetailPMapActivity"
+            android:name=".activity.IndoorActivity"
+            android:label="@string/title_activity_indoor"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
+            android:name=".activity.DetailPMapActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.PlanActivity"
+            android:label="@string/title_activity_plan"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.LiveLineActivity"
+            android:label="@string/title_activity_liveline"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MyMapActivity"
+            android:label="@string/title_activity_mymap"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.TrackActivity"
@@ -85,6 +92,7 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="NWGBZ-5PC32-GXFUV-CSANL-C4RNJ-4JBAJ" />
+        <meta-data android:name="com.fengmap.mapapi.appkey" android:value="79d3197253d64a1ca878f8892462d68f" />
     </application>
 
 </manifest>

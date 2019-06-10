@@ -25,6 +25,18 @@
     <string name="main_snack_bar">This is a snack bar</string>
     <string name="main_snack_bar_action">Okay</string>
 
+    <!--activity title-->
+    <string name="title_activity_indoor">三维支持</string>
+    <string name="title_activity_about">关于</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_login">登录</string>
+    <string name="title_activity_register">注册</string>
+    <string name="title_activity_personinfo_user">用户信息</string>
+    <string name="title_activity_track">轨迹记录</string>
+    <string name="title_activity_liveline">精力曲线</string>
+    <string name="title_activity_mymap">个人地图</string>
+    <string name="title_activity_plan">日程规划</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_start">StartActivity</string>
@@ -54,7 +66,7 @@
 
     <!--card_home_liveline-->
     <string name="card_home_liveline_title">精力曲线</string>
-    <string name="title_activity_about">AboutActivity</string>
+
 
     <!--card_home_map-->
     <string name="card_home_map_title">个人地图</string>
@@ -110,7 +122,7 @@
     <string name="settings_category_basic">Basic Settings</string>
     <string name="settings_category_advanced">Advanced Settings</string>
     <string name="settings_category_other">Other Settings</string>
-    <string name="title_activity_settings">Settings</string>
+
     <string name="settings_switch_preference_title">Switch Preference</string>
     <string name="settings_switch_preference_summary">Switch Preference Summary</string>
     <string name="settings_check_box_preference_title">Check Box Preference</string>
@@ -133,7 +145,7 @@
     <string name="card_login_avuser_user">User Name</string>
     <string name="card_login_avuser_passwd">PassWord</string>
 
-    <string name="title_activity_login">登录</string>
+
     <string name="card_login_button_login">登录</string>
     <string name="card_login_button_signout">注册</string>
     <string name="card_login_button_skip">skip</string>
@@ -150,7 +162,7 @@
     <string name="card_register_avuser_sex">sex</string>
     <string name="card_register_avuser_birth">birth</string>
 
-    <string name="title_activity_register">注册</string>
+
     <string name="card_register_button_finish">完成</string>
     <string name="card_register_button_back">返回</string>
     <string name="card_register_button_skip">skip</string>
@@ -172,9 +184,10 @@
     <string name="nav_menu_map">个人地图</string>
     <string name="nav_menu_liveline">精力曲线</string>
     <string name="nav_menu_plan">规划事件</string>
+    <string name="nav_menu_indoor">三维支持</string>
 
     <!--personal info-->
-    <string name="title_activity_personinfo_user">用户信息</string>
+
     <string name="card_personinfo_userinfo_nickname">昵称</string>
     <string name="card_personinfo_userinfo_location">位置</string>
     <string name="card_personinfo_userinfo_birth">生日</string>
@@ -197,7 +210,7 @@
     <string name="card_personinfo_button_restore">刷新</string>
 
     <!--card_activity_track_info_title-->
-    <string name="title_activity_track">轨迹记录</string>
+
     <string name="card_activity_track_info_title">数据信息</string>
     <string name="card_activity_track_info_start">开始</string>
     <string name="card_activity_track_info_end">结束</string>
@@ -207,7 +220,7 @@
     <string name="card_activity_track_info_button_theme">切换风格</string>
 
     <!--activity of livelint-->
-    <string name="title_activity_liveline">精力曲线</string>
+
     <string name="fab_adddata_liveline">精力评价</string>
     <string name="dialog_button_liveline_score_title">评价精力</string>
     <string name="dialog_button_liveline_score_time_title">时间</string>
@@ -225,7 +238,7 @@
     <string name="tv_recycler_item_3">Drag up or down to move it</string>
 
     <!--activity of mymap-->
-    <string name="title_activity_mymap">个人地图</string>
+
     <string name="fab_adddata_mymmap">增加地图</string>
 
     <!--card_fragement_plan_vigor-->
@@ -236,7 +249,6 @@
     <string name="tv_card_fragement_plan_vigor_description">注：若数值不准，请修改或添加记录以尽可能拟合您的精力曲线。</string>
 
 
-
     <!--<string name="card_home_location_station">已关闭</string>-->
     <!--<string name="card_home_location_station_title">状态</string>-->
     <!--<string name="card_home_location_length">×××m</string>-->
@@ -244,5 +256,7 @@
     <!--<string name="card_home_location_quantity">××××</string>-->
     <!--<string name="card_home_location_quantity_title">数量</string>-->
     <!--<string name="card_home_location_date">××××年××月××日</string>-->
+
+
 
 </resources>

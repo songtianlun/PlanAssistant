@@ -47,6 +47,7 @@ Planning Assistant is developed to help users achieve effective work by recordin
 - [x] show liveline
 - [x] manager liveline data
 - [x] show personal map
+- [ ] indoor
 - [ ] unverified account processing
 - [ ] analyse track
 - [ ] ui
