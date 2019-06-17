@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hgo.planassistant">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.vending.BILLING" /> <!-- LeanCloud -->
     <!-- 基础模块（必须加入以下声明）START -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 腾讯地图 -->
@@ -17,6 +16,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 前台服务 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
 
     <application
         android:name=".App"
@@ -92,7 +92,6 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="NWGBZ-5PC32-GXFUV-CSANL-C4RNJ-4JBAJ" />
-        <meta-data android:name="com.fengmap.mapapi.appkey" android:value="79d3197253d64a1ca878f8892462d68f" />
     </application>
 
 </manifest>

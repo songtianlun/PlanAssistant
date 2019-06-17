@@ -92,7 +92,6 @@ dependencies {
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     //seekbar with bubble
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-    implementation files('libs/fengmap-2.2.0.jar')
 }
 
 

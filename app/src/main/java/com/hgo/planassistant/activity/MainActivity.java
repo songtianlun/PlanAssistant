@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     // 要申请的权限
     private String[] permissions = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_PHONE_STATE,
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity
                 if (i != PackageManager.PERMISSION_GRANTED) {
                     // 如果没有授予该权限，就去提示用户请求
                     showDialogTipUserRequestPermission();
+                    break;
                 }
             }
 

@@ -1,39 +1,40 @@
 package com.hgo.planassistant.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import com.fengmap.android.FMMapSDK;
-import com.fengmap.android.map.FMMap;
-import com.fengmap.android.map.FMMapView;
 import com.hgo.planassistant.R;
 
-public class IndoorActivity extends AppCompatActivity {
+public class IndoorActivity extends BaseActivity {
 
-    FMMap mFMMap;
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FMMapSDK.init(this);//初始化蜂鸟云SDK
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indoor);
 
         Toolbar toolbar = findViewById(R.id.toolbar_indoor);
         setSupportActionBar(toolbar);
 
-        FMMapView mapView = (FMMapView) findViewById(R.id.indoor_mapview);
-        mFMMap = mapView.getFMMap();       //获取地图操作对象
+        webView = findViewById(R.id.webView1);
+        webView.loadUrl("https://www.esmap.cn/escopemap/mapshow/weixin/index.html?bids=haut_build_3&s=1560747&v=7c1123be80335e9e&token=VWJhX1hUVnBkWlIxV214Ulh3Tj1NWnRzWW93");
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
-        String bid = "10380";             //地图id
-        mFMMap.openMapById(bid, true);          //打开地图
     }
     @Override
     public void onBackPressed() {
-        if (mFMMap != null) {
-            mFMMap.onDestroy();
-        }
+
         super.onBackPressed();
     }
 }

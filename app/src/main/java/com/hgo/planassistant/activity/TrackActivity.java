@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,19 +30,25 @@ import com.hgo.planassistant.R;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
+import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
 
 import org.geotools.geojson.geom.GeometryJSON;
 
@@ -65,6 +72,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+import static java.net.Proxy.Type.HTTP;
 
 public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
@@ -179,6 +187,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                 map_style.removeSource(HEATMAP_SOURCE_ID);
                                 map_style.addSource(new GeoJsonSource(HEATMAP_SOURCE_ID,
                                         FeatureCollection.fromFeatures(genetateGeoStringFromAvobject(list))));
+                                CreateLineLayer(genetatePointsFromAvobject(list));//创建线
 //                                RagesQuare(list);// 分析范围内的点
 //                                MarkerQuare();//确定marker
 //                        for (AVObject obj: list){
@@ -306,6 +315,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                         map_style.removeSource(HEATMAP_SOURCE_ID);
                         map_style.addSource(new GeoJsonSource(HEATMAP_SOURCE_ID,
                                 FeatureCollection.fromFeatures(genetateGeoStringFromAvobject(list))));
+                        CreateLineLayer(genetatePointsFromAvobject(list));//创建线
 //                        for (AVObject obj: list){
 ////                            AVObject point = obj.getAVObject("point");
 //                            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
@@ -333,15 +343,81 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     private Feature[] genetateGeoStringFromAvobject(List<AVObject> list){
         Feature[] features = new Feature[list.size()];
         int i=0;
+
+        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
 //        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
         for (AVObject obj: list){
             AVGeoPoint geopoint = obj.getAVGeoPoint("point");
             features[i] = Feature.fromGeometry(Point.fromLngLat(
                     geopoint.getLongitude(),
                     geopoint.getLatitude()));
+            latLngBoundsBuilder.include(new LatLng(geopoint.getLatitude(),geopoint.getLongitude()));
             i++;
         }
+        LatLngBounds latLngBounds = latLngBoundsBuilder.build();//创建边界
+        mapboxmap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);//全幅显示
         return features;
+    }
+    private ArrayList<Point> genetatePointsFromAvobject(List<AVObject> list){
+        ArrayList<Point> routeCoordinates = new ArrayList<Point>();
+
+        for (AVObject obj: list){
+            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+            routeCoordinates.add(Point.fromLngLat(geopoint.getLongitude(), geopoint.getLatitude()));
+        }
+        Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
+        return routeCoordinates;
+    }
+    private void CreateLineLayer(ArrayList<Point> routeCoordinates){
+        // Create the LineString from the list of coordinates and then make a GeoJSON
+        // FeatureCollection so we can add the line to our map as a layer.
+
+        // 尝试使用高德地图轨迹纠偏api进行纠偏
+        final String URL = "https://restapi.amap.com/v4/grasproad/driving" ;
+//
+//        try {
+//            HttpPost request = new HttpPost(URL);                       // 提交路径
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();// 设置提交参数
+//            params.add(new BasicNameValuePair("id", "100"));    // 设置id参数
+//            params.add(new BasicNameValuePair("password", "111111"));// 设置password参数
+//            request.setEntity(new UrlEncodedFormEntity(params,
+//                    HTTP.UTF_8));                                       // 设置编码
+//            HttpResponse response = new DefaultHttpClient()
+//                    .execute(request);                                      // 接收回应
+//            if (response.getStatusLine().getStatusCode() != 404) {      // 请求正常
+//                flag = Boolean.parseBoolean(EntityUtils.toString(
+//                        response.getEntity()).trim());                  // 接收返回的信息
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace() ;
+//            info.setText("WEB服务器连接失败。") ;
+//        }
+
+
+        LineString lineString = LineString.fromLngLats(routeCoordinates);
+
+        FeatureCollection featureCollection =
+                FeatureCollection.fromFeatures(new Feature[]{Feature.fromGeometry(lineString)});
+
+        Source geoJsonSource = new GeoJsonSource("line-source", featureCollection);
+
+        map_style.addSource(geoJsonSource);
+
+        LineLayer lineLayer = new LineLayer("linelayer", "line-source");
+
+    // The layer properties for our line. This is where we make the line dotted, set the
+    // color, etc.
+        lineLayer.setProperties(
+                PropertyFactory.lineDasharray(new Float[]{0.01f, 2f}),
+                PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
+                PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+                PropertyFactory.lineWidth(5f),
+                PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+        );
+
+//        map_style.addLayerAbove(lineLayer, HEATMAP_LAYER_ID);
+        map_style.addLayer(lineLayer);
+
     }
     private void SaveToMymap(List<AVObject> map_list, String map_name){
         // 第一步：创建空的个人地图

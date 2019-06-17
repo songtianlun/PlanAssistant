@@ -116,7 +116,8 @@ public class TencentLocationService extends Service implements
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        mLocationManager.removeUpdates(this);
+        if(mLocationManager!=null)
+            mLocationManager.removeUpdates(this);
         stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
     }
     @Override
