@@ -399,7 +399,7 @@ The creation of UML was originally motivated by the desire to standardize the di
 
 ## Class View / 类图
 
-![](http://photo-frytea.test.upcdn.net/20190618191150.png)
+![](http://photo-frytea.test.upcdn.net/20190618192019.png)
 
 
 ## Database All of E-R / 数据库设计
