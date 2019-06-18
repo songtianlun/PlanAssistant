@@ -19,7 +19,7 @@ The creation of UML was originally motivated by the desire to standardize the di
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Uml_diagram.svg/1280px-Uml_diagram.svg.png)
 
-[PlanAssistant-UML-DOCS](uml-html-docs/index.html)
+[PlanAssistant-UML-DOCS](https://songtianlun.github.io/PlanAssistant/uml-html-docs/index.html)
 
 ## Use Case View / 用例图
 
