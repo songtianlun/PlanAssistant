@@ -25,37 +25,13 @@ Planning Assistant is developed to help users achieve effective work by recordin
 - user-Platform
 	- Android api>=21
 
-## Dev-To-do
+## Version tables
 
-- [x] Android X
-- [x] start ui
-- [x] chart
-- [x] setting ui
-- [x] about ui
-- [x] BaiDu Statistic
-- [x] login
-- [x] sign out
-- [x] change password
-- [x] change info
-- [x] personal info ui
-- [x] tencent location
-- [x] data to leancloud background
-- [x] load data to mapbox
-- [x] location setting
-- [x] track map
-- [x] quare track to show hot map
-- [x] show liveline
-- [x] manager liveline data
-- [x] show personal map
-- [x] indoor from webview
-- [ ] unverified account processing
-- [ ] analyse track
-- [ ] ui
-- [ ] sql
-- [ ] location
-- [ ] map
-- [ ] record
-
+ name | version | type | link
+ :--: | :--: | :--: | :--:
+ PlanAssistant | v1.0.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
+ PlanAssistant | v1.1.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-v1.1.0.apk)
+ 
 ## some algorithm
 
 ### track analyse
@@ -64,30 +40,3 @@ find location where user stop.
 No.1: Calculate **the number of points** in the space-time range.
 
 No.2: Analyse **marker points** by time and space range points and spatial extent.
-
-## Apps-Docs
-
-### 需求分析
-
-- 用例图
-
-### 概要设计
-
-- 用例规约
-- 数据库设计
-
-### 详细设计
-
-- 时序图
-- 类图
-- 数据库实现
-
-### 开源声明
-
-- 地图服务
-  - mapbox
-- 数据服务
-  - leancloud
-- 外观
-  - google material design
-- 其他服务
