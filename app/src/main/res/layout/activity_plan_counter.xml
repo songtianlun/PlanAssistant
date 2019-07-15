@@ -14,8 +14,8 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_liveline_view"
-            app:title="@string/title_activity_liveline"
             android:layout_width="match_parent"
+            app:title="@string/title_activity_plan_counter"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -34,13 +34,13 @@
     </RelativeLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_recycler_view"
+        android:id="@+id/swipe_refresh_pc_layout_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_recycler_view"
+            android:id="@+id/recycler_pc_view_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/zero_margin_when_normal"
@@ -51,12 +51,12 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/efab_recycler_view"
+        android:id="@+id/efab_recycler_pc_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:text="@string/fab_adddata_liveline"
+        android:text="@string/fab_adddata_plan_counter"
         app:icon="@drawable/ic_add_white_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

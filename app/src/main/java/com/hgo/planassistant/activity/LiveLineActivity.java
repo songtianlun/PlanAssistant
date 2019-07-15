@@ -286,30 +286,13 @@ public class LiveLineActivity extends BaseActivity {
                     public void done(List<AVObject> list, AVException e) {
                         Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
                         live_data = list;
-//                        adapter.Updatelist(list);
                         adapter=new LiveLineRecyclerViewAdapter(live_data,livelineactivity);
                         mRecyclerView.setAdapter(adapter);
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
                     }
                 });
 
-//                if (loadTimes <= 5) {
-//                    adapter.removeFooter();
-//                    loading = false;
-//                    adapter.addItems(data);
-////                    adapter.addFooter();
-//                    loadTimes++;
-//                } else {
-//                    adapter.removeFooter();
-//                    Snackbar.make(mRecyclerView, getString(R.string.no_more_data), Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
-//                        @Override
-//                        public void onDismissed(Snackbar transientBottomBar, int event) {
-//                            super.onDismissed(transientBottomBar, event);
-//                            loading = false;
-////                            adapter.addFooter();
-//                        }
-//                    }).show();
-//                }
+
             }
         }, 1500);
     }

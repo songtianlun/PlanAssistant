@@ -9,8 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +39,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.Tencent_Location;
 import com.hgo.planassistant.adapter.FragmentAdapter;
 import com.hgo.planassistant.fragement.HomeFragment;
 import com.hgo.planassistant.fragement.PlanFragment;
@@ -49,8 +46,6 @@ import com.hgo.planassistant.fragement.RecordFragment;
 import com.hgo.planassistant.service.TencentLocationService;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
-import com.tencent.map.geolocation.TencentLocationManager;
-import com.tencent.map.geolocation.TencentLocationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -398,6 +393,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_menu_indoor:
                 startActivity(new Intent(MainActivity.this, IndoorActivity.class));
+                break;
+            case R.id.nav_menu_plan_counter:
+                startActivity(new Intent(MainActivity.this, PlanCounterActivity.class));
                 break;
         }
 

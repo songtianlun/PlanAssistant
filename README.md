@@ -47,6 +47,7 @@ This software is developed for people who like to record their lives.
 - [x] manager liveline data
 - [x] show personal map
 - [x] vigor small tips
+- [x] the plan of hundred-day
 - [ ] unverified account processing
 - [ ] analyse track
 - [ ] ui

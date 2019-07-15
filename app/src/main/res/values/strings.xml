@@ -185,6 +185,7 @@
     <string name="nav_menu_liveline">精力曲线</string>
     <string name="nav_menu_plan">规划事件</string>
     <string name="nav_menu_indoor">三维支持</string>
+    <string name="nav_menu_plan_counter">百日计划</string>
 
     <!--personal info-->
 
@@ -249,6 +250,30 @@
     <string name="tv_card_fragement_plan_vigor_description">注：若数值不准，请修改或添加记录以尽可能拟合您的精力曲线。</string>
 
 
+    <!--activity of PlanCounter-->
+    <string name="title_activity_plan_counter">百日计数器</string>
+    <string name="fab_adddata_plan_counter">增加计数器</string>
+    <string name="dialog_button_plan_counter_title">百日计划</string>
+    <string name="dialog_button_plan_counter_description_title">计划说明</string>
+    <string name="dialog_button_plan_counter_title_title">计划名称</string>
+    <string name="dialog_button_plan_counter_finish_title">计划长度</string>
+    <string name="dialog_finish_today">今日已完成</string>
+
+    <!--activity of PlanCounterDetail-->
+    <string name="title_activity_plan_counter_detail">计数器</string>
+    <string name="plan_counter_detail_finish_title">完成度</string>
+    <string name="title_card_plan_counter_detail_info">计数器信息</string>
+    <string name="card_pc_detail_title">计数器名称</string>
+    <string name="card_pc_detail_description">计数器说明</string>
+    <string name="card_pc_detail_aims">目标长度</string>
+    <string name="title_card_pc_detail_log_title">完成记录</string>
+    <string name="card_pc_detail_button_finish">今日已完成</string>
+    <string name="card_pc_detail_button_delete">删除计数器</string>
+    <string name="dialog_pc_detail_items_finish_edit_title">目标长度</string>
+
+
+
+
     <!--<string name="card_home_location_station">已关闭</string>-->
     <!--<string name="card_home_location_station_title">状态</string>-->
     <!--<string name="card_home_location_length">×××m</string>-->
@@ -256,7 +281,6 @@
     <!--<string name="card_home_location_quantity">××××</string>-->
     <!--<string name="card_home_location_quantity_title">数量</string>-->
     <!--<string name="card_home_location_date">××××年××月××日</string>-->
-
 
 
 </resources>

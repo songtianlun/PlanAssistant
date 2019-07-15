@@ -25,6 +25,10 @@
             android:id="@+id/nav_menu_indoor"
             android:icon="@drawable/home_map_marker"
             android:title="@string/nav_menu_indoor" />
+        <item
+            android:id="@+id/nav_menu_plan_counter"
+            android:icon="@drawable/sprout"
+            android:title="@string/nav_menu_plan_counter" />
     </group>
 
     <group

@@ -17,7 +17,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -27,9 +26,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activity.PlanCounterDetailActivity"
+            android:label="@string/title_activity_plan_counter_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.PlanCounterActivity"
+            android:label="@string/title_activity_plan_counter"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.IndoorActivity"
             android:label="@string/title_activity_indoor"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.DetailPMapActivity"
             android:theme="@style/AppTheme.NoActionBar" />
