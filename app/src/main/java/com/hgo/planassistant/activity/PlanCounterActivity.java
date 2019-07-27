@@ -230,9 +230,9 @@ public class PlanCounterActivity extends AppCompatActivity {
                 AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
                 query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
                 query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+                query.orderByDescending("updatedAt");// 按时间，降序排列
                 query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                 query.limit(1000);
-                query.orderByDescending("createdAt");// 按时间，降序排列
                 query.findInBackground(new FindCallback<AVObject>() {
                     @Override
                     public void done(List<AVObject> list, AVException e) {
