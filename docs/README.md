@@ -31,7 +31,7 @@ Planning Assistant is developed to help users achieve effective work by recordin
  :--: | :--: | :--: | :--:
  PlanAssistant | V1.1.1 | release | [PlanAssistant-release-V1.1.1.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-V1.1.1.apk)
  PlanAssistant | V1.1.0 | release | [PlanAssistant-release-v1.1.0.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-v1.1.0.apk)
- PlanAssistant | V1.0.0 | release | [http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
+ PlanAssistant | V1.0.0 | release | [PlanAssistant-release-1.0.0.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
  
 ### Log of Update(Release)
 
