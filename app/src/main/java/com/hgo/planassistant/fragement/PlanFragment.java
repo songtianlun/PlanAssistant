@@ -83,6 +83,7 @@ public class PlanFragment extends Fragment {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
+                if(list!=null){
                 Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
                 for (AVObject obj: list){
                     Calendar livetime = Calendar.getInstance();
@@ -104,6 +105,7 @@ public class PlanFragment extends Fragment {
                 tv_card_fragement_plan_vigor_score.setText(score_str);
                 tv_card_fragement_plan_vigor_suggest.setText(LoadSuggest(hour_score));
 //                LoadLinechart(chareData);
+                }
             }
         });
     }

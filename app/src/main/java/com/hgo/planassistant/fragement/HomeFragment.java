@@ -153,11 +153,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         }
         tv_card_home_location_date.setText(date_str);
 
-        Log.i("HomeFragement",LocadLocationState());
-        if(LocadLocationState().equals("AMapLocationMode.Battery_Saving")){
-            card_home_location_station_location.setText("节能");
-        }else{
+        Log.i("HomeFragement",LocadLocationState().toString());
+        if(LocadLocationState()){
             card_home_location_station_location.setText("高精度");
+        }else{
+            card_home_location_station_location.setText("节能");
         }
         LoadDataTital(-6);
 
@@ -336,6 +336,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
+                if(list!=null){
                 Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
                 for (AVObject obj: list){
                     Calendar livetime = Calendar.getInstance();
@@ -351,6 +352,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //                    Log.i("HomeFragement",hour+"时刻的精力值修改为："+chareData[hour]);
                 }
                 LoadLinechart(chareData);
+                }
+
             }
         });
         return chareData;
@@ -490,11 +493,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 
     }
 
-    private String LocadLocationState(){
+    private Boolean LocadLocationState(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
 
 //        Log.i("HomeFragement",preferences.getString("pref_list_location_time", ""));
-        return preferences.getString("pref_list_location_type", "");
+        //return preferences.getString("pref_list_location_type", "");
+        return preferences.getBoolean("pref_location_usegps", false);
+
 
     }
 

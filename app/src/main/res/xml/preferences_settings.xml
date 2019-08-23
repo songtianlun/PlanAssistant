@@ -90,7 +90,18 @@
             <!--android:key="pref_multi_select_list"-->
             <!--android:title="@string/settings_multi_select_list_preference_title" />-->
     </PreferenceCategory>
-
+    <PreferenceCategory android:title="@string/settings_system_title">
+        <ListPreference
+            android:defaultValue="cn-north"
+            android:dialogTitle="@string/settings_system_server"
+            android:entries="@array/settings_list_system_server_title"
+            android:entryValues="@array/settings_list_system_server_values"
+            android:key="pref_list_system_server"
+            android:icon="@drawable/server"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/settings_system_server" />
+    </PreferenceCategory>
     <!--<PreferenceCategory android:title="@string/settings_category_advanced">-->
         <!--&lt;!&ndash; This preference simply launches an intent when selected. Use this UI sparingly, per design guidelines. &ndash;&gt;-->
         <!--<Preference android:title="@string/pref_title_system_sync_settings">-->

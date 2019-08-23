@@ -10,6 +10,6 @@ public class Constant {
     public static String SHARE_CONTENT = "A beautiful app designed with Material Design 2:\n" + APP_URL + "\n- " + DESIGNED_BY;
     public static String EMAIL = "mailto:songtianlun@frytea.com";
     public static String GIT_HUB = "https://github.com/songtianlun/PlanAssistant";
-    public static String MY_WEBSITE = "https://frytea.com";
+    public static String MY_WEBSITE = "https://songtianlun.github.io/PlanAssistant";
 
 }

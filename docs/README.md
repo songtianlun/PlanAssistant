@@ -25,12 +25,25 @@ Planning Assistant is developed to help users achieve effective work by recordin
 - user-Platform
 	- Android api>=21
 
-## Version tables
+## Version
 
  name | version | type | link
  :--: | :--: | :--: | :--:
- PlanAssistant | v1.0.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
  PlanAssistant | v1.1.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-v1.1.0.apk)
+ PlanAssistant | v1.0.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
+ 
+### Log of Update(Release)
+
+* V1.1.1
+    * Add Server Select
+    * Fix error of fail to use in first login.
+    * Fix Main View error screen of gps.
+    * Fix some bug.
+* V1.1.0
+    * Add Plan Counter
+    * Fix some bug
+* V1.0.0
+    * simple framework
  
 ## some algorithm
 

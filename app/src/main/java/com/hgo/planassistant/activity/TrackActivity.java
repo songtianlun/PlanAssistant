@@ -177,6 +177,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                         query.findInBackground(new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
+                                if(list!=null){
                                 Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                                 Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
                                 now_list = list;//暂时存储当前查询结果
@@ -198,6 +199,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //                                    .position(new LatLng(geopoint.getLatitude(),geopoint.getLongitude())));
 //
 //                        }
+                            }
                             }
                         });
                         initHeatmapColors();
@@ -341,6 +343,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         TV_stop_time.setText(end_time.get(Calendar.HOUR_OF_DAY)+" 时 "+end_time.get(Calendar.MINUTE) +"分");
     }
     private Feature[] genetateGeoStringFromAvobject(List<AVObject> list){
+        if(list!=null){
         Feature[] features = new Feature[list.size()];
         int i=0;
 
@@ -356,7 +359,9 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         }
         LatLngBounds latLngBounds = latLngBoundsBuilder.build();//创建边界
         mapboxmap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);//全幅显示
-        return features;
+            return features;
+        }
+        return null;
     }
     private ArrayList<Point> genetatePointsFromAvobject(List<AVObject> list){
         ArrayList<Point> routeCoordinates = new ArrayList<Point>();

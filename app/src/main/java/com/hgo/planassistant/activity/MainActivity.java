@@ -452,6 +452,9 @@ public class MainActivity extends AppCompatActivity
             SP_editor.putBoolean("pref_location_usegps",false); // 是否使用GPS
             SP_editor.putBoolean("pref_location_indoor",false); // 是否室内定位
 
+            //System
+            SP_editor.putString("pref_list_system_server","international"); // 定位服务
+
             // 调用apply方法将添加的数据提交，从而完成存储的动作
             SP_editor.commit();// 提交
             Log.i("MainActivity","首次启动，初始化设置项。");

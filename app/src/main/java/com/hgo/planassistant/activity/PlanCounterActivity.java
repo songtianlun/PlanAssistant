@@ -84,8 +84,10 @@ public class PlanCounterActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
+                if(list!=null){
                 Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
                 pc_data = list;
+                }
                 initView();
             }
         });

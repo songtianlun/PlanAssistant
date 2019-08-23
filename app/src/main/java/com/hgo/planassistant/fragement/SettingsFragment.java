@@ -1,11 +1,14 @@
 package com.hgo.planassistant.fragement;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -15,11 +18,14 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.activity.PlanCounterDetailActivity;
 import com.hgo.planassistant.service.TencentLocationService;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
+
+    private Context setting_context;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -29,6 +35,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         loadsetting();
 
 
@@ -40,10 +47,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_location_indoor").setOnPreferenceChangeListener(this);
         findPreference("pref_location_usegps").setOnPreferenceChangeListener(this);
 
+        findPreference("pref_list_system_server").setOnPreferenceChangeListener(this);
+
         //设置默认状态下的描述
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
         onPreferenceChange(findPreference("pref_list_location_type"), preferences.getString("pref_list_location_type", ""));
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
+        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "international"));
+
     }
 
     @Override
@@ -108,6 +119,26 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 SP_edit.putString("pref_list_location_time",newValue.toString());
                 SP_edit.commit();
                 break;
+            case "pref_list_system_server":
+                SP_edit.putString("pref_list_system_server",newValue.toString());
+                SP_edit.commit();
+
+                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "international");
+                Log.i("SettingFragement","Server Old Value:" + oldvalue);
+                Log.i("SettingFragement","Server new Value:" + newValue.toString());
+                if(!oldvalue.equals(newValue.toString())){
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("重启程序后修改生效，是否重启?")
+                            .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    System.exit(0);
+                                }
+                            })
+                            .show();
+                }else{
+
+                }
         }
         // 修改状态时修改summary显示
         String stringValue = newValue.toString();
@@ -163,6 +194,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_location_switch").setDefaultValue(SP_setting.getBoolean("pref_location_switch",true));
         findPreference("pref_location_background_switch").setDefaultValue(SP_setting.getBoolean("pref_location_background_switch",false));
         findPreference("pref_list_location_type").setDefaultValue(SP_setting.getString("pref_list_location_type","Battery_Saving"));
+        findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","international"));
 
     }
 }

@@ -82,7 +82,7 @@
     <string name="about_card2_email">Feedback by E-mail</string>
     <string name="about_card2_git_hub">Source code on GitHub</string>
     <string name="about_card2_address">Beijing, China</string>
-    <string name="about_card2_website">View my website</string>
+    <string name="about_card2_website">PlanAssistant Docs</string>
     <string name="about_card2_source_licenses">Open source licenses</string>
 
     <string name="dialog_ok">OK</string>
@@ -117,6 +117,9 @@
     <string name="settings_location_usegps_description">是否允许软件使用GPS定位，开启获得更高精度，反之软件功耗更低。</string>
     <string name="settings_location_indoor">室内定位</string>
     <string name="settings_location_indoor_description">是否启用室内定位模式，提高室内定位效能。</string>
+
+    <string name="settings_system_title">系统设置</string>
+    <string name="settings_system_server">服务器节点</string>
 
 
     <string name="settings_category_basic">Basic Settings</string>

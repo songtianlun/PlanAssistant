@@ -134,6 +134,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             user.setUsername(username);// 设置用户名
             user.setPassword(password);// 设置密码
             user.setEmail(email);//设置邮箱
+            user.put("introduction","I'm" + username);
+            user.put("birth","1997年10月29日");
+            user.put("sex","保密");
 
             user.put("nickname",username);
 
