@@ -39,21 +39,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         loadsetting();
 
 
-        // 绑定改变事件
-        findPreference("pref_location_switch").setOnPreferenceChangeListener(this);
-        findPreference("pref_location_background_switch").setOnPreferenceChangeListener(this);
-        findPreference("pref_list_location_type").setOnPreferenceChangeListener(this);
-        findPreference("pref_list_location_time").setOnPreferenceChangeListener(this);
-        findPreference("pref_location_indoor").setOnPreferenceChangeListener(this);
-        findPreference("pref_location_usegps").setOnPreferenceChangeListener(this);
 
-        findPreference("pref_list_system_server").setOnPreferenceChangeListener(this);
-
-        //设置默认状态下的描述
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
-        onPreferenceChange(findPreference("pref_list_location_type"), preferences.getString("pref_list_location_type", ""));
-        onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
-        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "international"));
 
     }
 
@@ -123,6 +109,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 SP_edit.putString("pref_list_system_server",newValue.toString());
                 SP_edit.commit();
 
+                if(newValue.toString().equals("cn-north")){
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("2019年10月1日后将停止“中国 - 华北”节点，请及时切换国际节点！ \n 注：若过期未切换会导致程序无法启动，此时请重新安装最新版软件解决！")
+                            .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+
                 String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "international");
                 Log.i("SettingFragement","Server Old Value:" + oldvalue);
                 Log.i("SettingFragement","Server new Value:" + newValue.toString());
@@ -136,8 +134,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                                 }
                             })
                             .show();
-                }else{
-
                 }
         }
         // 修改状态时修改summary显示
@@ -195,6 +191,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_location_background_switch").setDefaultValue(SP_setting.getBoolean("pref_location_background_switch",false));
         findPreference("pref_list_location_type").setDefaultValue(SP_setting.getString("pref_list_location_type","Battery_Saving"));
         findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","international"));
+        findPreference("pref_list_location_time").setDefaultValue(SP_setting.getString("pref_list_location_time","4000"));
+
+        // 绑定改变事件
+        findPreference("pref_location_switch").setOnPreferenceChangeListener(this);
+        findPreference("pref_location_background_switch").setOnPreferenceChangeListener(this);
+        findPreference("pref_list_location_type").setOnPreferenceChangeListener(this);
+        findPreference("pref_list_location_time").setOnPreferenceChangeListener(this);
+        findPreference("pref_location_indoor").setOnPreferenceChangeListener(this);
+        findPreference("pref_location_usegps").setOnPreferenceChangeListener(this);
+
+        findPreference("pref_list_system_server").setOnPreferenceChangeListener(this);
+
+        //设置默认状态下的描述
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+        onPreferenceChange(findPreference("pref_list_location_type"), preferences.getString("pref_list_location_type", ""));
+        onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
+        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "international"));
 
     }
 }

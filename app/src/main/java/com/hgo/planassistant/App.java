@@ -2,13 +2,17 @@ package com.hgo.planassistant;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.hgo.planassistant.service.TencentLocationService;

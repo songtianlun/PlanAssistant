@@ -357,8 +357,11 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             latLngBoundsBuilder.include(new LatLng(geopoint.getLatitude(),geopoint.getLongitude()));
             i++;
         }
-        LatLngBounds latLngBounds = latLngBoundsBuilder.build();//创建边界
-        mapboxmap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);//全幅显示
+        if(list.size()>2){
+            LatLngBounds latLngBounds = latLngBoundsBuilder.build();//创建边界
+            mapboxmap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);//全幅显示
+        }
+
             return features;
         }
         return null;

@@ -44,13 +44,13 @@
     <string-array name="settings_list_system_server_title">
         <item>LeanCloud - 中国-华北</item>
         <item>LeanCloud - 国际</item>
-        <item>FireBase</item>
+        <!--<item>FireBase</item>-->
     </string-array>
 
     <string-array name="settings_list_system_server_values">
-    <item>cn-north</item>
-    <item>international</item>
-    <item>firebase</item>
+        <item>cn-north</item>
+        <item>international</item>
+        <!--<item>firebase</item>-->
     </string-array>
 
     <string-array name="spinner_array">
