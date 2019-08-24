@@ -2,11 +2,6 @@
 ---
 ## Step-First / 第一步
 
- name | version | type | link
- :--: | :--: | :--: | :--:
- PlanAssistant | v1.0.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
- PlanAssistant | v1.1.0 | release | [Download](http://frytea-data.test.upcdn.net/PlanAssistant-release-v1.1.0.apk)
-
 Download app. And Just to sign up.
 
 >Get apk: [Latest Apks](https://raw.githubusercontent.com/songtianlun/PlanAssistant/master/app/release/app-release.apk) (note: it's slow, try to table)
