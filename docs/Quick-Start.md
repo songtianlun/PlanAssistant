@@ -4,7 +4,7 @@
 
 Download app. And Just to sign up.
 
->Get apk: [Latest Apks](https://raw.githubusercontent.com/songtianlun/PlanAssistant/master/app/release/app-release.apk) (note: it's slow, try to table)
+>Get apk: [Latest Apks](https://raw.githubusercontent.com/songtianlun/PlanAssistant/master/app/release/app-release.apk) (maybe slow.)
 
 ## Step-Second / 第二步
 
