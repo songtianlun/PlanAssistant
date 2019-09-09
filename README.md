@@ -9,6 +9,8 @@
 ![CRAN/METACRAN](https://img.shields.io/cran/l/devtools.svg?color=green&label=LIcanse&logo=green&logoColor=red)
 [![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)  
 
+Material Designer + MapBox + LeanCloud.
+
 This software is developed for people who like to record their lives.
 
 
