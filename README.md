@@ -11,10 +11,11 @@
 
 Material Designer + MapBox + LeanCloud.
 
-This software is developed for people who like to record their lives.
+## Download
 
+[![B2654C2C-4076-44A0-89EB-50F71F39833A.png](http://frytea-data.test.upcdn.net/B2654C2C-4076-44A0-89EB-50F71F39833A.png)](https://www.pgyer.com/FcNf)
 
-## Environment
+## Dev Environment
 
 - Dev-Platform 
     - ThinkPad-E450
@@ -27,7 +28,6 @@ This software is developed for people who like to record their lives.
     - buildToolsVersion: 29.0.0-rc3
     - compileSdkVersion: 28
     - minSdkVersion: 21
-
 
 ## To-do
 
@@ -53,19 +53,13 @@ This software is developed for people who like to record their lives.
 - [x] show personal map
 - [x] vigor small tips
 - [x] the plan of hundred-day
-- [ ] unverified account processing
-- [ ] analyse track
+- [x] analyse track
+- [ ] Statistic view
 - [ ] ui
-- [ ] sql
-- [ ] location
-- [ ] map
-- [ ] record
+- [ ] unverified account processing
 
-## some algorithm
+## Contact me
 
-### track analyse
-find location where user stop.
-
-No.1: Calculate **the number of points** in the space-time range.
-
-No.2: Analyse **marker points** by time and space range points and spatial extent.
+ - Blog: <https://blog.frytea.com>
+ - HomePage: <https://home.frytea.com>
+ - E-mail: <songtianlun@frytea.com>
