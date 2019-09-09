@@ -64,5 +64,3 @@ find location where user stop.
 No.1: Calculate **the number of points** in the space-time range.
 
 No.2: Analyse **marker points** by time and space range points and spatial extent.
-
-### describe
