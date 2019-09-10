@@ -55,7 +55,6 @@ Material Designer + MapBox + LeanCloud.
 - [x] the plan of hundred-day
 - [x] analyse track
 - [ ] Statistic view
-- [ ] ui
 - [ ] unverified account processing
 
 ## Contact me
