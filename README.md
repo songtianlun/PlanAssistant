@@ -1,7 +1,6 @@
 
 [![ic_launcher_round.png](https://i.loli.net/2019/05/26/5cea9bdf9020a96716.png)](http://fir.im/xm19?release_id=5d76767ef945486b4887d325&fir_source=GitHub&fir_campaign=GitHub)
 
-
 # Plan-Assistant
 
 [![Build Status](https://jenkins.frytea.com/buildStatus/icon?job=PlanAssistant)](https://jenkins.frytea.com/job/PlanAssistant/)
