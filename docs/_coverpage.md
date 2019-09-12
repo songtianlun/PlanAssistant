@@ -3,6 +3,12 @@
 
 # Plan-Assistant <small>1.1.1</small>
 
+
+[![Build Status](https://jenkins.frytea.com/buildStatus/icon?job=PlanAssistant)](https://jenkins.frytea.com/job/PlanAssistant/)
+[![API](https://img.shields.io/badge/API-28%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=28)
+![CRAN/METACRAN](https://img.shields.io/cran/l/devtools.svg?color=green&label=LIcanse&logo=green&logoColor=red)
+[![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)  
+
 > Help you achieve effective work.
 
 - Map by MapBox / 地图
