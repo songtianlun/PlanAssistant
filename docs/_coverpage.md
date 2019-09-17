@@ -6,8 +6,8 @@
 
 [![Build Status](https://jenkins.frytea.com/buildStatus/icon?job=PlanAssistant)](https://jenkins.frytea.com/job/PlanAssistant/)
 [![API](https://img.shields.io/badge/API-28%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=28)
-![CRAN/METACRAN](https://img.shields.io/cran/l/devtools.svg?color=green&label=LIcanse&logo=green&logoColor=red)
-[![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)  
+[![GitHub license](https://img.shields.io/github/license/songtianlun/PlanAssistant)](https://github.com/songtianlun/PlanAssistant/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/songtianlun/PlanAssistant?style=social)](https://github.com/songtianlun/PlanAssistant/stargazers)
 
 > Help you achieve effective work.
 
