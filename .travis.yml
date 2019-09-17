@@ -36,6 +36,6 @@ cache:                   #指定缓存目录
 
 
 before_script:
-  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-$EMULATOR_API
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
