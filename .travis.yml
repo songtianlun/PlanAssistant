@@ -1,41 +1,63 @@
-language: android        #语言说明
-jdk: oraclejdk8          #jdk版本
-sudo: required           #权限要求
-env:                 #环境变量
+# Disabling sudo moves build to the Container Based Infrastructure on Travis CI
+sudo: false
+
+language: android
+jdk: oraclejdk8
+
+env:
   global:
-    - ANDROID_API=28
-    - EMULATOR_API=25
-    - ANDROID_BUILD_TOOLS=28.0.3
-    - ADB_INSTALL_TIMEOUT=5 # minutes
-android:             #Android 环境要求
+    # wait up to 10 minutes for adb to connect to emulator
+    - ADB_INSTALL_TIMEOUT=10
+
+android:
   components:
-    - tools
+    # Uncomment the lines below if you want to
+    # use the latest revision of Android SDK Tools
     - platform-tools
-    - build-tools-$ANDROID_BUILD_TOOLS
-    - android-$ANDROID_API
-    - android-$EMULATOR_API
+    - tools
+
+    # The BuildTools version used by your project
+    - build-tools-28.0.3
+
+    # The SDK version used to compile your project
+    - android-21
+    - android-28
+
+    # Additional components
+    - extra-google-google_play_services
     - extra-google-m2repository
-    - extra-android-m2repository        # 配置design 库 
-    - addon-google_apis-google-19       # 配置google play services
-    - sys-img-armeabi-v7a-android-$ANDROID_API
-    - sys-img-armeabi-v7a-android-$EMULATOR_API
+    - extra-android-m2repository
+    - extra-android-support
 
-licenses:               #内容许可添加
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
+    # Specify at least one system image,
+    # if you need to run emulator(s) during your tests
+    - sys-img-armeabi-v7a-android-21
+  licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 
-before_cache: 
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-cache:                   #指定缓存目录
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
-
+# start Android emulator
 before_script:
-  - echo no | android create avd --force -n test -t android-$EMULATOR_API
-  - emulator -avd test -no-skin -no-audio -no-window &
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
+script:
+  - ./gradlew clean assembleDebug testDebug jacocoTestReport coveralls checkstyle pmd jdepend lintDebug buildDashboard connectedAndroidTest crashlyticsUploadDistributionDebug -PpreDexEnable=false -PversionCode=$TRAVIS_BUILD_NUMBER -PfabricApiKey=$FABRIC_API_KEY -PfabricApiSecret=$FABRIC_API_SECRET
+
+env:
+  matrix:
+  - TERM=dumb
+
+notifications:
+  email: true
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
+    - $HOME/.android
+    - ${TRAVIS_BUILD_DIR}/gradle/caches/
+    - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
