@@ -3,7 +3,7 @@
 
 # Plan-Assistant
 
-[![Build Status](https://jenkins.frytea.com/buildStatus/icon?job=PlanAssistant)](https://jenkins.frytea.com/job/PlanAssistant/)
+[![Jenkins Build Status](https://jenkins.frytea.com/buildStatus/icon?job=PlanAssistant)](https://jenkins.frytea.com/job/PlanAssistant/)
 [![Build Status](https://travis-ci.org/songtianlun/PlanAssistant.svg?branch=master)](https://travis-ci.org/songtianlun/PlanAssistant)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 ![CRAN/METACRAN](https://img.shields.io/cran/l/devtools.svg?color=green&label=LIcanse&logo=green&logoColor=red)
