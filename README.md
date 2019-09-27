@@ -31,17 +31,16 @@ Material Designer + MapBox + LeanCloud.
 
 ## To-do
 
-- [x] Android X
-- [x] start ui
-- [x] chart
-- [x] setting ui
-- [x] about ui
-- [x] BaiDu Statistic
-- [x] login
-- [x] sign out
-- [x] change password
-- [x] change info
-- [x] personal info ui
+- [x] Android X / 迁移库到Android x
+- [x] start ui / 启动界面
+- [x] chart / 图表
+- [x] setting ui / 设置功能构建
+- [x] about ui / 关于信息统计
+- [x] BaiDu Statistic / 百度统计
+- [x] login / 登录功能
+- [x] sign out / 注册功能
+- [x] change password / 修改密码功能
+- [x] personal info ui / 个人信息界面
 - [x] tencent location
 - [x] data to leancloud background
 - [x] load data to mapbox
