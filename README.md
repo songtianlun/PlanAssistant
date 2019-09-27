@@ -41,20 +41,22 @@ Material Designer + MapBox + LeanCloud.
 - [x] sign out / 注册功能
 - [x] change password / 修改密码功能
 - [x] personal info ui / 个人信息界面
-- [x] tencent location
-- [x] data to leancloud background
-- [x] load data to mapbox
-- [x] location setting
-- [x] track map
-- [x] quare track to show hot map
-- [x] show liveline
-- [x] manager liveline data
-- [x] show personal map
-- [x] vigor small tips
-- [x] the plan of hundred-day
-- [x] analyse track
-- [ ] Statistic view
-- [ ] unverified account processing
+- [x] tencent location / 继承腾讯定位
+- [x] data to leancloud background / leancloud数据后台刷新
+- [x] load data to mapbox / 加载数据到mapbox
+- [x] location setting / 本地设置
+- [x] track map / 轨迹地图
+- [x] quare track to show hot map / 查询轨迹，记录可视化
+- [x] show liveline  / 显示精力曲线
+- [x] manager liveline data / 管理精力曲线数据
+- [x] show personal map / 显示个人地图
+- [x] vigor small tips / 精力数值提醒
+- [x] the plan of hundred-day / 百日计数器
+- [x] analyse track / 分析轨迹
+- [ ] sign in map / 地图签到功能
+- [ ] map communication / 地图社区
+- [ ] Statistic view / 统计数据显示
+- [ ] unverified account processing / 未登录处理
 
 ## Contact me
 
