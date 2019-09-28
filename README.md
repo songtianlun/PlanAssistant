@@ -55,6 +55,9 @@ Material Designer + MapBox + LeanCloud.
 - [x] analyse track / 分析轨迹
 - [ ] sign in map / 地图签到功能
 - [ ] map communication / 地图社区
+- [ ] bug gather / bug搜集系统
+- [ ] build account / 内测自动fir更新推送
+- [ ] update push / 更新推送功能
 - [ ] Statistic view / 统计数据显示
 - [ ] unverified account processing / 未登录处理
 
