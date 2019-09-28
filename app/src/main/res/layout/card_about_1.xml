@@ -9,6 +9,7 @@
     >
 
     <RelativeLayout
+        android:id="@+id/card_about_1_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackgroundBorderless"

@@ -4,20 +4,20 @@ apply plugin: 'mtj-circle-plugin' // 百度统计
 
 android {
     compileSdkVersion 28
-    signingConfigs {
-        releaseConfig {
-            storeFile file("../keys/songtianlun.jks")
-            storePassword project.hasProperty("KEYSTORE_PASS") ? KEYSTORE_PASS : System.getenv("KEYSTORE_PASS")
-            keyAlias project.hasProperty("ALIAS_NAME") ? ALIAS_NAME : System.getenv("ALIAS_NAME")
-            keyPassword project.hasProperty("ALIAS_PASS") ? ALIAS_PASS : System.getenv("ALIAS_PASS")
-        }
-    }
+//    signingConfigs {
+//        releaseConfig {
+//            storeFile file("../keys/songtianlun.jks")
+//            storePassword project.hasProperty("KEYSTORE_PASS") ? KEYSTORE_PASS : System.getenv("KEYSTORE_PASS")
+//            keyAlias project.hasProperty("ALIAS_NAME") ? ALIAS_NAME : System.getenv("ALIAS_NAME")
+//            keyPassword project.hasProperty("ALIAS_PASS") ? ALIAS_PASS : System.getenv("ALIAS_PASS")
+//        }
+//    }
     defaultConfig {
         applicationId "com.hgo.planassistant"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.1.1"
+        versionName "1.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        ndk {
 //            //高德定位相关
@@ -92,6 +92,9 @@ dependencies {
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     //seekbar with bubble
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+    // fir.im 内测推送
+    implementation 'com.sunfusheng:FirUpdater:1.3.0'
+    implementation 'com.tencent.bugly:crashreport:latest.release' //Bugly SDK最新版本版本
 }
 
 

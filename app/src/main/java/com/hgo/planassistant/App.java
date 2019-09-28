@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.hgo.planassistant.service.TencentLocationService;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.lang.reflect.Array;
 import java.util.concurrent.Executor;
@@ -92,6 +93,10 @@ public class App extends Application {
 
         // 正式发布前去除
         AVOSCloud.setDebugLogEnabled(false);
+
+
+        //Bugly false为调试模式
+        CrashReport.initCrashReport(getApplicationContext(), "fb19b7ed69", true);
 
     }
 }

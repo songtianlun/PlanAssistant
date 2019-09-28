@@ -1,6 +1,7 @@
 package com.hgo.planassistant.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,25 +11,33 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hgo.planassistant.Constant;
+import com.hgo.planassistant.DataSource;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.util.AppUtils;
+import com.sunfusheng.FirUpdater;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
+
+    private Context this_context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        this_context = this;
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //
@@ -56,11 +65,14 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         TextView tv_card_about_2_git_hub = findViewById(R.id.tv_card_about_2_git_hub);
         TextView tv_card_about_2_website = findViewById(R.id.tv_card_about_2_website);
         TextView tv_card_about_source_licenses = findViewById(R.id.tv_card_about_source_licenses);
+        RelativeLayout card_about_1_version = findViewById(R.id.card_about_1_version);
 //        tv_card_about_2_shop.setOnClickListener(this);
         tv_card_about_2_email.setOnClickListener(this);
         tv_card_about_2_git_hub.setOnClickListener(this);
         tv_card_about_2_website.setOnClickListener(this);
         tv_card_about_source_licenses.setOnClickListener(this);
+        card_about_1_version.setOnClickListener(this);
+
 
 //        FloatingActionButton fab = findViewById(R.id.fab_about_share);
 //        fab.setOnClickListener(this);
@@ -118,6 +130,13 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 intent.setData(Uri.parse(Constant.MY_WEBSITE));
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
+                break;
+            case R.id.card_about_1_version:
+                FirUpdater.getInstance(this_context)
+                        .apiToken(DataSource.fir_im_API_TOKEN)
+                        .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+                        .checkVersion();
+                Log.i("AboutActivity","Check Update.");
                 break;
 
 //            case R.id.fab_about_share:
