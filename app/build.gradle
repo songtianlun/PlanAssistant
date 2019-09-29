@@ -32,6 +32,7 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //        }
         release {
+            shrinkResources true
             minifyEnabled false
             signingConfig signingConfigs.release//打包命令行：gradlew assembleRelease
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
