@@ -36,12 +36,11 @@ android {
             signingConfig signingConfigs.release//打包命令行：gradlew assembleRelease
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
-                if (variant.buildType.name.equals('release')) {
-                    variant.outputs.each { output ->
-                        def outputFile = output.outputFile
-                        if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                            def fileName = "${releaseTime()}_com.agriculture_${defaultConfig.versionName}.apk"
-                            output.outputFile = new File(outputFile.parent, fileName)
+                if (variant.buildType.name.equals('release')) {  //如果是release版本
+                    variant.outputs.each { output -> def outputFile = output.outputFile
+                        if (outputFile != null && outputFile.name.endsWith('.apk')) {  //查找所有的apk
+                            def fileName = "${releaseTime()}_XXXXPorject_${defaultConfig.versionName}.apk"  //重新定义apk的名称
+                            output.outputFile = new File(outputFile.parent, fileName)  //outputFile.parent参数可以改成你你想要的发布路径
                         }
                     }
                 }
