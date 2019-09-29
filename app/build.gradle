@@ -25,7 +25,9 @@ android {
 //            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
 //        }
     }
-
+    releaseTime() {
+        return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+08:00"))
+    }
     buildTypes {
 //        release {
 //            minifyEnabled false
