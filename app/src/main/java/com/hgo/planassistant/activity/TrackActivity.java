@@ -189,16 +189,6 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                 map_style.addSource(new GeoJsonSource(HEATMAP_SOURCE_ID,
                                         FeatureCollection.fromFeatures(genetateGeoStringFromAvobject(list))));
                                 CreateLineLayer(genetatePointsFromAvobject(list));//创建线
-//                                RagesQuare(list);// 分析范围内的点
-//                                MarkerQuare();//确定marker
-//                        for (AVObject obj: list){
-////                            AVObject point = obj.getAVObject("point");
-//                            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-////                            Log.i("TrackActivity",geopoint.toString());
-//                            mapboxMap.addMarker(new MarkerOptions()
-//                                    .position(new LatLng(geopoint.getLatitude(),geopoint.getLongitude())));
-//
-//                        }
                             }
                             }
                         });

@@ -67,6 +67,9 @@ public class MyMapActivity extends BaseActivity {
         PIA_bundle = savedInstanceState; //在recycleview中使用的bundle
         MymapContext = this;
 
+        Toolbar toolbar = findViewById(R.id.toolbar_mymap_view);
+        setToolbar(toolbar);
+
         initData();
     }
 

@@ -397,6 +397,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_menu_plan_counter:
                 startActivity(new Intent(MainActivity.this, PlanCounterActivity.class));
                 break;
+            case R.id.nav_menu_map_check:
+                startActivity(new Intent(MainActivity.this, MapCheckActivity.class));
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

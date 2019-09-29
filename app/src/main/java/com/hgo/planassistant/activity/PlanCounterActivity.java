@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,7 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PlanCounterActivity extends AppCompatActivity {
+public class PlanCounterActivity extends BaseActivity {
 
     private SwipeRefreshLayout pc_swipeRefreshLayout;
     private RecyclerView pc_RecyclerView;
@@ -65,6 +66,9 @@ public class PlanCounterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_counter);
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
+
+        Toolbar toolbar = findViewById(R.id.toolbar_plan_counter_view);
+        setToolbar(toolbar);
 
         PlanCounteractivity = this;
 

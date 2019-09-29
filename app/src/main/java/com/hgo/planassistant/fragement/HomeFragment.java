@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
@@ -63,16 +64,28 @@ import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.MainActivity;
 import com.hgo.planassistant.custom.MyMarkerView;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -168,15 +181,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                mapboxMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(34.833774, 113.537698))
-                        .title("Eiffel Tower"));
+//                mapboxMap.addMarker(new MarkerOptions()
+//                        .position(new LatLng(34.833774, 113.537698))
+//                        .title("Eiffel Tower"));
                 mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
 
                         // Map is set up and the style has loaded. Now you can add data or make other map adjustments
 
+                        Calendar start_time = Calendar.getInstance();
+                        Calendar end_time = Calendar.getInstance();
+                        start_time.add(Calendar.HOUR_OF_DAY, -6); //讲起始时间推算为当前时间前n小时
+
+                        CameraPosition cameraPositionForFragmentMap = new CameraPosition.Builder()
+                                .target(new LatLng(34.833774, 113.537698))
+                                .zoom(11.047)
+                                .build();
+                        mapboxMap.animateCamera(
+                                CameraUpdateFactory.newCameraPosition(cameraPositionForFragmentMap), 2600);
+
+                        AVQuery<AVObject> query = new AVQuery<>("trajectory");
+                        // 启动查询缓存
+                        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+                        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+                        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+                        query.whereGreaterThan("time",start_time.getTime());
+                        query.whereLessThan("time",end_time.getTime());
+                        query.whereLessThan("precision",50);
+                        query.selectKeys(Arrays.asList("point", "time", "precision"));
+                        query.limit(1000);
+                        query.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> list, AVException e) {
+                                if(list!=null){
+                                    Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
+                                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
+
+                                    CreateLineLayer(genetatePointsFromAvobject(list),style);//创建线
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -532,5 +577,67 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 }
             }
         });
+    }
+
+    private void CreateLineLayer(ArrayList<Point> routeCoordinates, Style style){
+        // Create the LineString from the list of coordinates and then make a GeoJSON
+        // FeatureCollection so we can add the line to our map as a layer.
+
+        // 尝试使用高德地图轨迹纠偏api进行纠偏
+        final String URL = "https://restapi.amap.com/v4/grasproad/driving" ;
+//
+//        try {
+//            HttpPost request = new HttpPost(URL);                       // 提交路径
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();// 设置提交参数
+//            params.add(new BasicNameValuePair("id", "100"));    // 设置id参数
+//            params.add(new BasicNameValuePair("password", "111111"));// 设置password参数
+//            request.setEntity(new UrlEncodedFormEntity(params,
+//                    HTTP.UTF_8));                                       // 设置编码
+//            HttpResponse response = new DefaultHttpClient()
+//                    .execute(request);                                      // 接收回应
+//            if (response.getStatusLine().getStatusCode() != 404) {      // 请求正常
+//                flag = Boolean.parseBoolean(EntityUtils.toString(
+//                        response.getEntity()).trim());                  // 接收返回的信息
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace() ;
+//            info.setText("WEB服务器连接失败。") ;
+//        }
+
+
+        LineString lineString = LineString.fromLngLats(routeCoordinates);
+
+        FeatureCollection featureCollection =
+                FeatureCollection.fromFeatures(new Feature[]{Feature.fromGeometry(lineString)});
+
+        Source geoJsonSource = new GeoJsonSource("line-source", featureCollection);
+
+        style.addSource(geoJsonSource);
+
+        LineLayer lineLayer = new LineLayer("linelayer", "line-source");
+
+        // The layer properties for our line. This is where we make the line dotted, set the
+        // color, etc.
+        lineLayer.setProperties(
+                PropertyFactory.lineDasharray(new Float[]{0.01f, 2f}),
+                PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
+                PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+                PropertyFactory.lineWidth(5f),
+                PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+        );
+
+//        map_style.addLayerAbove(lineLayer, HEATMAP_LAYER_ID);
+        style.addLayer(lineLayer);
+
+    }
+    private ArrayList<Point> genetatePointsFromAvobject(List<AVObject> list){
+        ArrayList<Point> routeCoordinates = new ArrayList<Point>();
+
+        for (AVObject obj: list){
+            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+            routeCoordinates.add(Point.fromLngLat(geopoint.getLongitude(), geopoint.getLatitude()));
+        }
+        Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
+        return routeCoordinates;
     }
 }

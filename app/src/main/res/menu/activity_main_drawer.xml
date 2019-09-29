@@ -29,6 +29,11 @@
             android:id="@+id/nav_menu_plan_counter"
             android:icon="@drawable/sprout"
             android:title="@string/nav_menu_plan_counter" />
+        <item
+            android:id="@+id/nav_menu_map_check"
+            android:icon="@drawable/map_check"
+            android:title="@string/nav_menu_map_check"
+            />
     </group>
 
     <group

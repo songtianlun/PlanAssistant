@@ -69,7 +69,7 @@
 
 
     <!--card_home_map-->
-    <string name="card_home_map_title">个人地图</string>
+    <string name="card_home_map_title">最近轨迹</string>
 
     <!--card_about_1-->
     <string name="about_card1_message">Hey, glad to see you!</string>
@@ -189,6 +189,7 @@
     <string name="nav_menu_plan">规划事件</string>
     <string name="nav_menu_indoor">三维支持</string>
     <string name="nav_menu_plan_counter">百日计划</string>
+    <string name="nav_menu_map_check">到此一游</string>
 
     <!--personal info-->
 
@@ -274,7 +275,12 @@
     <string name="card_pc_detail_button_delete">删除计数器</string>
     <string name="dialog_pc_detail_items_finish_edit_title">目标长度</string>
 
+    <!--activity_map_check-->
+    <string name="title_activity_map_check">到此一游</string>
 
+
+    <!--card_map_check_map-->
+    <string name="card_map_check_map_title">签到汇总</string>
 
 
     <!--<string name="card_home_location_station">已关闭</string>-->
