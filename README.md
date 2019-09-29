@@ -13,7 +13,7 @@ Material Designer + MapBox + LeanCloud.
 
 ## Download
 
-[![B2654C2C-4076-44A0-89EB-50F71F39833A.png](http://frytea-data.test.upcdn.net/8A509086-6E86-403C-B633-4A346A0255F2.png)](http://fir.im/xm19?release_id=5d76767ef945486b4887d325&fir_source=GitHub&fir_campaign=GitHub)
+[![B2654C2C-4076-44A0-89EB-50F71F39833A.png](http://frytea-data.test.upcdn.net/8A509086-6E86-403C-B633-4A346A0255F2.png)](http://fir.im/xm19)
 
 ## Dev Environment
 
