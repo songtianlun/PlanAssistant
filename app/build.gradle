@@ -4,14 +4,14 @@ apply plugin: 'mtj-circle-plugin' // 百度统计
 
 android {
     compileSdkVersion 28
-//    signingConfigs {
-//        releaseConfig {
-//            storeFile file("../keys/songtianlun.jks")
-//            storePassword project.hasProperty("KEYSTORE_PASS") ? KEYSTORE_PASS : System.getenv("KEYSTORE_PASS")
-//            keyAlias project.hasProperty("ALIAS_NAME") ? ALIAS_NAME : System.getenv("ALIAS_NAME")
-//            keyPassword project.hasProperty("ALIAS_PASS") ? ALIAS_PASS : System.getenv("ALIAS_PASS")
-//        }
-//    }
+    signingConfigs {
+        release {
+            storeFile file('../keys/songtianlun.jks')
+            storePassword 'sotilu!999'
+            keyAlias 'key0'
+            keyPassword 'sotilu!999'
+        }
+    }
     defaultConfig {
         applicationId "com.hgo.planassistant"
         minSdkVersion 21
@@ -25,10 +25,27 @@ android {
 //            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
 //        }
     }
+
     buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release//打包命令行：gradlew assembleRelease
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                if (variant.buildType.name.equals('release')) {
+                    variant.outputs.each { output ->
+                        def outputFile = output.outputFile
+                        if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                            def fileName = "${releaseTime()}_com.agriculture_${defaultConfig.versionName}.apk"
+                            output.outputFile = new File(outputFile.parent, fileName)
+                        }
+                    }
+                }
+            }
         }
     }
     compileOptions {
