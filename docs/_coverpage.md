@@ -15,5 +15,5 @@
 - Ui by Material / 设计材料
 - Data by LeanCloud / 对象数据库
 
-[Download](http://fir.im/xm19?release_id=5d76767ef945486b4887d325&fir_source=GitHub&fir_campaign=GitHub)
+[Download](http://fir.im/xm19)
 [Get Started](Quick-Start.md)
