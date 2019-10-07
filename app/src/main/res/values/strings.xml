@@ -190,6 +190,10 @@
     <string name="nav_menu_indoor">三维支持</string>
     <string name="nav_menu_plan_counter">百日计划</string>
     <string name="nav_menu_map_check">到此一游</string>
+<<<<<<< HEAD
+    <string name="nav_menu_city_hotpoint">城市热力图</string>
+=======
+>>>>>>> master/master
 
     <!--personal info-->
 
@@ -282,6 +286,12 @@
     <!--card_map_check_map-->
     <string name="card_map_check_map_title">签到汇总</string>
 
+<<<<<<< HEAD
+    <!--activity_city_hot_point-->
+    <string name="title_activity_city_hot_point">城市热力图</string>
+
+=======
+>>>>>>> master/master
 
     <!--<string name="card_home_location_station">已关闭</string>-->
     <!--<string name="card_home_location_station_title">状态</string>-->

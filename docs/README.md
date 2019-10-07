@@ -82,3 +82,16 @@ Material Designer + MapBox + LeanCloud.
     * Fix some bug
 * V1.0.0
     * simple framework
+<<<<<<< HEAD
+
+### Version number
+
+<主版本号>.<子版本号>.<阶段版本号>_<日期版本号加希腊字母版本号>
+
+* V1 - 样品
+    * V1.1 Add Server Select
+    * V1.1.1 Add part of Update
+    * V1.1.2 Add Check in
+    * V1.1.3_20191007 Add city hotpoint
+=======
+>>>>>>> master/master

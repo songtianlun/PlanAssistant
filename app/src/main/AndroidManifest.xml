@@ -31,10 +31,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+<<<<<<< HEAD
+            android:name=".activity.CityHotPointActivity"
+            android:label="@string/title_activity_city_hot_point"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.MapCheckActivity"
+            android:label="@string/title_activity_map_check"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+=======
             android:name=".activity.MapCheckActivity"
             android:label="@string/title_activity_map_check"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+>>>>>>> master/master
         <activity
             android:name=".activity.PlanCounterDetailActivity"
             android:label="@string/title_activity_plan_counter_detail"
@@ -109,6 +120,12 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="NWGBZ-5PC32-GXFUV-CSANL-C4RNJ-4JBAJ" />
+<<<<<<< HEAD
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="KH6M9VxFs2pipvCFMp6CNqzhaYTgjPUQ" />
+=======
+>>>>>>> master/master
     </application>
 
 </manifest>

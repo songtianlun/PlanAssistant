@@ -400,6 +400,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_menu_map_check:
                 startActivity(new Intent(MainActivity.this, MapCheckActivity.class));
                 break;
+<<<<<<< HEAD
+            case R.id.nav_menu_city_hotpoint:
+                startActivity(new Intent(MainActivity.this, CityHotPointActivity.class));
+                break;
+=======
+>>>>>>> master/master
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

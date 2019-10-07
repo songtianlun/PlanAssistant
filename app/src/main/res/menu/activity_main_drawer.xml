@@ -34,6 +34,14 @@
             android:icon="@drawable/map_check"
             android:title="@string/nav_menu_map_check"
             />
+<<<<<<< HEAD
+        <item
+            android:id="@+id/nav_menu_city_hotpoint"
+            android:icon="@drawable/city"
+            android:title="@string/nav_menu_city_hotpoint"
+            />
+=======
+>>>>>>> master/master
     </group>
 
     <group
