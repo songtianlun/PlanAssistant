@@ -22,6 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.DataSource;
 import com.hgo.planassistant.R;
@@ -84,6 +85,14 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         TextView tv_about_version = findViewById(R.id.tv_about_version);
         tv_about_version.setText(AppUtils.getVersionName(this));
         tv_about_version.startAnimation(alphaAnimation);
+
+        // 检查更新
+        FirUpdater.getInstance(this)
+                .apiToken(DataSource.fir_im_API_TOKEN)
+                .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+                .checkVersion();
+
+        Log.i("AboutActivity","Check Update.");
     }
 
     @Override
@@ -145,9 +154,10 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
 //                intent.setType("text/plain");
 //                startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
                 FirUpdater.getInstance(this_context)
-                        .apiToken(DataSource.fir_im_API_TOKEN)
-                        .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
-                        .checkVersion();
+                          .apiToken(DataSource.fir_im_API_TOKEN)
+                          .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+                          .checkVersion();
+
                 Log.i("AboutActivity","Check Update.");
                 break;
         }
