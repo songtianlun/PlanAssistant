@@ -11,6 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -90,6 +91,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         FirUpdater.getInstance(this)
                 .apiToken(DataSource.fir_im_API_TOKEN)
                 .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+                .apkPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/")
                 .checkVersion();
 
         Log.i("AboutActivity","Check Update.");
