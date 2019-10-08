@@ -146,6 +146,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 FirUpdater.getInstance(this_context)
                         .apiToken(DataSource.fir_im_API_TOKEN)
                         .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+                        .apkPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/")
                         .checkVersion();
                 Log.i("AboutActivity","Check Update.");
                 break;
@@ -158,6 +159,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 FirUpdater.getInstance(this_context)
                           .apiToken(DataSource.fir_im_API_TOKEN)
                           .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+                          .apkPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/")
                           .checkVersion();
 
                 Log.i("AboutActivity","Check Update.");
