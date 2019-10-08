@@ -75,10 +75,8 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-<<<<<<< HEAD
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-=======
->>>>>>> master/master
+
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -222,11 +220,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                                     Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                                     Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
 
-<<<<<<< HEAD
+
                                     CreateLineLayer(genetatePointsFromAvobject(list,mapboxMap),style);//创建线
-=======
-                                    CreateLineLayer(genetatePointsFromAvobject(list),style);//创建线
->>>>>>> master/master
+
+
                                 }
                             }
                         });
@@ -648,7 +645,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
         return routeCoordinates;
     }
-<<<<<<< HEAD
     // 生成的同时全幅显示
     private ArrayList<Point> genetatePointsFromAvobject(List<AVObject> list, MapboxMap mapboxmap){
         ArrayList<Point> routeCoordinates = new ArrayList<Point>();
@@ -666,6 +662,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
         return routeCoordinates;
     }
-=======
->>>>>>> master/master
+
 }
