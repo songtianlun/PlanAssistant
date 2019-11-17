@@ -18,5 +18,5 @@ jobs:
     - name: install fir.im
       run: apt-get install fir-cli
     - name: Upload to Fir.im
-    - run: fir login ${{ secrets.FIRTOKEN }}
-    - run: fir publish build/app/outputs/apk/release
+      run: fir login ${{ secrets.FIRTOKEN }}
+      run: fir publish build/app/outputs/apk/release
