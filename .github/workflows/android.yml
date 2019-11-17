@@ -24,8 +24,12 @@ jobs:
       id: ruby
       with:
         ruby-version: 2.6.5
+        files: build/app/outputs/apk/release/app-release.apk
     - name: install fir.im
       run: gem install fir-cli
+    - run: cd build & ls
     - name: Upload to Fir.im
       run: fir login ${{ secrets.FIRTOKEN }}
     - run: fir publish build/app/outputs/apk/release/app-release.apk
+      
+  
