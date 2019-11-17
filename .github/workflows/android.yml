@@ -16,7 +16,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: install fir.im
-      run: apt-get install fir-cli
+      run: sudo apt-get install fir-cli
     - name: Upload to Fir.im
       run: fir login ${{ secrets.FIRTOKEN }}
     - run: fir publish build/app/outputs/apk/release
