@@ -28,5 +28,4 @@ jobs:
       run: gem install fir-cli
     - name: Upload to Fir.im
       run: fir login ${{ secrets.FIRTOKEN }}
-    - run: ls build
-    - run: fir publish build
+    - run: fir publish build/app/outputs/apk/release/app-release.apk
