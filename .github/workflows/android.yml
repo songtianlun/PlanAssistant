@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - run: curl -X POST ${{ secrets.WeChart_Push_URL }} -H 'content-type:application/json' -d '{ "channelName":"GitHubPlanAssistant","text":"您的项目已经开始构建～" }'
     - uses: actions/checkout@v1
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
@@ -30,5 +31,7 @@ jobs:
     - name: Upload to Fir.im
       run: fir login ${{ secrets.FIRTOKEN }}
     - run: fir publish app/build/outputs/apk/release/app-release.apk
+    - run: curl -X POST ${{ secrets.WeChart_Push_URL }} -H 'content-type:application/json' -d '{ "channelName":"GitHubPlanAssistant","text":"Android程序已成功打包并提交fir.im！" }'
+    
       
   
