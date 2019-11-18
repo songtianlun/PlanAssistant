@@ -7,9 +7,9 @@ android {
     signingConfigs {
         release {
             storeFile file('../keys/songtianlun.jks')
-            storePassword ${{ secrets.KeystorePassword }}
-            keyAlias ${{ secrets.keyAlias }}
-            keyPassword ${{ secrets.keyPassword }}
+            storePassword 'sotilu!999'
+            keyAlias 'key0'
+            keyPassword 'sotilu!999'
         }
     }
     defaultConfig {
