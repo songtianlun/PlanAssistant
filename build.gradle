@@ -1,15 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+
     repositories {
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' } // 阿里云公共maven仓库
+        maven { url 'https://jitpack.io' }
         google()
         jcenter()
-        maven { url 'https://jitpack.io' }
-        
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath 'com.baidu.mobstat:mtj-circle-plugin:latest.integration'
+        classpath 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+        classpath 'com.baidu.mobstat:mtj-sdk:latest.integration'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -18,10 +21,13 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        jcenter()
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' } // 阿里云公共maven仓库
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/sfsheng0322/maven' } //fir.im 内测推送
+        mavenCentral()
+        mavenLocal()
+        google()
+        jcenter()
     }
 }
 
