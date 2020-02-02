@@ -1,21 +1,38 @@
 image: jangrewe/gitlab-ci-android
 
-stages:
-- build
-
 before_script:
-- export GRADLE_USER_HOME=$(pwd)/.gradle
+#  配置 gradle 的缓存目录
+- export GRADLE_USER_HOME=/cache/.gradle
+#  获取权限
 - chmod +x ./gradlew
+- chmod +x ./fir-publisher
+
+stages:
+  - build
+  - deploy
+
 
 cache:
   key: ${CI_PROJECT_ID}
   paths:
   - .gradle/
 
+#region build 编译阶段
+
+# 提交代码自动编译
 build:
   stage: build
   script:
   - ./gradlew build
-  artifacts:
-    paths:
-    - app/build/outputs/apk/release/app-release.apk
+#  artifacts:
+#    paths:
+#    - app/build/outputs/apk/release/app-release.apk
+
+uploadToFir:
+  stage: deploy
+#  only:
+#    - /^[\d]+\.[\d]+\.[\d]+-beta\.[\d]+$/
+  script:
+    - ./fir-publisher
+#  tags:
+#    - android

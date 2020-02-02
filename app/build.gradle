@@ -121,6 +121,10 @@ dependencies {
 //    implementation 'com.tencent.bugly:crashreport:latest.release' //Bugly SDK最新版本版本
 //    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration' // 百度移动统计
 
+    // 友盟+
+    implementation  'com.umeng.umsdk:analytics:8.0.0'
+    implementation  'com.umeng.umsdk:common:2.0.0'
+
 }
 
 

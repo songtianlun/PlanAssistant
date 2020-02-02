@@ -17,8 +17,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hgo.planassistant.R;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class StartActivity extends AppCompatActivity {
         // 竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         init();
+        init_umange();
 
     }
     private void init() {
@@ -39,6 +42,8 @@ public class StartActivity extends AppCompatActivity {
             e.printStackTrace();
             tv_version.setText("version");
         }
+
+
 //        //利用timer让此界面延迟3秒后跳转，timer有一个线程，该线程不断执行task
 //        Timer timer = new Timer();
 //        TimerTask timerTask = new TimerTask() {
@@ -55,11 +60,41 @@ public class StartActivity extends AppCompatActivity {
 //        timer.schedule(timerTask,3000);
     }
 
+    /**
+     * 初始化 友盟+统计
+     */
+    private void init_umange(){
+        /**
+         * 注意: 即使您已经在AndroidManifest.xml中配置过appkey和channel值，也需要在App代码中调
+         * 用初始化接口（如需要使用AndroidManifest.xml中配置好的appkey和channel值，
+         * UMConfigure.init调用中appkey和channel参数请置为null）。
+         * UMConfigure.init(Context context, String appkey, String channel, int deviceType, String pushSecret);
+         * Channel
+         * default: fir.im (default)
+         */
+        UMConfigure.init(this, "5e368c604ca357e87b00002c", "default", UMConfigure.DEVICE_TYPE_PHONE, null);
+
+        /**
+         * 设置组件化的Log开关
+         * 参数: boolean 默认为false，如需查看LOG设置为true
+         */
+        UMConfigure.setLogEnabled(true);
+        // 选用AUTO页面采集模式
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+    }
+
     @Override
     protected void onResume() {
         countDownTimer.cancel();
         countDownTimer.start();
         super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
@@ -68,7 +103,7 @@ public class StartActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    CountDownTimer countDownTimer = new CountDownTimer(600, 600) {
+    CountDownTimer countDownTimer = new CountDownTimer(300, 300) {
         @Override
         public void onTick(long millisUntilFinished) {
 

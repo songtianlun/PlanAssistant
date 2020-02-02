@@ -25,6 +25,7 @@ allprojects {
 //        maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/sfsheng0322/maven' } //fir.im 内测推送
+        maven { url 'https://dl.bintray.com/umsdk/release' } // 友盟+
         mavenCentral()
         mavenLocal()
         google()

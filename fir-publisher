@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Get API Token from http://fir.im/apps
+API_TOKEN="914f363e04f97a17bceb50b9d5170218" # 这里填你自己的 token
+ORIGINAL_FILENAME="app-release.apk" # gitlab 自动编译测试包生成的 apk 名字
+PACKAGE_DIR="app/build/outputs/apk/release/" # 安装包位置
+# ios or android
+TYPE="android"
+# App 的 bundleId 或 包名
+BUNDLE_ID="com.hgo.planassistant"
+
+package_path="${PACKAGE_DIR}${new_filename}"
+
+# Get upload_url
+credential=$(curl -X "POST" "http://api.fir.im/apps" \
+-H "Content-Type: application/json" \
+-d "{\"type\":\"${TYPE}\", \"bundle_id\":\"${BUNDLE_ID}\", \"api_token\":\"${API_TOKEN}\"}"
+)
+binary_response=$(echo ${credential} | grep -o "binary[^}]*")
+KEY=$(echo ${binary_response} | awk -F '"' '{print $5}')
+TOKEN=$(echo ${binary_response} | awk -F '"' '{print $9}')
+UPLOAD_URL=$(echo ${binary_response} | awk -F '"' '{print $13}')
+
+# Upload package
+echo 'Uploading...'
+echo '✈ -------------------------------------------- ✈'
+response=$(curl -F "key=${KEY}" \
+-F "token=${TOKEN}" \
+-F "file=@${package_path}" \
+-F "x:build=${CI_PIPELINE_ID}" \
+${UPLOAD_URL}
+)
+echo $response;
