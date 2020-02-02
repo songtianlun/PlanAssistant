@@ -72,6 +72,10 @@ Material Designer + MapBox + LeanCloud.
  
 ### Log of Update(Release)
 
+* V1.1.4
+    * 放弃百度移动统计改用友盟
+* V1.1.3
+    * 增加百日计数器
 * V1.1.1
     * Add Server Select
     * Fix error of fail to use in first login.
