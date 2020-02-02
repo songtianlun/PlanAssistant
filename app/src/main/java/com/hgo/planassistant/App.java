@@ -19,8 +19,6 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
 import com.hgo.planassistant.service.TencentLocationService;
-import com.tencent.bugly.crashreport.CrashReport;
-
 import java.lang.reflect.Array;
 import java.util.concurrent.Executor;
 
@@ -99,7 +97,7 @@ public class App extends Application {
 
 
         //Bugly false为调试模式
-        CrashReport.initCrashReport(getApplicationContext(), "fb19b7ed69", true);
+//        CrashReport.initCrashReport(getApplicationContext(), "fb19b7ed69", true);
 
 
         // init baidu map
