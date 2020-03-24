@@ -10,6 +10,7 @@ before_script:
 stages:
   - build
   - deploy
+  - deploy pages
 
 
 cache:
@@ -36,3 +37,15 @@ uploadToFir:
     - ./fir-publisher
 #  tags:
 #    - android
+
+pages:
+  stage: deploy pages
+  script:
+  - mkdir .public
+  - cp -r * .public
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
