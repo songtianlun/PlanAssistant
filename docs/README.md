@@ -74,6 +74,8 @@ Material Designer + MapBox + LeanCloud.
 
 * V1.1.4
     * 放弃百度移动统计改用友盟
+    * 添加 Cactus 应用保活守护进程
+    * 地图可视化改用高德地图
 * V1.1.3
     * 增加百日计数器
 * V1.1.1

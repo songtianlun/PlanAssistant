@@ -32,6 +32,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.umeng.analytics.MobclickAgent;
 
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -65,6 +66,18 @@ public class DetailPMapActivity extends BaseActivity {
         nowActContext = this;
         nowBundle = savedInstanceState;
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
     }
 
     private void initData(){

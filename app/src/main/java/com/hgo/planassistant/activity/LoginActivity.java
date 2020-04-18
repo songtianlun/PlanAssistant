@@ -22,6 +22,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.hgo.planassistant.R;
+import com.umeng.analytics.MobclickAgent;
 
 public class LoginActivity extends BaseActivity  implements View.OnClickListener{
 
@@ -112,6 +113,19 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
                 break;
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
     private void attemptLogin() {
         et_account.setError(null);
         et_password.setError(null);

@@ -32,6 +32,7 @@ import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.umeng.analytics.MobclickAgent;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.text.DateFormat;
@@ -74,6 +75,18 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
 
 
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计//AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
     }
 
     private void initData(){

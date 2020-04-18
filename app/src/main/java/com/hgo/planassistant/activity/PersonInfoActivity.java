@@ -28,6 +28,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.util.AppUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,12 +54,19 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
         Configuration configuration = getResources().getConfiguration();
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
     }
 
     private void initView(){

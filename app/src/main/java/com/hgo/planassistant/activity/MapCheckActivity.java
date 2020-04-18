@@ -27,6 +27,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -75,4 +76,15 @@ public class MapCheckActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
 }

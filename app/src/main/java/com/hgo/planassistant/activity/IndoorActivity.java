@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.hgo.planassistant.R;
+import com.umeng.analytics.MobclickAgent;
 
 public class IndoorActivity extends BaseActivity {
 
@@ -32,6 +33,19 @@ public class IndoorActivity extends BaseActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
     @Override
     public void onBackPressed() {
 

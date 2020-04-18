@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import com.hgo.planassistant.R;
+import com.umeng.analytics.MobclickAgent;
 
 public class CityHotPointActivity extends BaseActivity {
     private MapView mMapView = null;
@@ -54,12 +55,16 @@ public class CityHotPointActivity extends BaseActivity {
         super.onResume();
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         mMapView.onResume();
+
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
     }
     @Override
     protected void onPause() {
         super.onPause();
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
         mMapView.onPause();
+
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
     }
     @Override
     protected void onDestroy() {

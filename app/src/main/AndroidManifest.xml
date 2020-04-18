@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 前台服务 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
@@ -116,6 +117,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="KH6M9VxFs2pipvCFMp6CNqzhaYTgjPUQ" />
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="key">e553357a276042ba68761f55dfd17720</meta-data>
     </application>
 
 </manifest>

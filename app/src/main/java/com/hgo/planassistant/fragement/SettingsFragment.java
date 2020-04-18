@@ -1,5 +1,6 @@
 package com.hgo.planassistant.fragement;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import androidx.preference.PreferenceManager;
 
 
 import com.google.android.material.snackbar.Snackbar;
+import com.gyf.cactus.Cactus;
+import com.gyf.cactus.callback.CactusCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.PlanCounterDetailActivity;
@@ -80,9 +83,36 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 if((Boolean) newValue){
                     Intent startIntent = new Intent(getActivity(), TencentLocationService.class);
                     getActivity().startService(startIntent);
+
+
+                    //利用PendingIntent的getService接口，得到封装后的PendingIntent
+                    //第二个参数，是区分PendingIntent来源的请求代码
+                    //第四个参数，是决定如何创建PendingIntent的标志位
+                    PendingIntent pendingIntent = PendingIntent.getService(getActivity(), 0, startIntent, 0);
+
+                    // Cactus 应用保活
+                    Cactus.getInstance()
+                            .hideNotification(true)
+                            .isDebug(true)
+                            .setPendingIntent(pendingIntent)
+                            .addCallback(new CactusCallback() {
+                                @Override
+                                public void doWork(int i) {
+                                    Log.i("SettingsFragement","Cactus 应用保活已启动");
+                                }
+
+                                @Override
+                                public void onStop() {
+                                    Log.i("SettingsFragement","Cactus 应用保活已停止");
+                                }
+                            })
+                            .register(getActivity());
+
                 }else{
                     Intent stopIntent = new Intent(getActivity(), TencentLocationService.class);
                     getActivity().stopService(stopIntent);
+                    Cactus.getInstance().unregister(getActivity());
+                    Log.i("SettingsFragement","停止 Cactus 应用保活");
                 }
                 break;
             case "pref_location_usegps":
@@ -109,19 +139,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 SP_edit.putString("pref_list_system_server",newValue.toString());
                 SP_edit.commit();
 
-                if(newValue.toString().equals("cn-north")){
-                    new AlertDialog.Builder(getContext())
-                            .setMessage("2019年10月1日后将停止“中国 - 华北”节点，请及时切换国际节点！ \n 注：若过期未切换会导致程序无法启动，此时请重新安装最新版软件解决！")
-                            .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+//                if(newValue.toString().equals("cn-north")){
+//                    new AlertDialog.Builder(getContext())
+//                            .setMessage("2019年10月1日后将停止“中国 - 华北”节点，请及时切换国际节点！ \n 注：若过期未切换会导致程序无法启动，此时请重新安装最新版软件解决！")
+//                            .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                }
+//                            })
+//                            .show();
+//                }
 
-                                }
-                            })
-                            .show();
-                }
-
-                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "international");
+                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "cn-north");
                 Log.i("SettingFragement","Server Old Value:" + oldvalue);
                 Log.i("SettingFragement","Server new Value:" + newValue.toString());
                 if(!oldvalue.equals(newValue.toString())){

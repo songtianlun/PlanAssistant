@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.hgo.planassistant.App;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
@@ -28,17 +29,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        // umeng 统计，加入各个activity，避免重复统计 //AUTO页面采集模式下不调用
+////        MobclickAgent.onResume(this);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        // umeng 统计，加入各个activity，避免重复统计 //AUTO页面采集模式下不调用
+////        MobclickAgent.onPause(this);
+//    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

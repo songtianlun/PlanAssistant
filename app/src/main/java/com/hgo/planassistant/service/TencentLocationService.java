@@ -45,7 +45,6 @@ public class TencentLocationService extends Service implements
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-
     }
 
     //服务执行的操作

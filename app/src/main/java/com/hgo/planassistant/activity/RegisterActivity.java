@@ -18,6 +18,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SignUpCallback;
 import com.hgo.planassistant.R;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +34,19 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         initView();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
     private void initView(){
         Toolbar toolbar = findViewById(R.id.toolbar_register);
         setToolbar(toolbar);

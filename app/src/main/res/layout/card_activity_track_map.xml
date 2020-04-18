@@ -31,14 +31,20 @@
             android:id="@+id/card_home_plan_data"
             android:layout_margin="@dimen/dimen_common_very_small">
 
-            <com.mapbox.mapboxsdk.maps.MapView
-                android:id="@+id/card_track_mapView"
+            <com.amap.api.maps.MapView
+                android:id="@+id/card_track_amapView"
                 android:layout_width="match_parent"
-                android:layout_height="420dp"
-                mapbox:mapbox_cameraTargetLat="34.833488"
-                mapbox:mapbox_cameraTargetLng="113.543419"
-                mapbox:mapbox_cameraTilt="20"
-                mapbox:mapbox_cameraZoom="12"/>
+                android:layout_height="420dp"/>
+
+<!--            <com.mapbox.mapboxsdk.maps.MapView-->
+<!--                android:id="@+id/card_track_mapView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="420dp"-->
+<!--                android:visibility="invisible"-->
+<!--                mapbox:mapbox_cameraTargetLat="34.833488"-->
+<!--                mapbox:mapbox_cameraTargetLng="113.543419"-->
+<!--                mapbox:mapbox_cameraTilt="20"-->
+<!--                mapbox:mapbox_cameraZoom="12"/>-->
 
             <!--<com.google.android.material.button.MaterialButton-->
                 <!--android:id="@+id/bt_card_home_map_location"-->

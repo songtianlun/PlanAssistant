@@ -1,6 +1,7 @@
 package com.hgo.planassistant.activity;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.gyf.cactus.Cactus;
+import com.gyf.cactus.callback.CactusCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.adapter.FragmentAdapter;
@@ -46,11 +49,12 @@ import com.hgo.planassistant.fragement.RecordFragment;
 import com.hgo.planassistant.service.TencentLocationService;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,TencentLocationListener {
 
     private DrawerLayout drawer;
@@ -87,6 +91,18 @@ public class MainActivity extends AppCompatActivity
         initnavi_view(); // 初始化NaviView
         initPermission(); // 动态获取权限
         loadsetting(); // 载入设置
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
     }
 
     private void initView() {
@@ -460,7 +476,7 @@ public class MainActivity extends AppCompatActivity
             SP_editor.putBoolean("pref_location_indoor",false); // 是否室内定位
 
             //System
-            SP_editor.putString("pref_list_system_server","international"); // 定位服务
+            SP_editor.putString("pref_list_system_server","cn-north"); // 后端服务，默认“cn-north”，备用“international”
 
             // 调用apply方法将添加的数据提交，从而完成存储的动作
             SP_editor.commit();// 提交
@@ -477,6 +493,29 @@ public class MainActivity extends AppCompatActivity
             //如果设置启动服务，则激活服务
             Intent startIntent = new Intent(this, TencentLocationService.class);
             startService(startIntent);
+
+            //利用PendingIntent的getService接口，得到封装后的PendingIntent
+            //第二个参数，是区分PendingIntent来源的请求代码
+            //第四个参数，是决定如何创建PendingIntent的标志位
+            PendingIntent pendingIntent = PendingIntent.getService(mainactivity_context, 0, startIntent, 0);
+
+            // Cactus 应用保活
+            Cactus.getInstance()
+                    .hideNotification(true)
+                    .isDebug(true)
+                    .setPendingIntent(pendingIntent)
+                    .addCallback(new CactusCallback() {
+                        @Override
+                        public void doWork(int i) {
+                            Log.i("SettingsFragement","Cactus 应用保活已启动");
+                        }
+
+                        @Override
+                        public void onStop() {
+                            Log.i("SettingsFragement","Cactus 应用保活已停止");
+                        }
+                    })
+                    .register(mainactivity_context);
         }
 //        SP_editor.putInt("pref_list_location_time",4000); // 定位间隔
         SP_editor.commit();// 提交

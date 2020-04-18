@@ -21,11 +21,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        systemProp.https.proxyPort=1080
 //        systemProp.https.proxyHost=127.0.0.1
-//        ndk {
-//            //高德定位相关
-//            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-//            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
-//        }
+        ndk {
+            //高德定位相关
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
+        }
 
     }
 
@@ -102,14 +102,16 @@ dependencies {
     implementation 'cn.leancloud.android:avoscloud-feedback:4.7.15@aar'
     // LeanCloud 应用内搜索包
     //    compile ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
-    //    // 高德地图
-    //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //    //3D地图so及jar
-    //    implementation 'com.amap.api:3dmap:latest.integration'
-    //    //定位功能
-    //    implementation 'com.amap.api:location:latest.integration'
-    //    //搜索功能
-    //    implementation 'com.amap.api:search:latest.integration'
+
+    // 高德地图
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //3D地图so及jar
+    implementation 'com.amap.api:3dmap:latest.integration'
+    //定位功能
+    implementation 'com.amap.api:location:latest.integration'
+    //搜索功能
+    implementation 'com.amap.api:search:latest.integration'
+
     implementation files('libs/TencentLocationSdk_v7.1.6.1_r67ba7298_20190409_142648.jar')
     implementation files('libs/gt-geojson-19.4.jar')
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
@@ -124,6 +126,9 @@ dependencies {
     // 友盟+
     implementation  'com.umeng.umsdk:analytics:8.0.0'
     implementation  'com.umeng.umsdk:common:2.0.0'
+
+    // Cactus 应用保活
+    implementation 'com.gyf.cactus:cactus:1.1.3-beta09'
 
 }
 

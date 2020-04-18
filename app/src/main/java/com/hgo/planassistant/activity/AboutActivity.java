@@ -29,6 +29,7 @@ import com.hgo.planassistant.DataSource;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.util.AppUtils;
 import com.sunfusheng.FirUpdater;
+import com.umeng.analytics.MobclickAgent;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 
@@ -55,6 +56,18 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         setToolbar(toolbar);
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计//AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
     }
 
     public void initView() {

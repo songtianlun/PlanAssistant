@@ -28,7 +28,7 @@ public class StartActivity extends BaseActivity {
         setContentView(R.layout.activity_start);
         //设置此界面为
         // 竖屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         init();
         init_umange();
 
@@ -85,16 +85,16 @@ public class StartActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
+//        MobclickAgent.onResume(this); //AUTO页面采集模式下不调用
         countDownTimer.cancel();
         countDownTimer.start();
         super.onResume();
-        MobclickAgent.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+//        MobclickAgent.onPause(this); //AUTO页面采集模式下不调用
     }
 
     @Override

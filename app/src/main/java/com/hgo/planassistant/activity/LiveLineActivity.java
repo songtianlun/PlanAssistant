@@ -38,6 +38,7 @@ import com.hgo.planassistant.R;
 import com.hgo.planassistant.adapter.LiveLineRecyclerViewAdapter;
 import com.hgo.planassistant.util.AppUtils;
 import com.hgo.planassistant.view.ItemTouchHelperCallback;
+import com.umeng.analytics.MobclickAgent;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.text.SimpleDateFormat;
@@ -79,6 +80,17 @@ public class LiveLineActivity extends BaseActivity {
 //        initView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        MobclickAgent.onResume(this); // umeng+ 统计  //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        MobclickAgent.onPause(this);  // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
 
     private void initData() {
         live_data = new ArrayList<>();
