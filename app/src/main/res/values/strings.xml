@@ -225,6 +225,9 @@
     <string name="card_activity_track_info_button_quare">开始查询</string>
     <string name="card_activity_track_info_button_save">保存地图</string>
     <string name="card_activity_track_info_button_theme">切换风格</string>
+    <string name="card_activity_track_info_button_bigmap">查看大图</string>
+
+    <string name="card_activity_track_bar_chart_title">精度统计</string>
 
     <!--activity of livelint-->
 
@@ -288,6 +291,8 @@
     <!--activity_city_hot_point-->
     <string name="title_activity_city_hot_point">城市热力图</string>
 
+    <!--toolbar_track_detail_map-->
+    <string name="title_toolbar_track_detail_map">轨迹地图</string>
 
 
     <!--<string name="card_home_location_station">已关闭</string>-->

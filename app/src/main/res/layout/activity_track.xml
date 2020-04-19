@@ -15,19 +15,14 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/activity_track_layout_map"
-        android:layout_marginTop="?attr/actionBarSize"
-        layout="@layout/card_activity_track_map" />
+
 
     <ScrollView
         android:id="@+id/scroll_track"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:layout_below="@id/activity_track_layout_map">
+        android:layout_below="@id/toolbar_track">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,6 +31,12 @@
 
             <include layout="@layout/card_activity_track_info" />
 
+            <include
+                android:id="@+id/activity_track_layout_map"
+                layout="@layout/card_activity_track_map" />
+
+            <include layout="@layout/card_activity_track_barchart" />
+            
         </LinearLayout>
     </ScrollView>
 

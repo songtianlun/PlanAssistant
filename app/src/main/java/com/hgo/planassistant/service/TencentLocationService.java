@@ -36,6 +36,8 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class TencentLocationService extends Service implements
         TencentLocationListener{
 
+    private SharedPreferences SP_setting;
+
     private TencentLocationManager mLocationManager;
     public TencentLocationService() {
     }
@@ -95,7 +97,7 @@ public class TencentLocationService extends Service implements
 //        request.setInterval(3000);
 
         //读取设置信息初始化定位设置
-        SharedPreferences SP_setting = App.getContext().getSharedPreferences("setting",MODE_PRIVATE);
+        SP_setting = App.getContext().getSharedPreferences("setting",MODE_PRIVATE);
         request.setAllowCache(true); //允许缓存
         request.setAllowGPS(SP_setting.getBoolean("pref_location_usegps",false));
         request.setIndoorLocationMode(SP_setting.getBoolean("pref_location_indoor",false));
@@ -163,6 +165,7 @@ public class TencentLocationService extends Service implements
             track_record.put("altitude",tencentLocation.getAltitude()); //设置高程
             track_record.put("type",tencentLocation.getProvider()); //设置类型
             track_record.put("precision",tencentLocation.getAccuracy()); //精度
+            track_record.put("interval", Integer.parseInt(SP_setting.getString("pref_list_location_time","4000"))); //定位时间间隔
             track_record.put("createDate",now_str); //文本日期
 //            track_record.saveInBackground();// 保存到服务端
             track_record.saveEventually();// 离线保存

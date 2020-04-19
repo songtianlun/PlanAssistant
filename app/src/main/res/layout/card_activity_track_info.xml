@@ -201,7 +201,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_common_small"
-            android:text="@string/card_activity_track_info_button_theme"
+            android:text="@string/card_activity_track_info_button_bigmap"
             android:layout_toRightOf="@id/card_activity_track_info_button_quare"
             android:clickable="true"/>
 

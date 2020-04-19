@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 前台服务 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
@@ -32,9 +32,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activity.TrackDetailMapActivity"
+            android:label="@string/title_toolbar_track_detail_map"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".activity.CityHotPointActivity"
             android:label="@string/title_activity_city_hot_point"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MapCheckActivity"
             android:label="@string/title_activity_map_check"
@@ -117,7 +121,9 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="KH6M9VxFs2pipvCFMp6CNqzhaYTgjPUQ" />
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="key">e553357a276042ba68761f55dfd17720</meta-data>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="e553357a276042ba68761f55dfd17720" />
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,9 +38,20 @@ import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -89,7 +101,7 @@ import static java.net.Proxy.Type.HTTP;
 
 public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
-    static private int PrecisionLessThen = 50; // 轨迹精度查询最高限制
+    static public int PrecisionLessThen = 50; // 轨迹精度查询最高限制
     private   String HEATMAP_SOURCE_ID = "HEATMAP_SOURCE_ID";
     private   String HEATMAP_LAYER_ID = "HEATMAP_LAYER_ID";
     private Expression[] listOfHeatmapColors;
@@ -111,6 +123,8 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     private List<AVObject> now_list;
 
     private Context track_context;
+
+    private BarChart chart;
 
     //MarkerQuare
     public int range_point_num_max = 0; //范围查询时的最大点个数，中间变量
@@ -164,6 +178,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     void initView(Bundle savedInstanceState){
 
 
+        chart = findViewById(R.id.card_activity_track_bar_chart_chart);
         aMapView = findViewById(R.id.card_track_amapView);
 //        mapView = (MapView) findViewById(R.id.card_track_mapView);
         BT_save = findViewById(R.id.card_activity_track_info_button_save);
@@ -232,6 +247,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                     Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                     Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
                     now_list = list;//暂时存储当前查询结果
+                    initChart(list);
                     TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
                             "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
                             "数据总数: "+ list.size());
@@ -333,6 +349,102 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //        });
 
     }
+
+    private void initChart(List<AVObject> list){
+        chart.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        chart.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        chart.setPinchZoom(false);
+
+        chart.setDrawBarShadow(false);
+        chart.setDrawGridBackground(false);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawLabels(true); //绘制标签
+
+
+        ValueFormatter valueFormatter = new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                int value_int = (int)value;
+                switch (value_int){
+                    case 0: return "1~30";
+                    case 1: return "30~100";
+                    case 2: return "100~200";
+                    case 3: return "200~300";
+                    case 4: return ">300";
+                    default: return "";
+                }
+            }
+        };
+        xAxis.setValueFormatter(valueFormatter);//设置自定义格式，在绘制之前动态调整x的值。
+
+
+        chart.getAxisLeft().setDrawGridLines(false);
+
+        // add a nice and smooth animation
+        chart.animateY(1500);
+
+        chart.getLegend().setEnabled(false);
+
+
+        // 设置数据
+        ArrayList<BarEntry> values = new ArrayList<>(5);
+        int[] PrecisionSum = new int[5]; //初始化为默认值,int型为0
+
+        for (AVObject obj: list){
+            int Precision = obj.getInt("precision");
+            Log.i("TrackActivity","处理精度："+Precision);
+            if(Precision>1 && Precision<=30)
+                PrecisionSum[0]++;
+            else if(Precision>30 && Precision<=100)
+                PrecisionSum[1]++;
+            else if(Precision>100 && Precision<=200)
+                PrecisionSum[2]++;
+            else if(Precision>200 && Precision<=300)
+                PrecisionSum[3]++;
+            else
+                PrecisionSum[4]++;
+        }
+
+
+        for(int i=0;i<5;i++){
+            values.add(new BarEntry(i,PrecisionSum[i]));
+        }
+
+        BarDataSet set1;
+
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(values);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            set1 = new BarDataSet(values, "Data Set");
+            set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+            set1.setDrawValues(false);
+
+            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+
+//            ArrayList<String> xVals = new ArrayList<String>();
+//            xVals.add("1.Q"); xVals.add("2.Q"); xVals.add("3.Q"); xVals.add("4.Q");
+
+            BarData data = new BarData(dataSets);
+            chart.setData(data);
+            chart.setFitBars(true);
+        }
+
+        chart.invalidate();
+
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -345,7 +457,24 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 String end_time_string = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS")).format(end_time.getTime());
                 SaveToMymap(now_list,start_time_string+" 至 "+end_time_string + "轨迹点");
                 break;
-//            case R.id.card_activity_track_info_button_theme:
+            case R.id.card_activity_track_info_button_theme:
+                Intent intent = new Intent();
+//                AVObjectListDataParcelableSend avObjectListDataParcelableSend = new AVObjectListDataParcelableSend(now_list);
+//                Bundle bundle = new Bundle();
+                //Parcelable 序列化
+//                bundle.putParcelable("TrackList", avObjectListDataParcelableSend);
+//                intent.putExtras(bundle);
+                Date start_time_date = start_time.getTime(); // 从一个 Calendar 对象中获取 Date 对象
+                Date end_time_date = end_time.getTime(); // 从一个 Calendar 对象中获取 Date 对象
+                long start_time_long = start_time_date.getTime();
+                long end_time_long = end_time_date.getTime();
+                com.hgo.planassistant.tools.DateFormat dateFormat = new com.hgo.planassistant.tools.DateFormat(start_time);
+                intent.putExtra("start_time", start_time_long);
+                intent.putExtra("end_time", end_time_long);
+                Log.i("TrackDetailMapActivity","发送开始时间："+ dateFormat.GetDetailDescription());
+                Log.i("TrackDetailMapActivity","发送结束时间："+ dateFormat.GetDetailDescription(end_time));
+                intent.setClass(this, TrackDetailMapActivity.class);
+                startActivity(intent);
 //                index++;
 //                if (index == listOfHeatmapColors.length - 1) {
 //                    index = 0;
@@ -357,7 +486,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //                            heatmapIntensity(listOfHeatmapIntensityStops[index])
 //                    );
 //                }
-//                break;
+                break;
             case R.id.card_activity_track_info_start_calendar:
                 DatePickerDialog start_datePickerDialog = new DatePickerDialog(this, (view1, year, monthOfYear, dayOfMonth) -> {
                     start_time.set(Calendar.YEAR,year);
@@ -401,6 +530,11 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                     refresh();
                 }, end_time.get(Calendar.HOUR_OF_DAY), end_time.get(Calendar.MINUTE),true);
                 end_timePickerDialog.show();
+                break;
+            case R.id.card_track_amapView:
+//                Intent intent = new Intent();
+//                intent.setClass(this, TrackDetailMapActivity.class);
+//                startActivity(intent);
                 break;
         }
     }
@@ -520,6 +654,23 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //            }
 //        });
 
+    }
+
+
+    // 计算方位角pab
+    private double CaculateAzimuth(double lat_a, double lng_a, double lat_b, double lng_b) {
+        double d = 0;
+        lat_a=lat_a*Math.PI/180;
+        lng_a=lng_a*Math.PI/180;
+        lat_b=lat_b*Math.PI/180;
+        lng_b=lng_b*Math.PI/180;
+
+        d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
+        d=Math.sqrt(1-d*d);
+        d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
+        d=Math.asin(d)*180/Math.PI;
+//     d = Math.round(d*10000);
+        return d;
     }
 
 
