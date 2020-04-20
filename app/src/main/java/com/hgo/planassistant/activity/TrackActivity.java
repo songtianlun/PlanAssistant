@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +51,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
+import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
 import com.mapbox.geojson.Feature;
@@ -101,7 +103,7 @@ import static java.net.Proxy.Type.HTTP;
 
 public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
-    static public int PrecisionLessThen = 50; // 轨迹精度查询最高限制
+    private int PrecisionLessThen = 500; // 轨迹精度查询最高限制
     private   String HEATMAP_SOURCE_ID = "HEATMAP_SOURCE_ID";
     private   String HEATMAP_LAYER_ID = "HEATMAP_LAYER_ID";
     private Expression[] listOfHeatmapColors;
@@ -140,6 +142,9 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         Toolbar toolbar = findViewById(R.id.toolbar_track);
         setToolbar(toolbar);
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
+
+//        SharedPreferences SP_setting = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE);
+        PrecisionLessThen = Integer.parseInt(App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getString("settings_location_query_precision","300")); // 查询轨迹精度限制
 
         initView(savedInstanceState);
     }
@@ -238,7 +243,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         query.whereLessThan("time",end_time.getTime());
         query.whereGreaterThan("precision",1);
         query.whereLessThan("precision",PrecisionLessThen);
-        query.selectKeys(Arrays.asList("point", "time", "precision"));
+        query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -375,10 +380,11 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 int value_int = (int)value;
                 switch (value_int){
                     case 0: return "1~30";
-                    case 1: return "30~100";
-                    case 2: return "100~200";
-                    case 3: return "200~300";
-                    case 4: return ">300";
+                    case 1: return "30~60";
+                    case 2: return "60~100";
+                    case 3: return "100~200";
+                    case 4: return "200~300";
+                    case 5: return ">300";
                     default: return "";
                 }
             }
@@ -396,25 +402,27 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
         // 设置数据
         ArrayList<BarEntry> values = new ArrayList<>(5);
-        int[] PrecisionSum = new int[5]; //初始化为默认值,int型为0
+        int[] PrecisionSum = new int[6]; //初始化为默认值,int型为0
 
         for (AVObject obj: list){
             int Precision = obj.getInt("precision");
             Log.i("TrackActivity","处理精度："+Precision);
             if(Precision>1 && Precision<=30)
                 PrecisionSum[0]++;
-            else if(Precision>30 && Precision<=100)
+            else if(Precision>30 && Precision<=60)
                 PrecisionSum[1]++;
-            else if(Precision>100 && Precision<=200)
+            else if(Precision>60 && Precision<=100)
                 PrecisionSum[2]++;
-            else if(Precision>200 && Precision<=300)
+            else if(Precision>100 && Precision<=200)
                 PrecisionSum[3]++;
-            else
+            else if(Precision>200 && Precision<=300)
                 PrecisionSum[4]++;
+            else
+                PrecisionSum[5]++;
         }
 
 
-        for(int i=0;i<5;i++){
+        for(int i=0;i<6;i++){
             values.add(new BarEntry(i,PrecisionSum[i]));
         }
 
@@ -565,7 +573,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         query.whereLessThan("time",end_time.getTime());
         query.whereGreaterThan("precision",1);
         query.whereLessThan("precision",PrecisionLessThen);
-        query.selectKeys(Arrays.asList("point", "time", "precision"));
+        query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -776,15 +784,18 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             double y = geopoint.getLongitude();
             latlngs[i] = new com.amap.api.maps.model.LatLng(x, y);
 
-            // 将WGS-84坐标转换为高德坐标
-            CoordinateConverter converter  = new CoordinateConverter(track_context);
-            // CoordType.GPS 待转换坐标类型
-            converter.from(CoordinateConverter.CoordType.GPS);
-            // sourceLatLng待转换坐标点 LatLng类型
-            converter.coord(latlngs[i]);
-            // 执行转换操作
-            latlngs[i] = converter.convert();
-
+            String coordinate = obj.getString("geo_coordinate");
+//            Log.i("TrackActivity","当前数据坐标："+coordinate + "数据信息:" + obj);
+            if(coordinate.equals(Constant.GPS)){
+                // 将WGS-84坐标转换为高德坐标
+                CoordinateConverter converter  = new CoordinateConverter(track_context);
+                // CoordType.GPS 待转换坐标类型
+                converter.from(CoordinateConverter.CoordType.GPS);
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(latlngs[i]);
+                // 执行转换操作
+                latlngs[i] = converter.convert();
+            }
             i++;
         }
 
@@ -802,14 +813,17 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             double y = geopoint.getLongitude();
             latlngs.add(new com.amap.api.maps.model.LatLng(x, y));
 
-            // 将WGS-84坐标转换为高德坐标
-            CoordinateConverter converter  = new CoordinateConverter(track_context);
-            // CoordType.GPS 待转换坐标类型
-            converter.from(CoordinateConverter.CoordType.GPS);
-            // sourceLatLng待转换坐标点 LatLng类型
-            converter.coord(latlngs.get(i));
-            // 执行转换操作
-            latlngs.set(i,converter.convert());
+            String coordinate = obj.getString("geo_coordinate");
+            if(coordinate.equals(Constant.GPS)){
+                // 将WGS-84坐标转换为高德坐标
+                CoordinateConverter converter  = new CoordinateConverter(track_context);
+                // CoordType.GPS 待转换坐标类型
+                converter.from(CoordinateConverter.CoordType.GPS);
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(latlngs.get(i));
+                // 执行转换操作
+                latlngs.set(i,converter.convert());
+            }
 
             i++;
         }

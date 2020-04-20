@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.SwitchPreference;
 import androidx.viewpager.widget.ViewPager;
 
 import com.avos.avoscloud.AVException;
@@ -97,6 +98,14 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
 //        MobclickAgent.onResume(this); // umeng+ 统计 //AUTO页面采集模式下不调用
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        SharedPreferences SP_setting = this.getSharedPreferences("setting",App.getContext().MODE_PRIVATE);
+//        SharedPreferences.Editor SP_edit = SP_setting.edit();
+//        SP_edit.putBoolean("pref_location_background_switch",false);
     }
 
     @Override
@@ -468,10 +477,12 @@ public class MainActivity extends BaseActivity
             SP_editor.putInt("PlanAssistant_Frequency",1); // 设置软件使用次数为1
 
             //定位相关设置
-            SP_editor.putBoolean("pref_location_switch",true); // 定位服务
+            SP_editor.putString("pref_list_location_server","Amap"); // 位置服务提供者
+            SP_editor.putString("settings_location_query_precision","300"); // 查询轨迹精度限制
+//            SP_editor.putBoolean("pref_location_switch",true); // 定位服务
             SP_editor.putBoolean("pref_location_background_switch",false); // 后台定位服务
             SP_editor.putString("pref_list_location_type","Battery_Saving"); // 定位模式
-            SP_editor.putInt("pref_list_location_time",4000); // 定位间隔
+            SP_editor.putString("pref_list_location_time","4000"); // 定位间隔
             SP_editor.putBoolean("pref_location_usegps",false); // 是否使用GPS
             SP_editor.putBoolean("pref_location_indoor",false); // 是否室内定位
 

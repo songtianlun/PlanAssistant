@@ -31,10 +31,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".service.DataCaptureService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".activity.TrackDetailMapActivity"
             android:label="@string/title_toolbar_track_detail_map"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.CityHotPointActivity"
             android:label="@string/title_activity_city_hot_point"

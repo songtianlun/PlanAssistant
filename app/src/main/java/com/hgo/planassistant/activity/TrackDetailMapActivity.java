@@ -82,6 +82,7 @@ public class TrackDetailMapActivity extends BaseActivity {
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         amap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
+        int PrecisionLessThen = Integer.parseInt(App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getString("settings_location_query_precision","300")); // 查询轨迹精度限制
         AVQuery<AVObject> query = new AVQuery<>("trajectory");
         // 启动查询缓存
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -90,7 +91,7 @@ public class TrackDetailMapActivity extends BaseActivity {
         query.whereGreaterThan("time",start_time.getTime());
         query.whereLessThan("time",end_time.getTime());
         query.whereGreaterThan("precision",1);
-        query.whereLessThan("precision",TrackActivity.PrecisionLessThen);
+        query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision"));
         query.limit(1000);
         query.findInBackground(new FindCallback<AVObject>() {

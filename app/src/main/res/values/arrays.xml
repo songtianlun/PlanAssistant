@@ -14,6 +14,34 @@
         <item>保密</item>
     </string-array>
 
+    <string-array name="settings_list_location_server_title">
+        <item>高德位置服务</item>
+        <item>腾讯位置服务</item>
+    </string-array>
+
+    <string-array name="settings_list_location_server_values">
+        <item>Amap</item>
+        <item>Tencent</item>
+    </string-array>
+
+    <string-array name="settings_list_location_query_precision_title">
+        <item>高于30m</item>
+        <item>高于60m</item>
+        <item>高于100m</item>
+        <item>高于200m</item>
+        <item>高于300m</item>
+        <item>高于500m</item>
+    </string-array>
+
+    <string-array name="settings_list_location_query_precision_values">
+        <item>30</item>
+        <item>60</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>500</item>
+    </string-array>
+
     <string-array name="settings_list_location_type_title">
         <item>低功耗模式</item>
         <item>仅设备模式</item>
@@ -24,7 +52,6 @@
         <item>Battery_Saving</item>
         <item>Device_Sensors</item>
         <item>Hight_Accuracy</item>
-
     </string-array>
 
     <string-array name="settings_list_location_time_interval_title">

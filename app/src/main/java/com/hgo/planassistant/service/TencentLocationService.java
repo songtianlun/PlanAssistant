@@ -34,7 +34,10 @@ import static android.app.PendingIntent.getActivity;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class TencentLocationService extends Service implements
+
         TencentLocationListener{
+
+//    private int interval = 0; //定位时间间隔
 
     private SharedPreferences SP_setting;
 
@@ -46,14 +49,14 @@ public class TencentLocationService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate");
+//        Log.d(TAG, "onCreate");
     }
 
     //服务执行的操作
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
+//        Log.d(TAG, "onStartCommand");
 
         // android 8.0后需要给notification一个channel one id
         String CHANNEL_ONE_ID = "com.primedu.cn";
@@ -97,11 +100,12 @@ public class TencentLocationService extends Service implements
 //        request.setInterval(3000);
 
         //读取设置信息初始化定位设置
-        SP_setting = App.getContext().getSharedPreferences("setting",MODE_PRIVATE);
+        SP_setting = this.getSharedPreferences("setting",MODE_MULTI_PROCESS);
+//        interval =  SP_setting.getInt("pref_list_location_time",4000);
         request.setAllowCache(true); //允许缓存
-        request.setAllowGPS(SP_setting.getBoolean("pref_location_usegps",false));
-        request.setIndoorLocationMode(SP_setting.getBoolean("pref_location_indoor",false));
-//        request.setInterval(SP_setting.getInt("pref_list_location_time",4000));
+        request.setAllowGPS(SP_setting.getBoolean("pref_location_tencent_usegps",false));
+        request.setIndoorLocationMode(SP_setting.getBoolean("pref_location_tencent_indoor",false));
+        request.setInterval(Integer.parseInt(SP_setting.getString("pref_list_location_time","4000")));
 
         // 开始定位
         int error = mLocationManager.requestLocationUpdates(request, this);
@@ -165,7 +169,8 @@ public class TencentLocationService extends Service implements
             track_record.put("altitude",tencentLocation.getAltitude()); //设置高程
             track_record.put("type",tencentLocation.getProvider()); //设置类型
             track_record.put("precision",tencentLocation.getAccuracy()); //精度
-            track_record.put("interval", Integer.parseInt(SP_setting.getString("pref_list_location_time","4000"))); //定位时间间隔
+            track_record.put("interval",SP_setting.getString("pref_list_location_time","4000")); //定位时间间隔
+//            track_record.put("interval", 4000); //定位时间间隔
             track_record.put("createDate",now_str); //文本日期
 //            track_record.saveInBackground();// 保存到服务端
             track_record.saveEventually();// 离线保存

@@ -111,12 +111,16 @@
     <string name="settings_location_description">使用先进的定位手段在应用前台记录您的轨迹.</string>
     <string name="settings_location_switch_background">后台轨迹记录</string>
     <string name="settings_location_background_description">在系统后台运行记录服务.</string>
-    <string name="settings_location_type">定位类型</string>
+    <string name="settings_location_server">位置服务提供者</string>
+    <string name="pref_list_location_query_precision">查询精度限制</string>
+    <string name="pref_list_location_query_precision_sedcription">轨迹查询时的精度最大值，设置越大看到的数据精度越低。</string>
     <string name="settings_location_time_interval">定位周期</string>
-    <string name="settings_location_usegps">GPS</string>
-    <string name="settings_location_usegps_description">是否允许软件使用GPS定位，开启获得更高精度，反之软件功耗更低。</string>
-    <string name="settings_location_indoor">室内定位</string>
-    <string name="settings_location_indoor_description">是否启用室内定位模式，提高室内定位效能。</string>
+    <string name="settings_location_time_interval_description">根据您的实际需要设定位置服务循环定位周期，周期越短位置获取越频繁。</string>
+    <string name="settings_location_ali_type">定位类型</string>
+    <string name="settings_location_tencent_usegps">GPS</string>
+    <string name="settings_location_tencent_usegps_description">是否允许软件所集成的腾讯位置服务使用GPS定位，开启获得更高精度，反之软件功耗更低。</string>
+    <string name="settings_location_tencent_indoor">室内定位</string>
+    <string name="settings_location_indoor_description">是否启用腾讯位置服务室内定位功能，提高室内定位效能。</string>
 
     <string name="settings_system_title">系统设置</string>
     <string name="settings_system_server">服务器节点</string>

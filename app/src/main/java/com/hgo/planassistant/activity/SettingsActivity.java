@@ -8,7 +8,7 @@ import com.hgo.planassistant.R;
 import com.hgo.planassistant.fragement.SettingsFragment;
 import com.umeng.analytics.MobclickAgent;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
