@@ -3,6 +3,7 @@ package com.hgo.planassistant.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -103,6 +104,7 @@ import static java.net.Proxy.Type.HTTP;
 
 public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
+    public static int QueryMaxNum = 5000; //数据查询条数上限
     private int PrecisionLessThen = 500; // 轨迹精度查询最高限制
     private   String HEATMAP_SOURCE_ID = "HEATMAP_SOURCE_ID";
     private   String HEATMAP_LAYER_ID = "HEATMAP_LAYER_ID";
@@ -122,7 +124,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     private Button BT_save,BT_quare,BT_theme;
     private TextView TV_start_calendar, TV_start_time,TV_stop_calendar,TV_stop_time,TV_info;
 
-    private List<AVObject> now_list;
+    private List<AVObject> now_list = null;
 
     private Context track_context;
 
@@ -237,7 +239,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         AVQuery<AVObject> query = new AVQuery<>("trajectory");
         // 启动查询缓存
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置缓存为一天，单位毫秒
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.whereGreaterThan("time",start_time.getTime());
         query.whereLessThan("time",end_time.getTime());
@@ -245,58 +247,93 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.countInBackground(new CountCallback() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null&&list.size()>0){
-                    Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-                    now_list = list;//暂时存储当前查询结果
-                    initChart(list);
-                    TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
-                            "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
-                            "数据总数: "+ list.size());
-                    // 构建热力图 HeatmapTileProvider
-                    HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                    builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
-//                            .gradient(ALT_HEATMAP_GRADIENT); // 设置热力图渐变，有默认值 DEFAULT_GRADIENT，可不设置该接口
-                    // Gradient 的设置可见参考手册
-                    // 构造热力图对象
-                    HeatmapTileProvider heatmapTileProvider = builder.build();
-                    // 初始化 TileOverlayOptions
-                    TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
-                    tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
-                    // 向地图上添加 TileOverlayOptions 类对象
-                    amap.addTileOverlay(tileOverlayOptions);
+            public void done(int count, AVException e) {
+                if(count>QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                }else{
+                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
+                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                    now_list = new ArrayList<>(count+1);
+                    int querynum = count/1000 + 1;
+                    Log.i("TrackActivity","查询次数："+querynum);
+                    for(int i=0;i<querynum;i++){
+                        Log.i("TrackActivity","第"+i+"次查询");
+                        int skip = i*1000;
+                        query.skip(skip);
+                        query.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> avObjects, AVException avException) {
+                                if(avObjects!=null&&avObjects.size()>0) {
+                                    now_list.addAll(avObjects);
+                                    Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
+                                    if(now_list.size()==count){
+                                        initChart(now_list);
+                                        TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
+                                                "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
+                                                "数据总数: "+ now_list.size());
+                                        // 构建热力图 HeatmapTileProvider
+                                        HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        // 构造热力图对象
+                                        HeatmapTileProvider heatmapTileProvider = builder.build();
+                                        // 初始化 TileOverlayOptions
+                                        TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+                                        tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+                                        // 向地图上添加 TileOverlayOptions 类对象
+                                        amap.addTileOverlay(tileOverlayOptions);
 
-                    // 全幅显示
-                    com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
-                    amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+                                        // 全幅显示
+                                        com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
+                                        amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 
-                    // 显示轨迹线
-                    Polyline polyline =amap.addPolyline(new PolylineOptions().
-                            addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                        // 显示轨迹线
+                                        Polyline polyline =amap.addPolyline(new PolylineOptions().
+                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
 
-//                    List<com.amap.api.maps.model.LatLng> points = GenetateLatLngListFromAvobject(now_list);
-//                    amap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-//
-//                    SmoothMoveMarker smoothMarker = new SmoothMoveMarker(amap);
-//                    // 设置滑动的图标
-//                    smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.walk));
-//
-//                    com.amap.api.maps.model.LatLng drivePoint = points.get(0);
-//                    Pair<Integer, com.amap.api.maps.model.LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(points, drivePoint);
-//                    points.set(pair.first, drivePoint);
-//                    List<com.amap.api.maps.model.LatLng> subList = points.subList(pair.first, points.size());
-//                    // 设置滑动的轨迹左边点
-//                    smoothMarker.setPoints(subList);
-//                    // 设置滑动的总时间
-//                    smoothMarker.setTotalDuration(40);
-//                    // 开始滑动
-//                    smoothMarker.startSmoothMove();
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
+
+
             }
         });
+//
+//        query.findInBackground(new FindCallback<AVObject>() {
+//            @Override
+//            public void done(List<AVObject> list, AVException e) {
+//                if(list!=null&&list.size()>0){
+//
+//                    initChart(list);
+//                    TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
+//                            "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
+//                            "数据总数: "+ list.size());
+//                    // 构建热力图 HeatmapTileProvider
+//                    HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+//                    builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
+//                    // 构造热力图对象
+//                    HeatmapTileProvider heatmapTileProvider = builder.build();
+//                    // 初始化 TileOverlayOptions
+//                    TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+//                    tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+//                    // 向地图上添加 TileOverlayOptions 类对象
+//                    amap.addTileOverlay(tileOverlayOptions);
+//
+//                    // 全幅显示
+//                    com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
+//                    amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+//
+//                    // 显示轨迹线
+//                    Polyline polyline =amap.addPolyline(new PolylineOptions().
+//                            addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(10).color(Color.argb(255, 1, 1, 1)));
+//
+//                }
+//            }
+//        });
 
 //        index = 0;
 //        mapView.onCreate(savedInstanceState);
@@ -406,7 +443,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
         for (AVObject obj: list){
             int Precision = obj.getInt("precision");
-            Log.i("TrackActivity","处理精度："+Precision);
+//            Log.i("TrackActivity","处理精度："+Precision);
             if(Precision>1 && Precision<=30)
                 PrecisionSum[0]++;
             else if(Precision>30 && Precision<=60)
@@ -575,41 +612,95 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.countInBackground(new CountCallback() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null&&list.size()>0){
-                    Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-                    now_list = list;//暂时存储当前查询结果
-                    TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
-                            "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
-                            "数据总数: "+ list.size());
-                    // 构建热力图 HeatmapTileProvider
-                    HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                    builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
-//                            .gradient(ALT_HEATMAP_GRADIENT); // 设置热力图渐变，有默认值 DEFAULT_GRADIENT，可不设置该接口
-                    // Gradient 的设置可见参考手册
-                    // 构造热力图对象
-                    HeatmapTileProvider heatmapTileProvider = builder.build();
-                    // 初始化 TileOverlayOptions
-                    TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
-                    tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
-                    // 向地图上添加 TileOverlayOptions 类对象
-                    amap.addTileOverlay(tileOverlayOptions);
+            public void done(int count, AVException e) {
+                if(count>QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                }else{
+                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
+                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                    now_list = new ArrayList<>(count+1);
+                    int querynum = count/1000 + 1;
+                    Log.i("TrackActivity","查询次数："+querynum);
+                    for(int i=0;i<querynum;i++){
+                        Log.i("TrackActivity","第"+i+"次查询");
+                        int skip = i*1000;
+                        query.skip(skip);
+                        query.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> avObjects, AVException avException) {
+                                if(avObjects!=null&&avObjects.size()>0) {
+                                    now_list.addAll(avObjects);
+                                    Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
+                                    if(now_list.size()==count){
+                                        initChart(now_list);
+                                        TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
+                                                "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
+                                                "数据总数: "+ now_list.size());
+                                        // 构建热力图 HeatmapTileProvider
+                                        HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        // 构造热力图对象
+                                        HeatmapTileProvider heatmapTileProvider = builder.build();
+                                        // 初始化 TileOverlayOptions
+                                        TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+                                        tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+                                        // 向地图上添加 TileOverlayOptions 类对象
+                                        amap.addTileOverlay(tileOverlayOptions);
 
-                    // 显示轨迹线
-                    Polyline polyline =amap.addPolyline(new PolylineOptions().
-                            addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(20).color(Color.argb(255, 1, 1, 1)));
+                                        // 全幅显示
+                                        com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
+                                        amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 
-                    // 全幅显示
-                    com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
-                    amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+                                        // 显示轨迹线
+                                        Polyline polyline =amap.addPolyline(new PolylineOptions().
+                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
 
-
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
+
             }
         });
+//        query.findInBackground(new FindCallback<AVObject>() {
+//            @Override
+//            public void done(List<AVObject> list, AVException e) {
+//                if(list!=null&&list.size()>0){
+//                    Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
+//                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
+//                    now_list = list;//暂时存储当前查询结果
+//                    TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
+//                            "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
+//                            "数据总数: "+ list.size());
+//                    // 构建热力图 HeatmapTileProvider
+//                    HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+//                    builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
+////                            .gradient(ALT_HEATMAP_GRADIENT); // 设置热力图渐变，有默认值 DEFAULT_GRADIENT，可不设置该接口
+//                    // Gradient 的设置可见参考手册
+//                    // 构造热力图对象
+//                    HeatmapTileProvider heatmapTileProvider = builder.build();
+//                    // 初始化 TileOverlayOptions
+//                    TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+//                    tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+//                    // 向地图上添加 TileOverlayOptions 类对象
+//                    amap.addTileOverlay(tileOverlayOptions);
+//
+//                    // 显示轨迹线
+//                    Polyline polyline =amap.addPolyline(new PolylineOptions().
+//                            addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(20).color(Color.argb(255, 1, 1, 1)));
+//
+//                    // 全幅显示
+//                    com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
+//                    amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+//
+//
+//                }
+//            }
+//        });
 
 //        mapboxmap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
 //            @Override

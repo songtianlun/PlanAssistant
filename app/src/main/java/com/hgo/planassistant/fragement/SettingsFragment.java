@@ -22,7 +22,9 @@ import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.activity.MainActivity;
 import com.hgo.planassistant.activity.PlanCounterDetailActivity;
+import com.hgo.planassistant.service.DataCaptureService;
 import com.hgo.planassistant.service.TencentLocationService;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -96,47 +98,48 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     pref_location_tencent_indoor.setEnabled(true);
                 }
                 SP_edit.commit();
+                restartService();
+                Log.i("SettingsFragement","数据获取服务已重启！");
                 break;
             case "pref_location_background_switch":
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
+                Log.i("SettingsFragement","后台轨迹记录设置项改变为："+newValue.toString());
                 SP_edit.putBoolean("pref_location_background_switch",Boolean.valueOf(newValue.toString()));
 //                Log.i("SettingsFragement",newValue.toString());
                 SP_edit.commit();
+                restartService();
 //                Log.i("SettingsFragement",String.valueOf(SP_setting.getBoolean("pref_location_background_switch",false)));
-                if((Boolean) newValue){
-                    Intent startIntent = new Intent(getActivity(), TencentLocationService.class);
-                    getActivity().startService(startIntent);
-
-
-                    //利用PendingIntent的getService接口，得到封装后的PendingIntent
-                    //第二个参数，是区分PendingIntent来源的请求代码
-                    //第四个参数，是决定如何创建PendingIntent的标志位
-                    PendingIntent pendingIntent = PendingIntent.getService(getActivity(), 0, startIntent, 0);
-
-                    // Cactus 应用保活
-                    Cactus.getInstance()
-                            .hideNotification(true)
-                            .isDebug(true)
-                            .setPendingIntent(pendingIntent)
-                            .addCallback(new CactusCallback() {
-                                @Override
-                                public void doWork(int i) {
-                                    Log.i("SettingsFragement","Cactus 应用保活已启动");
-                                }
-
-                                @Override
-                                public void onStop() {
-                                    Log.i("SettingsFragement","Cactus 应用保活已停止");
-                                }
-                            })
-                            .register(getActivity());
-
-                }else{
-                    Intent stopIntent = new Intent(getActivity(), TencentLocationService.class);
-                    getActivity().stopService(stopIntent);
-                    Cactus.getInstance().unregister(getActivity());
-                    Log.i("SettingsFragement","停止 Cactus 应用保活");
-                }
+//                if((Boolean) newValue){
+//                    Intent startIntent = new Intent(getActivity(), DataCaptureService.class);
+//                    getActivity().startService(startIntent);
+//                    //利用PendingIntent的getService接口，得到封装后的PendingIntent
+//                    //第二个参数，是区分PendingIntent来源的请求代码
+//                    //第四个参数，是决定如何创建PendingIntent的标志位
+//                    PendingIntent pendingIntent = PendingIntent.getService(getActivity(), 0, startIntent, 0);
+//
+//                    // Cactus 应用保活
+//                    Cactus.getInstance()
+//                            .hideNotification(true)
+//                            .isDebug(true)
+//                            .setPendingIntent(pendingIntent)
+//                            .addCallback(new CactusCallback() {
+//                                @Override
+//                                public void doWork(int i) {
+//                                    Log.i("SettingsFragement","Cactus 应用保活已启动");
+//                                }
+//                                @Override
+//                                public void onStop() {
+//                                    Log.i("SettingsFragement","Cactus 应用保活已停止");
+//                                }
+//                            })
+//                            .register(getActivity());
+//
+//                }else{
+//                    Intent stopIntent = new Intent(getActivity(), DataCaptureService.class);
+//                    getActivity().stopService(stopIntent);
+//                    Cactus.getInstance().unregister(getActivity());
+//                    Log.i("SettingsFragement","停止 Cactus 应用保活");
+//                }
                 break;
             case "pref_location_usegps":
                 SP_edit.putBoolean("pref_location_usegps",(Boolean) newValue);
@@ -151,11 +154,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 //                preference.setSummary(newValue.toString());
                 SP_edit.putString("pref_list_location_type",newValue.toString());
                 SP_edit.commit();
+                restartService();
                 break;
             case "pref_list_location_time":
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
 //                preference.setSummary(newValue.toString());
                 SP_edit.putString("pref_list_location_time",newValue.toString());
+                restartService();
                 SP_edit.commit();
                 break;
             case "pref_list_system_server":
@@ -283,5 +288,45 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
         onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north"));
 
+    }
+
+    public void StartService(){
+        Log.i("MainActivity","启动后台服务。");
+        Intent startIntent = new Intent(getActivity(), DataCaptureService.class);
+        getActivity().startService(startIntent);
+
+        //利用PendingIntent的getService接口，得到封装后的PendingIntent
+        //第二个参数，是区分PendingIntent来源的请求代码
+        //第四个参数，是决定如何创建PendingIntent的标志位
+        PendingIntent pendingIntent = PendingIntent.getService(getActivity(), 0, startIntent, 0);
+
+        // Cactus 应用保活
+        Cactus.getInstance()
+                .hideNotification(true)
+                .isDebug(true)
+                .setPendingIntent(pendingIntent)
+                .addCallback(new CactusCallback() {
+                    @Override
+                    public void doWork(int i) {
+                        Log.i("SettingsFragement","Cactus 应用保活已启动");
+                    }
+
+                    @Override
+                    public void onStop() {
+                        Log.i("SettingsFragement","Cactus 应用保活已停止");
+                    }
+                })
+                .register(getActivity());
+    }
+    public void stopService(){
+        Intent stopIntent = new Intent(getActivity(), DataCaptureService.class);
+        getActivity().stopService(stopIntent);
+        Cactus.getInstance().unregister(getActivity());
+    }
+    public void restartService(){
+        Intent restartIntent = new Intent(getActivity(), DataCaptureService.class);
+        getActivity().startService(restartIntent);
+        getActivity().stopService(restartIntent);
+        Cactus.getInstance().restart(getActivity());
     }
 }

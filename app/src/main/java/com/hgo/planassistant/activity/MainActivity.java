@@ -47,6 +47,7 @@ import com.hgo.planassistant.adapter.FragmentAdapter;
 import com.hgo.planassistant.fragement.HomeFragment;
 import com.hgo.planassistant.fragement.PlanFragment;
 import com.hgo.planassistant.fragement.RecordFragment;
+import com.hgo.planassistant.service.DataCaptureService;
 import com.hgo.planassistant.service.TencentLocationService;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
@@ -56,7 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,TencentLocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private DrawerLayout drawer;
     private FloatingActionButton fab;
@@ -92,6 +93,7 @@ public class MainActivity extends BaseActivity
         initnavi_view(); // 初始化NaviView
         initPermission(); // 动态获取权限
         loadsetting(); // 载入设置
+        StartService(); //启动后台服务
     }
 
     @Override
@@ -103,6 +105,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopService();
 //        SharedPreferences SP_setting = this.getSharedPreferences("setting",App.getContext().MODE_PRIVATE);
 //        SharedPreferences.Editor SP_edit = SP_setting.edit();
 //        SP_edit.putBoolean("pref_location_background_switch",false);
@@ -300,6 +303,8 @@ public class MainActivity extends BaseActivity
             }
         }
     }
+
+
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -499,63 +504,49 @@ public class MainActivity extends BaseActivity
             frequency++;
             SP_editor.putInt("PlanAssistant_Frequency",frequency);// 启动次数+1
         }
-        if(Background){
-            Log.i("MainActivity","允许后台启动，正在启动服务。");
-            //如果设置启动服务，则激活服务
-            Intent startIntent = new Intent(this, TencentLocationService.class);
-            startService(startIntent);
 
-            //利用PendingIntent的getService接口，得到封装后的PendingIntent
-            //第二个参数，是区分PendingIntent来源的请求代码
-            //第四个参数，是决定如何创建PendingIntent的标志位
-            PendingIntent pendingIntent = PendingIntent.getService(mainactivity_context, 0, startIntent, 0);
-
-            // Cactus 应用保活
-            Cactus.getInstance()
-                    .hideNotification(true)
-                    .isDebug(true)
-                    .setPendingIntent(pendingIntent)
-                    .addCallback(new CactusCallback() {
-                        @Override
-                        public void doWork(int i) {
-                            Log.i("SettingsFragement","Cactus 应用保活已启动");
-                        }
-
-                        @Override
-                        public void onStop() {
-                            Log.i("SettingsFragement","Cactus 应用保活已停止");
-                        }
-                    })
-                    .register(mainactivity_context);
-        }
 //        SP_editor.putInt("pref_list_location_time",4000); // 定位间隔
         SP_editor.commit();// 提交
 
     }
 
-    @Override
-    public void onLocationChanged(TencentLocation tencentLocation, int i, String s) {
-        String msg = null;
-        if (i == TencentLocation.ERROR_OK) {
-            // 定位成功
-            StringBuilder sb = new StringBuilder();
-            sb.append("(纬度=").append(tencentLocation.getLatitude()).append(",经度=")
-                    .append(tencentLocation.getLongitude()).append(",精度=")
-                    .append(tencentLocation.getAccuracy()).append("), 来源=")
-                    .append(tencentLocation.getProvider()).append(", 地址=")
-                    // 注意, 根据国家相关法规, wgs84坐标下无法提供地址信息
-                    .append("{84坐标下不提供地址!}");
-            msg = sb.toString();
-            Toast.makeText(App.getContext(),msg,Toast.LENGTH_LONG).show();
-        } else {
-            // 定位失败
-            msg = "定位失败: " + s;
-        }
-        Log.i("MainActivity",msg);
+    public void StartService(){
+        Log.i("MainActivity","启动后台服务。");
+        Intent startIntent = new Intent(this, DataCaptureService.class);
+        startService(startIntent);
+
+        //利用PendingIntent的getService接口，得到封装后的PendingIntent
+        //第二个参数，是区分PendingIntent来源的请求代码
+        //第四个参数，是决定如何创建PendingIntent的标志位
+        PendingIntent pendingIntent = PendingIntent.getService(mainactivity_context, 0, startIntent, 0);
+
+        // Cactus 应用保活
+        Cactus.getInstance()
+                .hideNotification(true)
+                .isDebug(true)
+                .setPendingIntent(pendingIntent)
+                .addCallback(new CactusCallback() {
+                    @Override
+                    public void doWork(int i) {
+                        Log.i("SettingsFragement","Cactus 应用保活已启动");
+                    }
+
+                    @Override
+                    public void onStop() {
+                        Log.i("SettingsFragement","Cactus 应用保活已停止");
+                    }
+                })
+                .register(mainactivity_context);
     }
-
-    @Override
-    public void onStatusUpdate(String s, int i, String s1) {
-
+    public void stopService(){
+        Intent stopIntent = new Intent(this, DataCaptureService.class);
+        stopService(stopIntent);
+        Cactus.getInstance().unregister(mainactivity_context);
+    }
+    public void restartService(){
+        Intent restartIntent = new Intent(this, DataCaptureService.class);
+        startService(restartIntent);
+        stopService(restartIntent);
+        Cactus.getInstance().restart(mainactivity_context);
     }
 }

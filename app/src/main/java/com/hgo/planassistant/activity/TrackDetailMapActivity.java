@@ -23,12 +23,15 @@ import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.hgo.planassistant.App;
+import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
 import com.hgo.planassistant.tools.DateFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +41,7 @@ public class TrackDetailMapActivity extends BaseActivity {
 
     private MapView aMapView = null;
     private AMap amap;
+    private List<AVObject> now_list = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,55 +96,106 @@ public class TrackDetailMapActivity extends BaseActivity {
         query.whereLessThan("time",end_time.getTime());
         query.whereGreaterThan("precision",1);
         query.whereLessThan("precision",PrecisionLessThen);
-        query.selectKeys(Arrays.asList("point", "time", "precision"));
+        query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.countInBackground(new CountCallback() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null&&list.size()>0){
-                    Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-                    // 构建热力图 HeatmapTileProvider
-                    HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                    builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
-//                            .gradient(ALT_HEATMAP_GRADIENT); // 设置热力图渐变，有默认值 DEFAULT_GRADIENT，可不设置该接口
-                    // Gradient 的设置可见参考手册
-                    // 构造热力图对象
-                    HeatmapTileProvider heatmapTileProvider = builder.build();
-                    // 初始化 TileOverlayOptions
-                    TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
-                    tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
-                    // 向地图上添加 TileOverlayOptions 类对象
-                    amap.addTileOverlay(tileOverlayOptions);
+            public void done(int count, AVException e) {
+                if(count>TrackActivity.QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                }else{
+                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
+                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                    now_list = new ArrayList<>(count+1);
+                    int querynum = count/1000 + 1;
+                    Log.i("TrackActivity","查询次数："+querynum);
+                    for(int i=0;i<querynum;i++){
+                        Log.i("TrackActivity","第"+i+"次查询");
+                        int skip = i*1000;
+                        query.skip(skip);
+                        query.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> avObjects, AVException avException) {
+                                if(avObjects!=null&&avObjects.size()>0) {
+                                    now_list.addAll(avObjects);
+                                    Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
+                                    if(now_list.size()==count){
+                                        // 构建热力图 HeatmapTileProvider
+                                        HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        // 构造热力图对象
+                                        HeatmapTileProvider heatmapTileProvider = builder.build();
+                                        // 初始化 TileOverlayOptions
+                                        TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+                                        tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+                                        // 向地图上添加 TileOverlayOptions 类对象
+                                        amap.addTileOverlay(tileOverlayOptions);
 
-                    // 全幅显示
-                    com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(list);
-                    amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+                                        // 全幅显示
+                                        com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
+                                        amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 
-                    // 显示轨迹线
-                    Polyline polyline =amap.addPolyline(new PolylineOptions().
-                            addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                        // 显示轨迹线
+                                        Polyline polyline =amap.addPolyline(new PolylineOptions().
+                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
 
-//                    List<com.amap.api.maps.model.LatLng> points = GenetateLatLngListFromAvobject(now_list);
-//                    amap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-//
-//                    SmoothMoveMarker smoothMarker = new SmoothMoveMarker(amap);
-//                    // 设置滑动的图标
-//                    smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.walk));
-//
-//                    com.amap.api.maps.model.LatLng drivePoint = points.get(0);
-//                    Pair<Integer, com.amap.api.maps.model.LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(points, drivePoint);
-//                    points.set(pair.first, drivePoint);
-//                    List<com.amap.api.maps.model.LatLng> subList = points.subList(pair.first, points.size());
-//                    // 设置滑动的轨迹左边点
-//                    smoothMarker.setPoints(subList);
-//                    // 设置滑动的总时间
-//                    smoothMarker.setTotalDuration(40);
-//                    // 开始滑动
-//                    smoothMarker.startSmoothMove();
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
+
+
             }
         });
+//        query.findInBackground(new FindCallback<AVObject>() {
+//            @Override
+//            public void done(List<AVObject> list, AVException e) {
+//                if(list!=null&&list.size()>0){
+//                    Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
+//                    Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
+//                    // 构建热力图 HeatmapTileProvider
+//                    HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+//                    builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
+////                            .gradient(ALT_HEATMAP_GRADIENT); // 设置热力图渐变，有默认值 DEFAULT_GRADIENT，可不设置该接口
+//                    // Gradient 的设置可见参考手册
+//                    // 构造热力图对象
+//                    HeatmapTileProvider heatmapTileProvider = builder.build();
+//                    // 初始化 TileOverlayOptions
+//                    TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+//                    tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+//                    // 向地图上添加 TileOverlayOptions 类对象
+//                    amap.addTileOverlay(tileOverlayOptions);
+//
+//                    // 全幅显示
+//                    com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(list);
+//                    amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+//
+//                    // 显示轨迹线
+//                    Polyline polyline =amap.addPolyline(new PolylineOptions().
+//                            addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(10).color(Color.argb(255, 1, 1, 1)));
+//
+////                    List<com.amap.api.maps.model.LatLng> points = GenetateLatLngListFromAvobject(now_list);
+////                    amap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+////
+////                    SmoothMoveMarker smoothMarker = new SmoothMoveMarker(amap);
+////                    // 设置滑动的图标
+////                    smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.walk));
+////
+////                    com.amap.api.maps.model.LatLng drivePoint = points.get(0);
+////                    Pair<Integer, com.amap.api.maps.model.LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(points, drivePoint);
+////                    points.set(pair.first, drivePoint);
+////                    List<com.amap.api.maps.model.LatLng> subList = points.subList(pair.first, points.size());
+////                    // 设置滑动的轨迹左边点
+////                    smoothMarker.setPoints(subList);
+////                    // 设置滑动的总时间
+////                    smoothMarker.setTotalDuration(40);
+////                    // 开始滑动
+////                    smoothMarker.startSmoothMove();
+//                }
+//            }
+//        });
 
 //        Bundle extras = intent.getExtras();
         //Parcelable 反序列化
@@ -185,15 +240,18 @@ public class TrackDetailMapActivity extends BaseActivity {
             double y = geopoint.getLongitude();
             latlngs[i] = new com.amap.api.maps.model.LatLng(x, y);
 
-            // 将WGS-84坐标转换为高德坐标
-            CoordinateConverter converter  = new CoordinateConverter(this);
-            // CoordType.GPS 待转换坐标类型
-            converter.from(CoordinateConverter.CoordType.GPS);
-            // sourceLatLng待转换坐标点 LatLng类型
-            converter.coord(latlngs[i]);
-            // 执行转换操作
-            latlngs[i] = converter.convert();
-
+            String coordinate = obj.getString("geo_coordinate");
+//            Log.i("TrackActivity","当前数据坐标："+coordinate + "数据信息:" + obj);
+            if(coordinate.equals(Constant.GPS)){
+                // 将WGS-84坐标转换为高德坐标
+                CoordinateConverter converter  = new CoordinateConverter(this);
+                // CoordType.GPS 待转换坐标类型
+                converter.from(CoordinateConverter.CoordType.GPS);
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(latlngs[i]);
+                // 执行转换操作
+                latlngs[i] = converter.convert();
+            }
             i++;
         }
 

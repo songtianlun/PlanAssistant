@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" /> <!--计步器、步测器 传感器-->
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -35,6 +36,7 @@
             android:name=".service.DataCaptureService"
             android:enabled="true"
             android:exported="true"></service>
+        <service android:name="com.amap.api.location.APSService"></service>
 
         <activity
             android:name=".activity.TrackDetailMapActivity"

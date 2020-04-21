@@ -219,11 +219,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                                 if(list!=null){
                                     Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                                     Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-
-
                                     CreateLineLayer(genetatePointsFromAvobject(list,mapboxMap),style);//创建线
-
-
                                 }
                             }
                         });

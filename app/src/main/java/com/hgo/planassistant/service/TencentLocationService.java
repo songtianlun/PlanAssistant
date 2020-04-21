@@ -169,7 +169,7 @@ public class TencentLocationService extends Service implements
             track_record.put("altitude",tencentLocation.getAltitude()); //设置高程
             track_record.put("type",tencentLocation.getProvider()); //设置类型
             track_record.put("precision",tencentLocation.getAccuracy()); //精度
-            track_record.put("interval",SP_setting.getString("pref_list_location_time","4000")); //定位时间间隔
+//            track_record.put("interval",SP_setting.getString("pref_list_location_time","4000")); //定位时间间隔
 //            track_record.put("interval", 4000); //定位时间间隔
             track_record.put("createDate",now_str); //文本日期
 //            track_record.saveInBackground();// 保存到服务端
