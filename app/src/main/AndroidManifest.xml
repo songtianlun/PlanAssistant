@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" /> <!--计步器、步测器 传感器-->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" /> <!-- 计步器、步测器 传感器 -->
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -32,12 +32,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <service
             android:name=".service.DataCaptureService"
             android:enabled="true"
-            android:exported="true"></service>
-        <service android:name="com.amap.api.location.APSService"></service>
+            android:exported="true" />
+        <service android:name="com.amap.api.location.APSService" />
 
+        <activity
+            android:name=".activity.StepCounterActivity"
+            android:label="@string/title_toolbar_activity_step_counter"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.TrackDetailMapActivity"
             android:label="@string/title_toolbar_track_detail_map"

@@ -25,11 +25,16 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.MainActivity;
+import com.hgo.planassistant.tools.DateFormat;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
@@ -38,6 +43,7 @@ import com.tencent.map.geolocation.TencentLocationRequest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -63,14 +69,14 @@ public class DataCaptureService extends Service {
     private Sensor StepCounterSensor;
     private SensorEventListener StepCounterSensorListener;
 
-    private Boolean LocationServiceStart = null; // 位置服务运行标记
+    private Boolean LocationServiceStart = false; // 位置服务运行标记
     private int CurrentStep = 0; // 标记当前步数
-    private int AddStep = 0; // 增加的步数
+    private int AddStep = -1; // 增加的步数
 
     private StorageTimeCount storagetimeCount; // 存储计时器
     private NoSportTimeCount noSportTimeCount = null; // 无运动计时器
     // 5*60 秒进行一次存储
-    private static int saveDuration = 300000;
+    private static int saveDuration = 300000; //调小以测试
     // 5*60 秒无运动则关闭位置记录
     private static int noStopDuration = 300000;
 
@@ -127,7 +133,7 @@ public class DataCaptureService extends Service {
 
         if(SP_setting.getBoolean("pref_location_background_switch",false)){
             Log.i("DataCaptureService","后台服务开关为开，启动后台位置获取");
-            startForeground(110, notification);// 开始前台服务
+//            startForeground(110, notification);// 开始前台服务
             initLocationCapture();
         }
 
@@ -143,7 +149,7 @@ public class DataCaptureService extends Service {
 
 
         DestroyLocationCapture();
-        stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
+//        stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
     }
 
     private void initLocationCapture(){
@@ -254,7 +260,8 @@ public class DataCaptureService extends Service {
     }
 
     private void initAMapLocation(){
-        if(aLocationClient!=null){
+        if(aLocationClient==null){
+            Log.i("DataCaptureService","无正在运行的高德位置服务，初始化高德位置服务！");
             aLocationListener = new AMapLocationListener() {
                 @Override
                 public void onLocationChanged(AMapLocation aMapLocation) {
@@ -380,6 +387,7 @@ public class DataCaptureService extends Service {
             //启动定位
             aLocationClient.startLocation();
         }
+        Log.i("DataCaptureService","高德位置服务正在运行！");
     }
 
     private void destroyAMapLocation(){
@@ -429,12 +437,13 @@ public class DataCaptureService extends Service {
                     Log.i("DataCaptureService","当前步数为0，判为数据服务刚刚启动，当前步数赋新值："+ CurrentStep);
                 } else if(CurrentStep<(int)sensorEvent.values[0]){
                     // 当前步数小于更新步数，判为步数增加
-                    if(AddStep!=0){
+                    if(AddStep!=-1){
                         AddStep += (int)sensorEvent.values[0] - CurrentStep;
-                        Log.i("DataCaptureService","当前步数非0，当前新增步数："+ AddStep);
+                        CurrentStep = (int)sensorEvent.values[0];
+                        Log.i("DataCaptureService","新增步数值更新，当前新增步数："+ AddStep);
                     }else{
-                        AddStep = (int)sensorEvent.values[0];
-                        Log.i("DataCaptureService","当前步数非0，为新增步数赋值，当前新增步数："+ AddStep);
+                        AddStep++;
+                        Log.i("DataCaptureService","新增步数为初始值，为新增步数赋值，当前新增步数："+ AddStep);
                     }
                 } else if(CurrentStep>(int)sensorEvent.values[0]){
                     // 当前步数大于更新部署，判为计步器清零，重置当前步数
@@ -454,6 +463,72 @@ public class DataCaptureService extends Service {
 
     private void saveStepData(){
         Log.i("DataCaptureService","存储新增步数到服务器");
+
+        DateFormat dateFormat = new DateFormat();
+        Calendar NowHour = dateFormat.FilterMinuteAndSecond(Calendar.getInstance());
+//        NowHour.set(dateFormat.getNowYear(),dateFormat.getNowMonth(),dateFormat.getNowDay(),dateFormat.getNowHourOfDay(),0,0);
+
+        Log.i("DataCaptureService","当前步数存储小时："+dateFormat.GetDetailDescription(NowHour));
+
+//        // 先查询当前小时是否有记录
+        AVQuery<AVObject> query = new AVQuery<>("stepcounter");
+        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        Calendar quaretime = NowHour;
+        quaretime.add(Calendar.MINUTE,1);
+        query.whereLessThan("time",quaretime.getTime());
+        quaretime.add(Calendar.MINUTE,-2);
+        query.whereGreaterThan("time",quaretime.getTime());
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> avObjects, AVException avException) {
+                Log.i("DataCaptureService","查询到当前时刻步数记录条数："+avObjects.size());
+
+                if(avObjects.size()<1){
+                    // 当前时刻不存在数据
+                    Log.i("DataCaptureService","当前时刻不存在数据，新建记录");
+                    // 构造方法传入的参数，对应的就是控制台中的 Class Name
+                    AVObject step_record = new AVObject("stepcounter");
+                    step_record.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
+                    step_record.put("time",NowHour.getTime()); //设置时间戳
+                    if(AddStep==-1){
+                        step_record.put("count",0);
+                    }else{
+                        step_record.put("count",AddStep);
+                    }
+                    step_record.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            Log.i("DataCaptureService","新建时刻步数：" + step_record.getInt("count"));
+                            AddStep -= step_record.getInt("count");
+                            // 避免更新数据期间的数据丢失
+                        }
+                    });
+//                    AddStep = 0;
+                }else{
+                    // 当前时刻存在数据
+                    Log.i("DataCaptureService","当前时刻有记录，更新步数");
+//                    Log.i("DataCaptureService","服务器时间："+avObjects.get(0).getDate("time")+",当前时间："+NowHour.getTime());
+                    AVObject step_record = AVObject.createWithoutData("stepcounter", avObjects.get(0).getObjectId());
+                    step_record.put("count",(avObjects.get(0).getInt("count")+AddStep) );
+                    step_record.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            Log.i("DataCaptureService","成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
+                            AddStep -= step_record.getInt("count") - avObjects.get(0).getInt("count");
+                            // 避免更新数据期间的数据丢失
+                        }
+                    });
+
+                }
+            }
+        });
+//
+        // 构造方法传入的参数，对应的就是控制台中的 Class Name
+        AVObject step_record = new AVObject("stepcounter");
+        step_record.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
+        step_record.put("time",new Date()); //设置时间戳
+//
+//        step_record.saveEventually();// 离线保存
     }
 
     private void startStorageTimeCount(){

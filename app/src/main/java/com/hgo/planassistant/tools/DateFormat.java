@@ -33,6 +33,9 @@ public class DateFormat {
         initDate(date);
     }
 
+    public DateFormat(){
+    }
+
     public DateFormat(Date in){
         date = Calendar.getInstance();
         date.setTime(in);
@@ -51,13 +54,13 @@ public class DateFormat {
     }
 
     private void initDate(Calendar in){
-        year = date.get(Calendar.YEAR);//年
-        month = date.get(Calendar.MONTH) + 1;//月（必须要+1）
-        day = date.get(Calendar.DATE);//日
-        hour = date.get(Calendar.HOUR_OF_DAY);//时
-        minute = date.get(Calendar.MINUTE);//分
-        second = date.get(Calendar.SECOND);//秒
-        week = date.get(Calendar.DAY_OF_WEEK);//星期（Locale.ENGLISH情况下，周日是1,剩下自己推算）
+        year = in.get(Calendar.YEAR);//年
+        month = in.get(Calendar.MONTH) + 1;//月（必须要+1）
+        day = in.get(Calendar.DATE);//日
+        hour = in.get(Calendar.HOUR_OF_DAY);//时
+        minute = in.get(Calendar.MINUTE);//分
+        second = in.get(Calendar.SECOND);//秒
+        week = in.get(Calendar.DAY_OF_WEEK);//星期（Locale.ENGLISH情况下，周日是1,剩下自己推算）
     }
 
     private String getChineseWeek(int in){
@@ -80,7 +83,30 @@ public class DateFormat {
                 Log.e("DateFormat","输入值有误！周几获取有效值范围“1~7”");
                 return " ";
         }
-
-
     }
+
+    public int getNowYear(){
+        return Calendar.getInstance().get(Calendar.YEAR);
+    }
+    public int getNowMonth(){
+        return (Calendar.getInstance().get(Calendar.MONTH));
+    }
+    public int getNowDay(){
+        return Calendar.getInstance().get(Calendar.DATE);
+    }
+    public int getNowHourOfDay(){
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+    }
+
+    public Calendar FilterMinuteAndSecond(Calendar in){
+        Calendar results = Calendar.getInstance();
+        if(in!=null){
+            results.set(in.get(Calendar.YEAR),in.get(Calendar.MONTH),in.get(Calendar.DATE),in.get(Calendar.HOUR_OF_DAY),0,0);
+        }else{
+            return null;
+        }
+        return results;
+    }
+
+
 }

@@ -433,7 +433,9 @@ public class MainActivity extends BaseActivity
             case R.id.nav_menu_city_hotpoint:
                 startActivity(new Intent(MainActivity.this, CityHotPointActivity.class));
                 break;
-
+            case R.id.nav_menu_step_counter:
+                startActivity(new Intent(MainActivity.this, StepCounterActivity.class));
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -522,7 +524,11 @@ public class MainActivity extends BaseActivity
 
         // Cactus 应用保活
         Cactus.getInstance()
-                .hideNotification(true)
+                .setLargeIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .hideNotification(false)
+                .setTitle("规划助手")
+                .setContent("规划助手后台运行中")
                 .isDebug(true)
                 .setPendingIntent(pendingIntent)
                 .addCallback(new CactusCallback() {

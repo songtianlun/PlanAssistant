@@ -302,7 +302,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         // Cactus 应用保活
         Cactus.getInstance()
-                .hideNotification(true)
+                .setLargeIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .hideNotification(false)
                 .isDebug(true)
                 .setPendingIntent(pendingIntent)
                 .addCallback(new CactusCallback() {
@@ -324,9 +326,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         Cactus.getInstance().unregister(getActivity());
     }
     public void restartService(){
-        Intent restartIntent = new Intent(getActivity(), DataCaptureService.class);
-        getActivity().startService(restartIntent);
-        getActivity().stopService(restartIntent);
-        Cactus.getInstance().restart(getActivity());
+//        Intent restartIntent = new Intent(getActivity(), DataCaptureService.class);
+//        getActivity().startService(restartIntent);
+//        getActivity().stopService(restartIntent);
+//        Cactus.getInstance().restart(getActivity());
+        stopService();
+        StartService();
     }
 }

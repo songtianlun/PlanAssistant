@@ -18,6 +18,10 @@
             android:icon="@drawable/chart_line"
             android:title="@string/nav_menu_liveline" />
         <item
+            android:id="@+id/nav_menu_step_counter"
+            android:icon="@drawable/walk"
+            android:title="@string/nav_menu_step_counter" />
+        <item
             android:id="@+id/nav_menu_plan"
             android:icon="@drawable/calendar_text"
             android:title="@string/nav_menu_plan" />
