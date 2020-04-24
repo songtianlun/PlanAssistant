@@ -15,5 +15,5 @@
 - Ui by Material / 设计材料
 - Data by LeanCloud / 对象数据库
 
-[Download](http://fir.im/xm19)
+[Download](http://firim.frytea.com/xm19)
 [Get Started](Quick-Start.md)
