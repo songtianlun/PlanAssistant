@@ -12,7 +12,7 @@ Material Designer + MapBox + LeanCloud.
 
 ## Download
 
-[![B2654C2C-4076-44A0-89EB-50F71F39833A.png](http://frytea-data.test.upcdn.net/8A509086-6E86-403C-B633-4A346A0255F2.png)](http://fir.im/xm19?release_id=5d76767ef945486b4887d325&fir_source=GitHub&fir_campaign=GitHub)
+[![B2654C2C-4076-44A0-89EB-50F71F39833A.png](http://frytea-data.test.upcdn.net/8A509086-6E86-403C-B633-4A346A0255F2.png)](http://firim.frytea.com/xm19)
 
 ## Dev Environment
 
@@ -62,15 +62,7 @@ Material Designer + MapBox + LeanCloud.
  - HomePage: <https://home.frytea.com>
  - E-mail: <songtianlun@frytea.com>
 
-## Version
-
- name | version | type | link
- :--: | :--: | :--: | :--:
- PlanAssistant | V1.1.1 | release | [PlanAssistant-release-V1.1.1.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-V1.1.1.apk)
- PlanAssistant | V1.1.0 | release | [PlanAssistant-release-v1.1.0.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-v1.1.0.apk)
- PlanAssistant | V1.0.0 | release | [PlanAssistant-release-1.0.0.apk](http://frytea-data.test.upcdn.net/PlanAssistant-release-1.0.0.apk)
- 
-### Log of Update(Release)
+## Log of Update(Release)
 
 * V1.1.4
     * 放弃百度移动统计改用友盟
