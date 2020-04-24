@@ -12,7 +12,7 @@ BUNDLE_ID="com.hgo.planassistant"
 package_path="${PACKAGE_DIR}${new_filename}"
 
 # Get upload_url
-credential=$(curl -X "POST" "http://api.fir.im/apps" \
+credential=$(curl -X "POST" "http://api.bq04.com/apps" \
 -H "Content-Type: application/json" \
 -d "{\"type\":\"${TYPE}\", \"bundle_id\":\"${BUNDLE_ID}\", \"api_token\":\"${API_TOKEN}\"}"
 )
