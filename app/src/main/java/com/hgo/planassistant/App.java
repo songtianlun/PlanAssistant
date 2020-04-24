@@ -19,6 +19,9 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
 import com.hgo.planassistant.service.TencentLocationService;
+
+import org.litepal.LitePal;
+
 import java.lang.reflect.Array;
 import java.util.concurrent.Executor;
 
@@ -40,6 +43,9 @@ public class App extends Application {
         mExecutor = AsyncTask.THREAD_POOL_EXECUTOR;
 
         initServer();
+
+        // 初始化 LitePal
+        LitePal.initialize(this);
     }
 
     public void runOnUi(Runnable runnable) {

@@ -54,6 +54,7 @@ import com.tencent.map.geolocation.TencentLocationListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends BaseActivity
@@ -67,6 +68,7 @@ public class MainActivity extends BaseActivity
     private View headview;
     private TextView tv_nickname, tv_introduction;
     private Context mainactivity_context;
+    private long firstPressedTime;
 
 
     // 要申请的权限
@@ -104,8 +106,8 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         stopService();
+        super.onDestroy();
 //        SharedPreferences SP_setting = this.getSharedPreferences("setting",App.getContext().MODE_PRIVATE);
 //        SharedPreferences.Editor SP_edit = SP_setting.edit();
 //        SP_edit.putBoolean("pref_location_background_switch",false);
@@ -330,11 +332,21 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
+//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+
+        // 点击两次退出程序
+//        firstPressedTime = System.currentTimeMillis();;
+        if (System.currentTimeMillis() - firstPressedTime < 2000) {
+            stopService();
             super.onBackPressed();
+        } else {
+            Toast.makeText(MainActivity.this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            firstPressedTime = System.currentTimeMillis();
         }
     }
 
@@ -492,6 +504,9 @@ public class MainActivity extends BaseActivity
             SP_editor.putString("pref_list_location_time","4000"); // 定位间隔
             SP_editor.putBoolean("pref_location_usegps",false); // 是否使用GPS
             SP_editor.putBoolean("pref_location_indoor",false); // 是否室内定位
+
+            // Perosonal
+            SP_editor.putInt("pref_personal_step_target",4000); //设置步数日目标
 
             //System
             SP_editor.putString("pref_list_system_server","cn-north"); // 后端服务，默认“cn-north”，备用“international”

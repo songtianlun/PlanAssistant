@@ -114,6 +114,21 @@
             <!--android:key="pref_multi_select_list"-->
             <!--android:title="@string/settings_multi_select_list_preference_title" />-->
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_personal_title">
+        <SeekBarPreference
+            android:dialogTitle="@string/settings_personal_step_target"
+            android:key="pref_list_personal_step_target"
+            android:icon="@drawable/bullseye_arrow"
+            android:max="20000"
+            android:min="2000"
+            android:defaultValue="4000"
+            android:summary="当前步数日目标：4000"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/settings_personal_step_target" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_system_title">
         <ListPreference
             android:defaultValue="international"

@@ -143,7 +143,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 btn_source_licenses_close.setOnClickListener(v -> dialog.dismiss());
                 dialog.show();
                 break;
-
             case R.id.tv_card_about_2_git_hub:
                 intent.setData(Uri.parse(Constant.GIT_HUB));
                 intent.setAction(Intent.ACTION_VIEW);
@@ -155,7 +154,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
                 break;
+            case R.id.catd_about_1:
+//                startActivity(new Intent(this, AppLogActivity.class));
+                break;
             case R.id.card_about_1_version:
+                startActivity(new Intent(this, AppLogActivity.class));
                 FirUpdater.getInstance(this_context)
                         .apiToken(DataSource.fir_im_API_TOKEN)
                         .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
@@ -165,6 +168,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.fab_about_share:
+                startActivity(new Intent(AboutActivity.this, AppLogActivity.class));
 //                intent.setAction(Intent.ACTION_SEND);
 //                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
 //                intent.setType("text/plain");

@@ -14,6 +14,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
 
@@ -35,6 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private ListPreference pref_list_location_ali_type;
     private SwitchPreference pref_location_tencent_usegps;
     private SwitchPreference pref_location_tencent_indoor;
+    private SeekBarPreference pref_list_personal_step_target;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -48,6 +50,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         pref_list_location_ali_type = findPreference("pref_list_location_ali_type");
         pref_location_tencent_usegps = findPreference("pref_location_tencent_usegps");
         pref_location_tencent_indoor = findPreference("pref_location_tencent_indoor");
+        pref_list_personal_step_target = findPreference("pref_list_personal_step_target");
 
         loadsetting();
     }
@@ -80,34 +83,49 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
                 SP_edit.putBoolean("pref_location_switch",(Boolean) newValue);
                 break;
+            case "pref_list_personal_step_target":
+                int trunc = Integer.parseInt(newValue.toString()) / 100; //百位截断
+                pref_list_personal_step_target.setSummary("当前运动目标：每日" + trunc*100 + "步");
+                pref_list_personal_step_target.setValue(trunc*100);
+                SP_edit.putInt("pref_personal_step_target",trunc*100);
+                SP_edit.commit();
+                break;
             case "pref_list_location_query_precision":
                 SP_edit.putString("settings_location_query_precision",newValue.toString());
                 SP_edit.commit();
                 Log.i("SettingsFragement","切换精度限制为："+newValue.toString());
                 break;
             case "pref_list_location_server":
-                SP_edit.putString("settings_location_server",newValue.toString());
-                Log.i("SettingsFragement","切换位置服务提供者为："+newValue.toString());
-                if(newValue.toString().equals("Amap")){
-                    pref_list_location_ali_type.setEnabled(true);
-                    pref_location_tencent_usegps.setEnabled(false);
-                    pref_location_tencent_indoor.setEnabled(false);
-                }else {
-                    pref_list_location_ali_type.setEnabled(false);
-                    pref_location_tencent_usegps.setEnabled(true);
-                    pref_location_tencent_indoor.setEnabled(true);
+                if(SP_setting.getString("settings_location_server","Amap").equals(newValue.toString())){
+                    Log.i("SettingsFragement","设置未改变");
+                }else{
+                    SP_edit.putString("settings_location_server",newValue.toString());
+                    Log.i("SettingsFragement","切换位置服务提供者为："+newValue.toString());
+                    if(newValue.toString().equals("Amap")){
+                        pref_list_location_ali_type.setEnabled(true);
+                        pref_location_tencent_usegps.setEnabled(false);
+                        pref_location_tencent_indoor.setEnabled(false);
+                    }else {
+                        pref_list_location_ali_type.setEnabled(false);
+                        pref_location_tencent_usegps.setEnabled(true);
+                        pref_location_tencent_indoor.setEnabled(true);
+                    }
+                    SP_edit.commit();
+                    restartService();
+                    Log.i("SettingsFragement","数据获取服务已重启！");
                 }
-                SP_edit.commit();
-                restartService();
-                Log.i("SettingsFragement","数据获取服务已重启！");
                 break;
             case "pref_location_background_switch":
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
-                Log.i("SettingsFragement","后台轨迹记录设置项改变为："+newValue.toString());
-                SP_edit.putBoolean("pref_location_background_switch",Boolean.valueOf(newValue.toString()));
+                if(SP_setting.getBoolean("pref_location_background_switch",false)==Boolean.valueOf(newValue.toString())){
+                    Log.i("SettingsFragement","设置未改变");
+                }else{
+                    Log.i("SettingsFragement","后台轨迹记录设置项改变为："+newValue.toString());
+                    SP_edit.putBoolean("pref_location_background_switch",Boolean.valueOf(newValue.toString()));
 //                Log.i("SettingsFragement",newValue.toString());
-                SP_edit.commit();
-                restartService();
+                    SP_edit.commit();
+                    restartService();
+                }
 //                Log.i("SettingsFragement",String.valueOf(SP_setting.getBoolean("pref_location_background_switch",false)));
 //                if((Boolean) newValue){
 //                    Intent startIntent = new Intent(getActivity(), DataCaptureService.class);
@@ -152,16 +170,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             case "pref_list_location_type":
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
 //                preference.setSummary(newValue.toString());
-                SP_edit.putString("pref_list_location_type",newValue.toString());
-                SP_edit.commit();
-                restartService();
+                if(SP_setting.getString("pref_list_location_type","Battery_Saving").equals(newValue.toString())){
+                    Log.i("SettingsFragement","设置未改变");
+                }else{
+                    SP_edit.putString("pref_list_location_type",newValue.toString());
+                    SP_edit.commit();
+                    restartService();
+                }
                 break;
             case "pref_list_location_time":
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
 //                preference.setSummary(newValue.toString());
-                SP_edit.putString("pref_list_location_time",newValue.toString());
-                restartService();
-                SP_edit.commit();
+                if(SP_setting.getString("pref_list_location_time","4000").equals(newValue.toString())){
+                    Log.i("SettingsFragement","设置未改变");
+                }else{
+                    SP_edit.putString("pref_list_location_time",newValue.toString());
+                    restartService();
+                    SP_edit.commit();
+                }
                 break;
             case "pref_list_system_server":
                 SP_edit.putString("pref_list_system_server",newValue.toString());
@@ -267,6 +293,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_list_location_ali_type").setDefaultValue(SP_setting.getString("pref_list_location_ali_type","Battery_Saving"));
         findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","international"));
         findPreference("pref_list_location_time").setDefaultValue(SP_setting.getString("pref_list_location_time","4000"));
+        findPreference("pref_list_personal_step_target").setDefaultValue(SP_setting.getInt("pref_personal_step_target",4000));
 
         // 绑定改变事件
 //        findPreference("pref_location_switch").setOnPreferenceChangeListener(this);
@@ -277,6 +304,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_list_location_time").setOnPreferenceChangeListener(this);
         findPreference("pref_location_tencent_indoor").setOnPreferenceChangeListener(this);
         findPreference("pref_location_tencent_usegps").setOnPreferenceChangeListener(this);
+        findPreference("pref_list_personal_step_target").setOnPreferenceChangeListener(this);
 
         findPreference("pref_list_system_server").setOnPreferenceChangeListener(this);
 
@@ -287,7 +315,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         onPreferenceChange(findPreference("pref_list_location_ali_type"), preferences.getString("pref_list_location_ali_type", "Battery_Saving"));
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
         onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north"));
-
+        onPreferenceChange(findPreference("pref_list_personal_step_target"), (preferences.getInt("pref_list_personal_step_target",4000)));
     }
 
     public void StartService(){

@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.StepCounterActivity"
-    android:background="@color/colorPrimary">
+    tools:context=".activity.AppLogActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbar_step_counter_layout"
+        android:id="@+id/toolbar_app_log_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_step_counter"
+            android:id="@+id/toolbar_app_log"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -23,23 +22,11 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/scroll_step_counter_layout"
+    <TextView
+        android:id="@+id/textview_activity_app_log"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_step_counter_layout">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/card_activity_step_counter_todaystep" />
-
-            <include layout="@layout/card_activity_step_counter_day_trend" />
-
-            <include layout="@layout/card_activity_step_counter_sevenday_trend" />
-        </LinearLayout>
-    </ScrollView>
+        android:layout_below="@id/toolbar_app_log_layout"
+        android:scrollbars="vertical"/>
 
 </RelativeLayout>

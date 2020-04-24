@@ -129,6 +129,9 @@ dependencies {
     // Cactus 应用保活
     implementation 'com.gyf.cactus:cactus:1.1.3-beta09'
 
+    // Litepal
+    implementation 'org.litepal.android:java:3.0.0'
+
 }
 
 

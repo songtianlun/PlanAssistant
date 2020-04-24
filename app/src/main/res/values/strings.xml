@@ -122,6 +122,9 @@
     <string name="settings_location_tencent_indoor">室内定位</string>
     <string name="settings_location_indoor_description">是否启用腾讯位置服务室内定位功能，提高室内定位效能。</string>
 
+    <string name="settings_personal_title">个人设置</string>
+    <string name="settings_personal_step_target">步数目标</string>
+
     <string name="settings_system_title">系统设置</string>
     <string name="settings_system_server">服务器节点</string>
 
@@ -234,6 +237,10 @@
 
     <string name="card_activity_track_bar_chart_title">精度统计</string>
 
+    <string name="card_activity_step_counter_todaystep_title">今日步数</string>
+    <string name="card_activity_step_counter_day_trend_title">今日趋势</string>
+    <string name="card_activity_step_counter_sevenday_trend_title">多日趋势</string>
+
     <!--activity of livelint-->
 
     <string name="fab_adddata_liveline">精力评价</string>
@@ -301,6 +308,9 @@
 
     <!--toolbar_activity_step_counter-->
     <string name="title_toolbar_activity_step_counter">计步器</string>
+
+<!--    toolbar_activity_app_log-->
+    <string name="title_toolbar_activity_app_log">运行日志</string>
 
 
     <!--<string name="card_home_location_station">已关闭</string>-->

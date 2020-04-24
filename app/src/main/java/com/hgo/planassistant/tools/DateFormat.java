@@ -7,8 +7,8 @@ import java.util.Date;
 
 public class DateFormat {
 
-    Calendar date;
-    Date date_date;
+    Calendar date = Calendar.getInstance();
+    Date date_date = new Date();
     int year;
     int month;
     int day;
@@ -28,9 +28,13 @@ public class DateFormat {
     }
 
     public DateFormat(Calendar in){
-        date = in;
-        date_date = in.getTime();
-        initDate(date);
+        if(in!=null){
+            date = in;
+            date_date = in.getTime();
+            initDate(date);
+        }else{
+            Log.i("DateFormat","输入为空！");
+        }
     }
 
     public DateFormat(){
@@ -48,9 +52,26 @@ public class DateFormat {
     }
 
     public String GetDetailDescription(Calendar in){
-        date = in;
-        initDate(date);
-        return year + "年" + month + "月" + day + "日" + getChineseWeek(week) + " " + hour + ":" + minute + ":" + second;
+        if(in!=null){
+            date = in;
+            initDate(date);
+            return year + "年" + month + "月" + day + "日" + getChineseWeek(week) + " " + hour + ":" + minute + ":" + second;
+        }else{
+            Log.i("DateFormat","输入为空！");
+            return null;
+        }
+
+    }
+
+    public String GetDetailDescription(Date in){
+        if(in!=null){
+            date.setTime(in);
+            initDate(date);
+            return year + "年" + month + "月" + day + "日" + getChineseWeek(week) + " " + hour + ":" + minute + ":" + second;
+        }else{
+            Log.i("DateFormat","输入为空！");
+            return null;
+        }
     }
 
     private void initDate(Calendar in){
@@ -102,6 +123,16 @@ public class DateFormat {
         Calendar results = Calendar.getInstance();
         if(in!=null){
             results.set(in.get(Calendar.YEAR),in.get(Calendar.MONTH),in.get(Calendar.DATE),in.get(Calendar.HOUR_OF_DAY),0,0);
+        }else{
+            return null;
+        }
+        return results;
+    }
+
+    public Calendar FilterHourAndMinuteAndSecond(Calendar in){
+        Calendar results = Calendar.getInstance();
+        if(in!=null){
+            results.set(in.get(Calendar.YEAR),in.get(Calendar.MONTH),in.get(Calendar.DATE),0,0,0);
         }else{
             return null;
         }
