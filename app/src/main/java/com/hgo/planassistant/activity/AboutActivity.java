@@ -113,7 +113,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
-
         switch (view.getId()) {
 //            case R.id.tv_card_about_2_shop:
 //                intent.setData(Uri.parse(Constant.APP_URL));

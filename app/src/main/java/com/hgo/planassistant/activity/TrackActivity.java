@@ -23,6 +23,7 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
+import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.HeatmapTileProvider;
 import com.amap.api.maps.model.MyLocationStyle;
@@ -55,28 +56,7 @@ import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.expressions.Expression;
-import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
-import com.mapbox.mapboxsdk.style.layers.LineLayer;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.style.sources.Source;
-import com.umeng.analytics.MobclickAgent;
+
 
 import org.geotools.geojson.geom.GeometryJSON;
 
@@ -89,18 +69,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-import static java.net.Proxy.Type.HTTP;
 
 public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
@@ -108,15 +76,14 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     private int PrecisionLessThen = 500; // 轨迹精度查询最高限制
     private   String HEATMAP_SOURCE_ID = "HEATMAP_SOURCE_ID";
     private   String HEATMAP_LAYER_ID = "HEATMAP_LAYER_ID";
-    private Expression[] listOfHeatmapColors;
-    private Expression[] listOfHeatmapRadiusStops;
     private Float[] listOfHeatmapIntensityStops;
 //    private MapView mapView;
 //    private MapboxMap mapboxmap;
 //    private Style map_style;
 //    private int index;
-    private com.amap.api.maps.MapView aMapView = null;
+    private MapView aMapView = null;
     private AMap amap = null;
+
 
     private Calendar start_time;
     private Calendar end_time;
@@ -135,8 +102,6 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //设置accessToken
-        Mapbox.getInstance(App.getContext(), getString(R.string.mapbox_access_token));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
@@ -830,40 +795,40 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         TV_stop_calendar.setText(end_time.get(Calendar.YEAR)+"年"+(end_time.get(Calendar.MONTH)+1)+"月"+end_time.get(Calendar.DATE)+"日");
         TV_stop_time.setText(end_time.get(Calendar.HOUR_OF_DAY)+" 时 "+end_time.get(Calendar.MINUTE) +"分");
     }
-    private Feature[] genetateGeoStringFromAvobject(List<AVObject> list){
-        if(list!=null){
-        Feature[] features = new Feature[list.size()];
-        int i=0;
-
-        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
-//        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
-        for (AVObject obj: list){
-            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-            features[i] = Feature.fromGeometry(Point.fromLngLat(
-                    geopoint.getLongitude(),
-                    geopoint.getLatitude()));
-            latLngBoundsBuilder.include(new LatLng(geopoint.getLatitude(),geopoint.getLongitude()));
-            i++;
-        }
-        if(list.size()>2){
-            LatLngBounds latLngBounds = latLngBoundsBuilder.build();//创建边界
-//            mapboxmap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);//全幅显示
-        }
-
-            return features;
-        }
-        return null;
-    }
-    private ArrayList<Point> genetatePointsFromAvobject(List<AVObject> list){
-        ArrayList<Point> routeCoordinates = new ArrayList<Point>();
-
-        for (AVObject obj: list){
-            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-            routeCoordinates.add(Point.fromLngLat(geopoint.getLongitude(), geopoint.getLatitude()));
-        }
-        Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
-        return routeCoordinates;
-    }
+//    private Feature[] genetateGeoStringFromAvobject(List<AVObject> list){
+//        if(list!=null){
+//        Feature[] features = new Feature[list.size()];
+//        int i=0;
+//
+//        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
+////        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
+//        for (AVObject obj: list){
+//            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+//            features[i] = Feature.fromGeometry(Point.fromLngLat(
+//                    geopoint.getLongitude(),
+//                    geopoint.getLatitude()));
+//            latLngBoundsBuilder.include(new LatLng(geopoint.getLatitude(),geopoint.getLongitude()));
+//            i++;
+//        }
+//        if(list.size()>2){
+//            LatLngBounds latLngBounds = latLngBoundsBuilder.build();//创建边界
+////            mapboxmap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50), 5000);//全幅显示
+//        }
+//
+//            return features;
+//        }
+//        return null;
+//    }
+//    private ArrayList<Point> genetatePointsFromAvobject(List<AVObject> list){
+//        ArrayList<Point> routeCoordinates = new ArrayList<Point>();
+//
+//        for (AVObject obj: list){
+//            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+//            routeCoordinates.add(Point.fromLngLat(geopoint.getLongitude(), geopoint.getLatitude()));
+//        }
+//        Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
+//        return routeCoordinates;
+//    }
     private com.amap.api.maps.model.LatLng[] GenetateLatLngArratFromAvobject(List<AVObject> list){
         int sum = list.size();
         com.amap.api.maps.model.LatLng[] latlngs = new com.amap.api.maps.model.LatLng[sum];

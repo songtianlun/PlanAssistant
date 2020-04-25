@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/card_home_location" />
+<!--        <include layout="@layout/card_home_location" />-->
+
+        <include layout="@layout/card_home_step_counter" />
 
         <include layout="@layout/card_home_map" />
 

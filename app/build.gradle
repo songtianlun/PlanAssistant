@@ -16,8 +16,8 @@ android {
         applicationId "com.hgo.planassistant"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.1.3.20191008"
+        versionCode 8
+        versionName "1.1.4.20200425"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        systemProp.https.proxyPort=1080
 //        systemProp.https.proxyHost=127.0.0.1

@@ -152,6 +152,7 @@ public class DataCaptureService extends Service {
     }
 
     private void initLocationCapture(){
+        StorageLog("debug","DateCaptureService","初始化位置服务，开始收集轨迹数据。");
         LocationServiceStart = true; //标记为已开启
 //        SP_setting = this.getSharedPreferences("setting",MODE_MULTI_PROCESS);
         if(SP_setting.getString("settings_location_server","Amap").equals("Amap")){
@@ -163,6 +164,7 @@ public class DataCaptureService extends Service {
         }
     }
     private void DestroyLocationCapture(){
+        StorageLog("debug","DateCaptureService","销毁位置服务，开始收集轨迹数据。");
         LocationServiceStart = false; //标记为false
         destroyAMapLocation();
         destroyTencentLocation();
@@ -422,6 +424,7 @@ public class DataCaptureService extends Service {
         StepCounterSensorListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
+                StorageLog("debug","DateCaptureService","计步器步数改变，启动位置记录，" + "当前计步器步数：" + sensorEvent.values[0]);
                 Log.d("DataCaptureService","计步器步数改变，启动位置记录，" + "当前计步器步数：" + sensorEvent.values[0]);
                 if(SP_setting.getBoolean("pref_location_background_switch",false)){
                     Log.d("DataCaptureService","后台服务开关为开，不重复启动位置记录！");
