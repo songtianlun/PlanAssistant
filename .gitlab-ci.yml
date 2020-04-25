@@ -32,7 +32,7 @@ build:
 uploadToPgyer:
   stage: deploy
   script:
-    - curl -F "file=@/app/build/outputs/apk/release/app-release.apk" -F "uKey=0d37385680eba5d8cd60f29937dfba3e" -F "_api_key=5625af52e1b97a58c99ba885cd2fbe98" https://upload.pgyer.com/apiv1/app/upload
+    - curl -F "file=app/build/outputs/apk/release/app-release.apk" -F "uKey=0d37385680eba5d8cd60f29937dfba3e" -F "_api_key=5625af52e1b97a58c99ba885cd2fbe98" https://upload.pgyer.com/apiv1/app/upload
 
 uploadToFir:
   stage: deploy

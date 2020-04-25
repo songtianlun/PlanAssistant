@@ -13,3 +13,4 @@
 .externalNativeBuild
 /app/build
 /app/release
+/app/release/
