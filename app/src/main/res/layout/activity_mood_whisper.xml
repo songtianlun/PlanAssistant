@@ -4,33 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.LiveLineActivity">
+    tools:context=".activity.MoodWhisperActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbar_liveline_layout"
+        android:id="@+id/toolbar_mood_whisper_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_liveline_view"
-            app:title="@string/title_activity_liveline"
+            android:id="@+id/toolbar_mood_whisper"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_recycler_view"
+        android:id="@+id/swipe_refresh_layout_mood_whisper_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_recycler_view"
+            android:id="@+id/recycler_view_mood_whisper_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/zero_margin_when_normal"
@@ -41,12 +39,12 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/efab_recycler_view"
+        android:id="@+id/efab_mood_whisper_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:text="@string/fab_adddata_liveline"
+        android:text="@string/fab_add_whisper"
         app:icon="@drawable/ic_add_white_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

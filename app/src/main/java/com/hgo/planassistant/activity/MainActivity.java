@@ -22,14 +22,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.preference.SwitchPreference;
 import androidx.viewpager.widget.ViewPager;
 
 import com.avos.avoscloud.AVException;
@@ -44,17 +42,14 @@ import com.gyf.cactus.callback.CactusCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.adapter.FragmentAdapter;
+import com.hgo.planassistant.fragement.EnergyFragment;
 import com.hgo.planassistant.fragement.HomeFragment;
 import com.hgo.planassistant.fragement.PlanFragment;
-import com.hgo.planassistant.fragement.RecordFragment;
 import com.hgo.planassistant.service.DataCaptureService;
-import com.hgo.planassistant.service.TencentLocationService;
-import com.tencent.map.geolocation.TencentLocation;
-import com.tencent.map.geolocation.TencentLocationListener;
-import com.umeng.analytics.MobclickAgent;
+import com.hgo.planassistant.tools.DateFormat;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends BaseActivity
@@ -139,8 +134,8 @@ public class MainActivity extends BaseActivity
         LinearLayout nav_header = headerView.findViewById(R.id.nav_header);
         nav_header.setOnClickListener(this);
 
-        fab = findViewById(R.id.fab_main);
-        fab.setOnClickListener(this);
+//        fab = findViewById(R.id.fab_main);
+//        fab.setOnClickListener(this);
 
 //        bt_feedback = findViewById(R.id.action_main_feedback);
 //        bt_feedback.setOnClickListener(this);
@@ -157,8 +152,8 @@ public class MainActivity extends BaseActivity
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
-        fragments.add(new RecordFragment());
         fragments.add(new PlanFragment());
+        fragments.add(new EnergyFragment());
         FragmentAdapter mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
         mViewPager.setAdapter(mFragmentAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -317,11 +312,11 @@ public class MainActivity extends BaseActivity
         @Override
         public void onPageSelected(int position) {
 
-            if (position == 2) {
-                fab.show();
-            } else {
-                fab.hide();
-            }
+//            if (position == 2) {
+//                fab.show();
+//            } else {
+//                fab.hide();
+//            }
         }
 
         @Override
@@ -427,6 +422,12 @@ public class MainActivity extends BaseActivity
             case R.id.nav_menu_mymap:
                 startActivity(new Intent(MainActivity.this, MyMapActivity.class));
                 break;
+            case R.id.nav_menu_energy_evaluation:
+                startActivity(new Intent(MainActivity.this, EnergyEvaluationActivity.class));
+                break;
+            case R.id.nav_menu_mood_whisper:
+                startActivity(new Intent(MainActivity.this, MoodWhisperActivity.class));
+                break;
             case R.id.nav_menu_liveline:
                 startActivity(new Intent(MainActivity.this, LiveLineActivity.class));
                 break;
@@ -459,11 +460,11 @@ public class MainActivity extends BaseActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fab_main:
-                Snackbar.make(v, getString(R.string.main_snack_bar), Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.main_snack_bar_action), view -> {
-                        }).show();
-                break;
+//            case R.id.fab_main:
+//                Snackbar.make(v, getString(R.string.main_snack_bar), Snackbar.LENGTH_LONG)
+//                        .setAction(getString(R.string.main_snack_bar_action), view -> {
+//                        }).show();
+//                break;
             default:
                 Log.i("MainActitvity","MainActivity Click！");
                 break;
@@ -507,6 +508,14 @@ public class MainActivity extends BaseActivity
 
             // Perosonal
             SP_editor.putInt("pref_personal_step_target",4000); //设置步数日目标
+            // 睡眠时间设置
+            DateFormat dateFormat = new DateFormat();
+            Calendar start_sleep = Calendar.getInstance();
+            Calendar end_sleep = Calendar.getInstance();
+            start_sleep.set(2020,5,1,23,0);
+            end_sleep.set(2020,5,2,7,0);
+            SP_editor.putLong("pref_personal_start_sleep", start_sleep.getTime().getTime());
+            SP_editor.putLong("pref_personal_end_sleep",end_sleep.getTime().getTime());
 
             //System
             SP_editor.putString("pref_list_system_server","cn-north"); // 后端服务，默认“cn-north”，备用“international”

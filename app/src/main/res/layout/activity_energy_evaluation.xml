@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.LiveLineActivity">
+    tools:context=".activity.EnergyEvaluationActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbar_liveline_layout"
+        android:id="@+id/toolbar_energy_evaluation_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_liveline_view"
-            app:title="@string/title_activity_liveline"
+            android:id="@+id/toolbar_energy_evaluation"
+            app:title="@string/title_toolbar_activity_energy_evaluation"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -24,13 +24,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_recycler_view"
+        android:id="@+id/swipe_energy_ecaluation_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_recycler_view"
+            android:id="@+id/recycler_view_energy_evaluation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/zero_margin_when_normal"
@@ -41,12 +41,12 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/efab_recycler_view"
+        android:id="@+id/efab_energy_evaluation_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:text="@string/fab_adddata_liveline"
+        android:text="@string/fab_add_energy_evaluation"
         app:icon="@drawable/ic_add_white_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

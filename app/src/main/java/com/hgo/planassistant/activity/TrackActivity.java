@@ -945,56 +945,59 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         // 第二步：将数据提交到当前的个人地图
         // 第三步：存储当前地图风格
 
-        // 构造方法传入的参数，对应的就是控制台中的 Class Name
-        AVObject mymap = new AVObject("personalmap");
+        if(map_list.size()>1000){
+            Toast.makeText(track_context,map_name + "数据点过多，请约束精度或时间将数据点数降至1000以下再试！",Toast.LENGTH_LONG).show();
+        }else{
+            // 构造方法传入的参数，对应的就是控制台中的 Class Name
+            AVObject mymap = new AVObject("personalmap");
 //        AVObject mappoint = new AVObject("mappoint");
-        ArrayList<AVObject> mappoints = new ArrayList<AVObject>();
+            ArrayList<AVObject> mappoints = new ArrayList<AVObject>();
 
-        // no.1
-        mymap.put("name",map_name);//地图名称
-        mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
-        mymap.put("mapstyle_index",0);//风格编号
-        mymap.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    // 存储成功
+            // no.1
+            mymap.put("name",map_name);//地图名称
+            mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
+            mymap.put("mapstyle_index",0);//风格编号
+            mymap.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        // 存储成功
 //                    Toast.makeText(track_context,map_name + "地图创建成功!",Toast.LENGTH_LONG).show();
 
-                    for (AVObject mappoint : map_list) {
-                        AVObject point = new AVObject("mappoint");
-                        point.put("point",mappoint.getAVGeoPoint("point"));
-                        point.put("altutude",mappoint.get("altitude"));
-                        point.put("MapId",mymap.getObjectId());
-                        mappoints.add(point);
-                    }
-
-                    AVObject.saveAllInBackground(mappoints, new SaveCallback() {
-                        @Override
-                        public void done(AVException e) {
-                            if (e != null) {
-                                // 出现错误
-                                mymap.deleteInBackground();
-                                Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
-                            } else {
-                                // 保存成功
-//                                Toast.makeText(track_context,"地图存储成功!",Toast.LENGTH_LONG).show();
-                            }
+                        for (AVObject mappoint : map_list) {
+                            AVObject point = new AVObject("mappoint");
+                            point.put("point",mappoint.getAVGeoPoint("point"));
+                            point.put("altutude",mappoint.get("altitude"));
+                            point.put("MapId",mymap.getObjectId());
+                            mappoints.add(point);
                         }
-                    });
+
+                        AVObject.saveAllInBackground(mappoints, new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e != null) {
+                                    // 出现错误
+                                    mymap.deleteInBackground();
+                                    Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                                } else {
+                                    // 保存成功
+//                                Toast.makeText(track_context,"地图存储成功!",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
 
 
-                } else {
-                    // 失败的话，请检查网络环境以及 SDK 配置是否正确
-                    Toast.makeText(track_context,map_name + "地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                    } else {
+                        // 失败的话，请检查网络环境以及 SDK 配置是否正确
+                        Toast.makeText(track_context,map_name + "地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
-        });
+            });
 
 //        ArrayList<AVObject> save_mappoints = (ArrayList<AVObject>) map_list;
 
 
-        
+
 
 //        for (AVObject obj: map_list){
 //            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
@@ -1004,7 +1007,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //
 //
 //        }
-
+        }
     }
     private void RagesQuare(List<AVObject> list){
         int i=0;

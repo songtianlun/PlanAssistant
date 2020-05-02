@@ -77,6 +77,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     //    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0-alpha01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -89,38 +90,56 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:7.3.2') {
-        exclude group: 'group_name', module: 'module_name'
-    }
+
+    //    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:7.3.2') {
+
+    //        exclude group: 'group_name', module: 'module_name'
+
+    //    }
+
     // LeanCloud 基础包
     implementation 'cn.leancloud.android:avoscloud-sdk:4.7.15'
+
     // 推送与即时通讯需要的包
+
     //    compile ('cn.leancloud.android:avoscloud-push:4.7.10@aar'){transitive = true}
+
     // Android 混合推送需要的包
+
     //    compile ('cn.leancloud.android:avoscloud-mixpush:4.7.10@aar'){transitive = true}
+
     // LeanCloud 用户反馈包
     implementation 'cn.leancloud.android:avoscloud-feedback:4.7.15@aar'
+
     // LeanCloud 应用内搜索包
+
     //    compile ('cn.leancloud.android:avoscloud-search:4.7.10@aar')
 
     // 高德地图
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     //3D地图so及jar
     implementation 'com.amap.api:3dmap:latest.integration'
+
     //定位功能
     implementation 'com.amap.api:location:latest.integration'
+
     //搜索功能
     implementation 'com.amap.api:search:latest.integration'
     implementation files('libs/TencentLocationSdk_v7.1.6.1_r67ba7298_20190409_142648.jar')
     implementation files('libs/gt-geojson-19.4.jar')
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
+
     //seekbar with bubble
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+
     // fir.im 内测推送
     implementation 'com.sunfusheng:FirUpdater:latest.integration'
     implementation files('libs/BaiduLBS_Android.jar')
-//    implementation 'com.tencent.bugly:crashreport:latest.release' //Bugly SDK最新版本版本
-//    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration' // 百度移动统计
+
+    //    implementation 'com.tencent.bugly:crashreport:latest.release' //Bugly SDK最新版本版本
+
+    //    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration' // 百度移动统计
 
     // 友盟+
     implementation 'com.umeng.umsdk:analytics:8.0.0'
@@ -132,6 +151,15 @@ dependencies {
     // Litepal
     implementation 'org.litepal.android:java:3.0.0'
 
+    // Ok http
+    implementation 'com.squareup.okhttp3:okhttp:4.6.0'
+    implementation files('libs/json-20160810.jar')
+    implementation files('libs/aip-java-sdk-4.13.0.jar')
+    implementation files('libs/slf4j-api-1.7.25.jar')
+    implementation files('libs/slf4j-simple-1.7.25.jar')
+
+    //FastJson
+    implementation 'com.alibaba:fastjson:VERSION_CODE'
 }
 
 

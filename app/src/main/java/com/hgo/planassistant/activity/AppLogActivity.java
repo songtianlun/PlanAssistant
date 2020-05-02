@@ -13,6 +13,8 @@ import com.hgo.planassistant.tools.DateFormat;
 
 import org.litepal.LitePal;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class AppLogActivity extends BaseActivity {
@@ -31,7 +33,12 @@ public class AppLogActivity extends BaseActivity {
         textView = findViewById(R.id.textview_activity_app_log);
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());//滑动
 
-        List<Log> allAlbum = LitePal.findAll(Log.class);
+        List<Log> allAlbum = LitePal.limit(200).find(Log.class);
+//        Calendar PastDay =  Calendar.getInstance();
+//        PastDay.add(Calendar.DATE,-1);
+//        Date PastDayDate = PastDay.getTime();
+//        List<Log> allAlbum = LitePal.where("time  >  ?","PastDayDate").find(Log.class);
+
         DateFormat dateFormat = new DateFormat();
         for (int i=allAlbum.size()-1;i>=0;i--){
             textView.append(dateFormat.GetDetailDescription(allAlbum.get(i).getTime())+"/"+allAlbum.get(i).getLabel()+"/"+allAlbum.get(i).getLog()+"\n");

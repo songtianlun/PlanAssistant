@@ -60,7 +60,6 @@ public class DateFormat {
             Log.i("DateFormat","输入为空！");
             return null;
         }
-
     }
 
     public String GetDetailDescription(Date in){
@@ -68,6 +67,30 @@ public class DateFormat {
             date.setTime(in);
             initDate(date);
             return year + "年" + month + "月" + day + "日" + getChineseWeek(week) + " " + hour + ":" + minute + ":" + second;
+        }else{
+            Log.i("DateFormat","输入为空！");
+            return null;
+        }
+    }
+
+    public String GetHourAndMinuteDetailDescription(){
+        return hour + ":" + minute;
+    }
+    public String GetHourAndMinuteDetailDescription(Calendar in){
+        if(in!=null){
+            date = in;
+            initDate(date);
+            return hour + ":" + minute;
+        }else{
+            Log.i("DateFormat","输入为空！");
+            return null;
+        }
+    }
+    public String GetHourAndMinuteDetailDescription(Date in){
+        if(in!=null){
+            date.setTime(in);
+            initDate(date);
+            return hour + ":" + minute;
         }else{
             Log.i("DateFormat","输入为空！");
             return null;

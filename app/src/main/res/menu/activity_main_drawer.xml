@@ -14,13 +14,21 @@
             android:icon="@drawable/home_map_marker"
             android:title="@string/nav_menu_map" />
         <item
-            android:id="@+id/nav_menu_liveline"
-            android:icon="@drawable/chart_line"
-            android:title="@string/nav_menu_liveline" />
-        <item
             android:id="@+id/nav_menu_step_counter"
             android:icon="@drawable/walk"
             android:title="@string/nav_menu_step_counter" />
+        <item
+            android:id="@+id/nav_menu_mood_whisper"
+            android:icon="@drawable/emoticon_cool_outline"
+            android:title="@string/nav_menu_mood_whisper"/>
+        <item
+            android:id="@+id/nav_menu_energy_evaluation"
+            android:icon="@drawable/arm_flex"
+            android:title="@string/nav_menu_energy_evaluation" />
+        <item
+            android:id="@+id/nav_menu_liveline"
+            android:icon="@drawable/chart_line"
+            android:title="@string/nav_menu_liveline" />
         <item
             android:id="@+id/nav_menu_plan"
             android:icon="@drawable/calendar_text"
@@ -36,14 +44,12 @@
         <item
             android:id="@+id/nav_menu_map_check"
             android:icon="@drawable/map_check"
-            android:title="@string/nav_menu_map_check"
-            />
+            android:title="@string/nav_menu_map_check" />
 
         <item
             android:id="@+id/nav_menu_city_hotpoint"
             android:icon="@drawable/city"
-            android:title="@string/nav_menu_city_hotpoint"
-            />
+            android:title="@string/nav_menu_city_hotpoint" />
 
     </group>
 

@@ -15,12 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.avos.avoscloud.AVObject;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.DetailPMapActivity;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -73,24 +67,10 @@ public class MyMapRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             final MyMapRecyclerViewAdapter.RecyclerViewHolder recyclerViewHolder = (MyMapRecyclerViewAdapter.RecyclerViewHolder) holder;
 
             //加载地图
-            recyclerViewHolder.mapview.onCreate(bundle);
-            recyclerViewHolder.mapview.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull MapboxMap mapboxMap) {
-
-                mapboxMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(34.833774, 113.537698))
-                        .title("Eiffel Tower"));
-                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-
-                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments
-
-                    }
-                });
-            }
-        });
+//            recyclerViewHolder.amapview.onCreate(bundle); // 此方法须覆写，虚拟机需要在很多情况下保存地图绘制的当前状态。
+//            if (recyclerViewHolder.amap == null) {
+//                recyclerViewHolder.amap = recyclerViewHolder.amapview.getMap();
+//            }
 
             //加载名称、备注、事件
             recyclerViewHolder.TV_title.setText(mItems.get(position).get("name").toString());
@@ -122,7 +102,8 @@ public class MyMapRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         private TextView TV_remarks;
         private TextView TV_date;
         private CardView mItem;
-        private MapView mapview;
+//        private com.amap.api.maps.MapView amapview;
+//        private AMap amap;
 
         private RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -130,7 +111,7 @@ public class MyMapRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             TV_remarks = (TextView) itemView.findViewById(R.id.tv_mymap_item_remarks);
             TV_date = (TextView) itemView.findViewById(R.id.tv_mymap_item_date);
             mItem = (CardView) itemView.findViewById(R.id.card_view_item_mymap_view);
-            mapview = itemView.findViewById(R.id.imrv_mapView);
+//            amapview = itemView.findViewById(R.id.imrv_amapView);
         }
     }
 }

@@ -20,13 +20,6 @@ import android.widget.Toast;
 
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Arrays;
@@ -35,7 +28,7 @@ import java.util.List;
 
 public class MapCheckActivity extends BaseActivity {
 
-    MapView mapView;
+//    MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,25 +47,25 @@ public class MapCheckActivity extends BaseActivity {
             }
         });
 
-        mapView = (MapView) findViewById(R.id.card_map_check_map_mapView);
-        mapView.onCreate(savedInstanceState);
-
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull MapboxMap mapboxMap) {
-
-//                mapboxMap.addMarker(new MarkerOptions()
-//                        .position(new LatLng(34.833774, 113.537698))
-//                        .title("Eiffel Tower"));
-                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments
-
-                    }
-                });
-            }
-        });
+//        mapView = (MapView) findViewById(R.id.card_map_check_map_mapView);
+//        mapView.onCreate(savedInstanceState);
+//
+//        mapView.getMapAsync(new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+//
+////                mapboxMap.addMarker(new MarkerOptions()
+////                        .position(new LatLng(34.833774, 113.537698))
+////                        .title("Eiffel Tower"));
+//                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+//                    @Override
+//                    public void onStyleLoaded(@NonNull Style style) {
+//                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments
+//
+//                    }
+//                });
+//            }
+//        });
 
     }
 

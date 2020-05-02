@@ -33,9 +33,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activity.EnergyEvaluationActivity"
+            android:label="@string/title_toolbar_activity_energy_evaluation"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.MoodWhisperActivity"
+            android:label="@string/title_toolbar_activity_mood_whisper"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.AppLogActivity"
             android:label="@string/title_toolbar_activity_app_log"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <service
             android:name=".service.DataCaptureService"
             android:enabled="true"

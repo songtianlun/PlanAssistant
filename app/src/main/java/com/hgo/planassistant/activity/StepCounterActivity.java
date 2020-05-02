@@ -349,7 +349,7 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 Log.d("StepCounterActivity","多日步数趋势共查到数据条数:"+avObjects.size());
-                int[] StepSum = new int[SumDay]; //初始化为默认值,int型为0
+                int[] StepSum = new int[SumDay+1]; //初始化为默认值,int型为0
                 Calendar start_calendat = Calendar.getInstance();
                 start_calendat.setTime(start_time);
                 for(int i=0;i<avObjects.size();i++){
@@ -357,10 +357,18 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
                     getDay.setTime(avObjects.get(i).getDate("time"));
                     Log.d("StepCounterActivity","处理数据时刻："+dateFormat.GetDetailDescription(getDay) + "索引："+getDay.get(Calendar.DATE));
 
-                    StepSum[(dateFormat.FilterHourAndMinuteAndSecond(getDay).get(Calendar.DATE)) - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).get(Calendar.DATE)] += avObjects.get(i).getInt("count");
+                    // 将 开始时间到当前时间之间相差的天数 作为数组坐标
+//                    StepSum[(dateFormat.FilterHourAndMinuteAndSecond(getDay).get(Calendar.DATE)) - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).get(Calendar.DATE)] += avObjects.get(i).getInt("count");
+                    StepSum[(int)Math.abs( ( dateFormat.FilterHourAndMinuteAndSecond(getDay).getTime().getTime() - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).getTime().getTime())/86400000)] += avObjects.get(i).getInt("count");
+
                 }
                 for(int i=0;i<SumDay;i++){
-                    values.add(new BarEntry((start_calendat.get(Calendar.DATE)+i),StepSum[i]));
+                    // 直接获取日期+1，忽略月末异常，采用日期加一再取日期的方法解决
+//                    values.add(new BarEntry((start_calendat.get(Calendar.DATE)+i),StepSum[i]));
+                    Calendar nowday = Calendar.getInstance();
+                    nowday.setTime(start_time);
+                    nowday.add(Calendar.DATE,i);
+                    values.add(new BarEntry((nowday.get(Calendar.DATE)),StepSum[i]));
                 }
                 BarDataSet set1;
 

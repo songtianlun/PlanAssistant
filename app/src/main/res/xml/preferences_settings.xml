@@ -127,6 +127,17 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/settings_personal_step_target" />
+        <Preference
+            android:title="@string/settings_personal_start_sleep"
+            android:summary="@string/settings_personal_start_sleep_summer"
+            android:key="pref_personal_start_sleep"
+            android:icon="@drawable/bed"/>
+        <Preference
+            android:title="@string/settings_personal_end_sleep"
+            android:summary="@string/settings_personal_end_sleep_summer"
+            android:key="pref_personal_end_sleep"
+            android:icon="@drawable/human"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_system_title">

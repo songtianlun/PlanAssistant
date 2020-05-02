@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_map_check_map"
+    android:id="@+id/card_energy_physical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/dimen_common"
@@ -21,32 +20,20 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/card_map_check_map_title"
+            android:id="@+id/card_energy_physical_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:adjustViewBounds="true"
             android:layout_margin="@dimen/dimen_common_small"
-            android:text="@string/card_map_check_map_title"
+            android:text="@string/card_energy_physical_title"
             android:scaleType="centerCrop" />
 
-        <RelativeLayout
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/card_energy_physical_linechart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_map_check_map_title"
-            android:id="@+id/card_home_plan_data"
-            android:layout_margin="@dimen/dimen_common_very_small">
-
-<!--            <com.mapbox.mapboxsdk.maps.MapView-->
-<!--                android:id="@+id/card_map_check_map_mapView"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="200dp"-->
-<!--                mapbox:mapbox_cameraTargetLat="34.833488"-->
-<!--                mapbox:mapbox_cameraTargetLng="113.543419"-->
-<!--                mapbox:mapbox_cameraTilt="20"-->
-<!--                mapbox:mapbox_cameraZoom="12"/>-->
-
-        </RelativeLayout>
+            android:layout_height="320dp"
+            android:layout_below="@id/card_energy_physical_title" />
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

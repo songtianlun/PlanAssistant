@@ -20,8 +20,8 @@
     <string name="menu_send">Send</string>
 
     <string name="tab_title_main_1">Home</string>
-    <string name="tab_title_main_2">Record</string>
-    <string name="tab_title_main_3">Plan</string>
+    <string name="tab_title_main_2">Plan</string>
+    <string name="tab_title_main_3">Energy</string>
     <string name="main_snack_bar">This is a snack bar</string>
     <string name="main_snack_bar_action">Okay</string>
 
@@ -105,6 +105,13 @@
     <string name="main_dialog_fullscreen">Fullscreen Dialog</string>
     <string name="main_popup_menu">Popup Menu</string>
 
+    <!--card_energy-->
+    <string name="card_energy_title">精力趋势（点此获取建议）</string>
+    <string name="card_energy_physical_title">体能精力</string>
+    <string name="card_energy_emotion_title">情感精力</string>
+    <string name="card_energy_thinking_title">思维精力</string>
+    <string name="card_energy_determination_title">意志精力</string>
+
     <!-- Strings related to Settings -->
     <string name="settings_location_title">定位设置</string>
     <string name="settings_location_switch">轨迹记录功能</string>
@@ -124,6 +131,10 @@
 
     <string name="settings_personal_title">个人设置</string>
     <string name="settings_personal_step_target">步数目标</string>
+    <string name="settings_personal_start_sleep">开始睡眠</string>
+    <string name="settings_personal_start_sleep_summer">开始睡眠时间</string>
+    <string name="settings_personal_end_sleep">结束睡眠</string>
+    <string name="settings_personal_end_sleep_summer">结束睡眠时间</string>
 
     <string name="settings_system_title">系统设置</string>
     <string name="settings_system_server">服务器节点</string>
@@ -193,11 +204,13 @@
     <string name="nav_menu_track">轨迹记录</string>
     <string name="nav_menu_map">个人地图</string>
     <string name="nav_menu_liveline">精力曲线</string>
+    <string name="nav_menu_energy_evaluation">精力评价</string>
+    <string name="nav_menu_mood_whisper">心情小语</string>
     <string name="nav_menu_step_counter">计步器</string>
     <string name="nav_menu_plan">规划事件</string>
     <string name="nav_menu_indoor">三维支持</string>
     <string name="nav_menu_plan_counter">百日计划</string>
-    <string name="nav_menu_map_check">到此一游</string>
+    <string name="nav_menu_map_check">位置收藏</string>
     <string name="nav_menu_city_hotpoint">城市热力图</string>
 
 
@@ -309,8 +322,22 @@
     <!--toolbar_activity_step_counter-->
     <string name="title_toolbar_activity_step_counter">计步器</string>
 
-<!--    toolbar_activity_app_log-->
+    <!--    toolbar_activity_app_log-->
     <string name="title_toolbar_activity_app_log">运行日志</string>
+
+    <!-- toolbar_activity_mood_whisper-->
+    <string name="title_toolbar_activity_mood_whisper">心情小语</string>
+    <string name="fab_add_whisper">记录心情</string>
+
+    <!-- toolbar_activity_energy_evaluation-->
+    <string name="title_toolbar_activity_energy_evaluation">精力评价</string>
+    <string name="fab_add_energy_evaluation">新增评价</string>
+
+    <!-- dialog_bottom_energy_evaluation-->
+    <string name="dialog_bottom_energy_evaluation_title">评价精力</string>
+    <string name="dialog_bottom_energy_evaluation_time_title">当前时间</string>
+    <string name="dialog_bottom_energy_evaluation_thinking_title">思维精力（专注程度）</string>
+    <string name="dialog_bottom_energy_evaluation_determination_title">意志精力（强度）</string>
 
 
     <!--<string name="card_home_location_station">已关闭</string>-->
@@ -320,6 +347,5 @@
     <!--<string name="card_home_location_quantity">××××</string>-->
     <!--<string name="card_home_location_quantity_title">数量</string>-->
     <!--<string name="card_home_location_date">××××年××月××日</string>-->
-
 
 </resources>

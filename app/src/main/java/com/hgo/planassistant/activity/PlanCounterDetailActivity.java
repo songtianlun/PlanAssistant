@@ -30,8 +30,6 @@ import android.widget.Toast;
 
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.umeng.analytics.MobclickAgent;
 import com.warkiz.widget.IndicatorSeekBar;
 

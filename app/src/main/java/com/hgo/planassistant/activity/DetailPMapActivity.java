@@ -1,63 +1,46 @@
 package com.hgo.planassistant.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.CoordinateConverter;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.HeatmapTileProvider;
+import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.maps.model.TileOverlayOptions;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.hgo.planassistant.App;
+import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.custom.HeatMap;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.expressions.Expression;
-import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.umeng.analytics.MobclickAgent;
 
-import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
-
 public class DetailPMapActivity extends BaseActivity {
 
-    private   String HEATMAP_SOURCE_ID = "HEATMAP_SOURCE_ID";
-    private   String HEATMAP_LAYER_ID = "HEATMAP_LAYER_ID";
-    private Expression[] listOfHeatmapColors;
-    private Expression[] listOfHeatmapRadiusStops;
-    private Float[] listOfHeatmapIntensityStops;
-
-    private MapView mapView;
+//    private MapView mapView;
+    private MapView amapview;
     private AVObject mapObject;
     private Context nowActContext;
     private Bundle nowBundle;
     private Toolbar toolbar;
-    private Style mapstyle;
-    private int style_index;
+    private AMap amap;
+//    private Style mapstyle;
+//    private int style_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +70,11 @@ public class DetailPMapActivity extends BaseActivity {
         avObject.fetchInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
-                String mapname = avObject.getString("title");// 读取 title
+//                String mapname = avObject.getString("title");// 读取 title
                 if (avObject != null) {
                     mapObject = avObject;
-                    style_index = (int)mapObject.get("mapstyle_index");
                     initView();
+                    loadMap();
                 }else{
                     Toast.makeText(nowActContext,"拉取数据失败!",Toast.LENGTH_SHORT).show();
                 }
@@ -101,35 +84,30 @@ public class DetailPMapActivity extends BaseActivity {
     }
 
     private void initView(){
-
-        mapView = findViewById(R.id.activity_dpmap_mapView);
+        amapview = findViewById(R.id.activity_dpmap_amapView);
         toolbar = findViewById(R.id.toolbar_detailpmap);
         setToolbar(toolbar);
         toolbar.setTitle(mapObject.get("name").toString());
 
+        amapview.onCreate(nowBundle); // 此方法须覆写，虚拟机需要在很多情况下保存地图绘制的当前状态。
 
-        mapView.onCreate(nowBundle);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull MapboxMap mapboxMap) {
-
-//                mapboxMap.addMarker(new MarkerOptions()
-//                        .position(new LatLng(34.833774, 113.537698))
-//                        .title("Eiffel Tower"));
-                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments
-                        mapstyle = style;
-                        loadMap();
-                    }
-                });
-            }
-        });
-
-
+        if (amap == null) {
+            amap = amapview.getMap();
+        }
     }
     private void loadMap(){
+        // 显示定位小蓝点
+        MyLocationStyle myLocationStyle;
+        myLocationStyle = new MyLocationStyle();
+        //初始化定位蓝点样式类
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW);//只定位一次。
+        // myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        // 连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        amap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+//aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+        amap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+
         AVQuery<AVObject> query = new AVQuery<>("mappoint");
         // 启动查询缓存
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -142,55 +120,70 @@ public class DetailPMapActivity extends BaseActivity {
             public void done(List<AVObject> list, AVException e) {
                 Log.i("TrackActivity","共查询到：" + list.size() + "条数据。");
                 Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
-                mapstyle.removeSource(HEATMAP_SOURCE_ID);
-                mapstyle.addSource(new GeoJsonSource(HEATMAP_SOURCE_ID,
-                        FeatureCollection.fromFeatures(genetateGeoStringFromAvobject(list))));
+                // 构建热力图 HeatmapTileProvider
+                HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+                builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(list))); // 设置热力图绘制的数据
+                // 构造热力图对象
+                HeatmapTileProvider heatmapTileProvider = builder.build();
+                // 初始化 TileOverlayOptions
+                TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+                tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+                // 向地图上添加 TileOverlayOptions 类对象
+                amap.addTileOverlay(tileOverlayOptions);
+
+                // 全幅显示
+                com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(list);
+                amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+
+                // 显示轨迹线
+                Polyline polyline =amap.addPolyline(new PolylineOptions().
+                        addAll(Arrays.asList(GenetateLatLngArratFromAvobject(list))).width(10).color(Color.argb(255, 1, 1, 1)));
             }
         });
 
-        listOfHeatmapColors = HeatMap.initHeatmapColors(listOfHeatmapColors);
-        listOfHeatmapRadiusStops = HeatMap.initHeatmapRadiusStops(listOfHeatmapRadiusStops);
-        listOfHeatmapIntensityStops = HeatMap.initHeatmapIntensityStops(listOfHeatmapIntensityStops);
-        addHeatmapLayer(mapstyle);
+
     }
-    private Feature[] genetateGeoStringFromAvobject(List<AVObject> list){
-        Feature[] features = new Feature[list.size()];
+    private com.amap.api.maps.model.LatLng[] GenetateLatLngArratFromAvobject(List<AVObject> list){
+        int sum = list.size();
+        com.amap.api.maps.model.LatLng[] latlngs = new com.amap.api.maps.model.LatLng[sum];
+
         int i=0;
-//        GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
         for (AVObject obj: list){
             AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-            features[i] = Feature.fromGeometry(Point.fromLngLat(
-                    geopoint.getLongitude(),
-                    geopoint.getLatitude()));
+            double x = geopoint.getLatitude();
+            double y = geopoint.getLongitude();
+            latlngs[i] = new com.amap.api.maps.model.LatLng(x, y);
+
+            String coordinate = obj.getString("geo_coordinate");
+//            Log.i("TrackActivity","当前数据坐标："+coordinate + "数据信息:" + obj);
+            if(coordinate.equals(Constant.GPS)){
+                // 将WGS-84坐标转换为高德坐标
+                CoordinateConverter converter  = new CoordinateConverter(this);
+                // CoordType.GPS 待转换坐标类型
+                converter.from(CoordinateConverter.CoordType.GPS);
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(latlngs[i]);
+                // 执行转换操作
+                latlngs[i] = converter.convert();
+            }
             i++;
         }
-        return features;
+
+        return latlngs;
     }
 
-    public void addHeatmapLayer(@NonNull Style loadedMapStyle) {
-        // Create the heatmap layer
-        HeatmapLayer layer = new HeatmapLayer(HEATMAP_LAYER_ID, HEATMAP_SOURCE_ID);
+    //根据自定义内容获取缩放bounds
+    private com.amap.api.maps.model.LatLngBounds getLatLngBounds(List<AVObject> Geolist) {
+        com.amap.api.maps.model.LatLngBounds.Builder b = com.amap.api.maps.model.LatLngBounds.builder();
 
-        // Heatmap layer disappears at whatever zoom level is set as the maximum
-        layer.setMaxZoom(18);
+        for (AVObject obj: Geolist){
+            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+            double x = geopoint.getLatitude();
+            double y = geopoint.getLongitude();
+            b.include(new com.amap.api.maps.model.LatLng(x, y));
+        }
 
-        layer.setProperties(
-                // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
-                // Begin color ramp at 0-stop with a 0-transparency color to create a blur-like effect.
-                heatmapColor(listOfHeatmapColors[style_index]),
-
-                // Increase the heatmap color weight weight by zoom level
-                // heatmap-intensity is a multiplier on top of heatmap-weight
-                heatmapIntensity(listOfHeatmapIntensityStops[style_index]),
-
-                // Adjust the heatmap radius by zoom level
-                heatmapRadius(listOfHeatmapRadiusStops[style_index]
-                ),
-
-                heatmapOpacity(1f)
-        );
-
-        // Add the heatmap layer to the map and above the "water-label" layer
-        loadedMapStyle.addLayerAbove(layer, "waterway-label");
+        return b.build();
     }
+
 }

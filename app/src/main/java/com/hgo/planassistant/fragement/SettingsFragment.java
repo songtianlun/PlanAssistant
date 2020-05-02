@@ -1,12 +1,14 @@
 package com.hgo.planassistant.fragement;
 
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -27,16 +29,25 @@ import com.hgo.planassistant.activity.MainActivity;
 import com.hgo.planassistant.activity.PlanCounterDetailActivity;
 import com.hgo.planassistant.service.DataCaptureService;
 import com.hgo.planassistant.service.TencentLocationService;
+import com.hgo.planassistant.tools.DateFormat;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener,
+        Preference.OnPreferenceClickListener {
 
     private Context setting_context;
     private ListPreference pref_list_location_ali_type;
     private SwitchPreference pref_location_tencent_usegps;
     private SwitchPreference pref_location_tencent_indoor;
     private SeekBarPreference pref_list_personal_step_target;
+    private Preference pref_personal_start_sleep;
+    private Preference pref_personal_end_sleep;
+    private SharedPreferences SP_setting;
+    private SharedPreferences.Editor SP_edit;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -51,7 +62,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         pref_location_tencent_usegps = findPreference("pref_location_tencent_usegps");
         pref_location_tencent_indoor = findPreference("pref_location_tencent_indoor");
         pref_list_personal_step_target = findPreference("pref_list_personal_step_target");
+        pref_personal_start_sleep = findPreference("pref_personal_start_sleep");
+        pref_personal_end_sleep = findPreference("pref_personal_end_sleep");
 
+        setting_context = getActivity();
+
+        SP_setting = getActivity().getSharedPreferences("setting",App.getContext().MODE_PRIVATE);
+        SP_edit = SP_setting.edit();
         loadsetting();
     }
 
@@ -73,16 +90,61 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
         return super.onPreferenceTreeClick(preference);
     }
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference.getKey() != null) {
+            switch(preference.getKey()){
+                case "pref_personal_start_sleep":
+                    // 睡眠时间设置
+                    DateFormat dateFormat_start = new DateFormat();
+                    Calendar start_sleep = Calendar.getInstance();
+                    start_sleep.setTimeInMillis(SP_setting.getLong("pref_personal_start_sleep", Calendar.getInstance().getTime().getTime()));
+                    Log.d("SettingsFragement","设置开始睡眠时刻：" + dateFormat_start.GetDetailDescription(start_sleep));
+                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(setting_context,(view1, hour, minute) -> {
+                        start_sleep.set(Calendar.HOUR_OF_DAY,hour);
+                        start_sleep.set(Calendar.MINUTE,minute);
+                        SP_edit.putLong("pref_personal_start_sleep",start_sleep.getTime().getTime());
+                        SP_edit.commit();
+                        pref_personal_start_sleep.setSummary(dateFormat_start.GetHourAndMinuteDetailDescription(start_sleep));
+                    }, start_sleep.get(Calendar.HOUR_OF_DAY), start_sleep.get(Calendar.MINUTE),true);
+                    start_timePickerDialog.show();
+                    break;
+                case "pref_personal_end_sleep":
+                    DateFormat dateFormat_end = new DateFormat();
+                    Calendar end_sleep = Calendar.getInstance();
+                    end_sleep.setTimeInMillis(SP_setting.getLong("pref_personal_end_sleep",end_sleep.getTime().getTime()));
+                    TimePickerDialog end_timePickerDialog = new TimePickerDialog(setting_context,(view1, hour, minute) -> {
+                        end_sleep.set(Calendar.HOUR_OF_DAY,hour);
+                        end_sleep.set(Calendar.MINUTE,minute);
+                        SP_edit.putLong("pref_personal_end_sleep",end_sleep.getTime().getTime());
+                        SP_edit.commit();
+                        pref_personal_end_sleep.setSummary(dateFormat_end.GetHourAndMinuteDetailDescription(end_sleep));
+                    }, end_sleep.get(Calendar.HOUR_OF_DAY), end_sleep.get(Calendar.MINUTE),true);
+                    end_timePickerDialog.show();
+                    break;
+            }
+        }
+        return false;
+    }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        SharedPreferences SP_setting = getActivity().getSharedPreferences("setting",App.getContext().MODE_PRIVATE);
-        SharedPreferences.Editor SP_edit = SP_setting.edit();
         switch (preference.getKey()){
             case "pref_location_switch":
 //                Snackbar.make(getListView(), newValue.toString(), Snackbar.LENGTH_SHORT).show();
                 SP_edit.putBoolean("pref_location_switch",(Boolean) newValue);
                 break;
+//            case "pref_personal_start_sleep":
+//                // 睡眠时间设置
+//                DateFormat dateFormat_start = new DateFormat();
+//                Calendar start_sleep = Calendar.getInstance();
+//                start_sleep.setTimeInMillis(SP_setting.getLong("pref_personal_start_sleep", start_sleep.getTime().getTime()));
+//                break;
+//            case "pref_personal_end_sleep":
+//                DateFormat dateFormat_end = new DateFormat();
+//                Calendar end_sleep = Calendar.getInstance();
+//                end_sleep.setTimeInMillis(SP_setting.getLong("pref_personal_end_sleep",end_sleep.getTime().getTime()));
+//                break;
             case "pref_list_personal_step_target":
                 int trunc = Integer.parseInt(newValue.toString()) / 100; //百位截断
                 pref_list_personal_step_target.setSummary("当前运动目标：每日" + trunc*100 + "步");
@@ -295,8 +357,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_list_location_time").setDefaultValue(SP_setting.getString("pref_list_location_time","4000"));
         findPreference("pref_list_personal_step_target").setDefaultValue(SP_setting.getInt("pref_personal_step_target",4000));
 
+        // 绑定点击事件
+        findPreference("pref_personal_start_sleep").setOnPreferenceClickListener(this);
+        findPreference("pref_personal_end_sleep").setOnPreferenceClickListener(this);
+
         // 绑定改变事件
 //        findPreference("pref_location_switch").setOnPreferenceChangeListener(this);
+        findPreference("pref_personal_start_sleep").setOnPreferenceChangeListener(this);
+        findPreference("pref_personal_end_sleep").setOnPreferenceChangeListener(this);
         findPreference("pref_list_location_server").setOnPreferenceChangeListener(this);
         findPreference("pref_list_location_query_precision").setOnPreferenceChangeListener(this);
         findPreference("pref_location_background_switch").setOnPreferenceChangeListener(this);
@@ -305,7 +373,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_location_tencent_indoor").setOnPreferenceChangeListener(this);
         findPreference("pref_location_tencent_usegps").setOnPreferenceChangeListener(this);
         findPreference("pref_list_personal_step_target").setOnPreferenceChangeListener(this);
-
         findPreference("pref_list_system_server").setOnPreferenceChangeListener(this);
 
         //设置描述，根据默认值设置描述
@@ -316,6 +383,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
         onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north"));
         onPreferenceChange(findPreference("pref_list_personal_step_target"), (preferences.getInt("pref_list_personal_step_target",4000)));
+
+        // 睡眠时间设置
+        DateFormat dateFormat = new DateFormat();
+        Calendar start_sleep = Calendar.getInstance();
+        Calendar end_sleep = Calendar.getInstance();
+        start_sleep.set(2020,5,1,23,0);
+        end_sleep.set(2020,5,2,7,0);
+
+        start_sleep.setTimeInMillis(SP_setting.getLong("pref_personal_start_sleep", start_sleep.getTime().getTime()));
+        end_sleep.setTimeInMillis(SP_setting.getLong("pref_personal_end_sleep",end_sleep.getTime().getTime()));
+
+        // 设置默认描述
+        findPreference("pref_personal_start_sleep").setSummary(dateFormat.GetHourAndMinuteDetailDescription(start_sleep));
+        findPreference("pref_personal_end_sleep").setSummary(dateFormat.GetHourAndMinuteDetailDescription(end_sleep));
     }
 
     public void StartService(){

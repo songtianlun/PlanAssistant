@@ -16,12 +16,9 @@
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <com.amap.api.maps.MapView
-
         android:id="@+id/activity_track_detail_mapview"
         android:layout_below="@id/toolbar_track_detail_map"
-
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"/>
 
 </RelativeLayout>
