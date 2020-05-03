@@ -9,6 +9,9 @@
     <dimen name="dimen_common_very_small">4dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
 
+    <dimen name="text_common">56dp</dimen>
+    <dimen name="text_multiline_small">112dp</dimen>
+
     <dimen name="zero_margin_when_normal">0dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>

@@ -88,6 +88,7 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_delete">Delete</string>
+    <string name="dialog_done">Done</string>
     <string name="dialog_neutral">Neutral</string>
     <string name="dialog_close">Close</string>
     <string name="main_dialog_simple">Simple dialog</string>
@@ -208,6 +209,7 @@
     <string name="nav_menu_mood_whisper">心情小语</string>
     <string name="nav_menu_step_counter">计步器</string>
     <string name="nav_menu_plan">规划事件</string>
+    <string name="nav_menu_task">日程管理</string>
     <string name="nav_menu_indoor">三维支持</string>
     <string name="nav_menu_plan_counter">百日计划</string>
     <string name="nav_menu_map_check">位置收藏</string>
@@ -338,6 +340,23 @@
     <string name="dialog_bottom_energy_evaluation_time_title">当前时间</string>
     <string name="dialog_bottom_energy_evaluation_thinking_title">思维精力（专注程度）</string>
     <string name="dialog_bottom_energy_evaluation_determination_title">意志精力（强度）</string>
+
+    <!-- toolbar_activity_task-->
+    <string name="toolbar_activity_task">日程管理</string>
+
+    <!-- dialog_bottom_task-->
+    <string name="dialog_bottom_task_title">新增日程</string>
+    <string name="dialog_bottom_task_name_title">* 日程名称</string>
+    <string name="dialog_bottom_task_name_hint">请输入日程名称，该项必填。</string>
+    <string name="dialog_bottom_task_importance_title">* 重要性</string>
+    <string name="dialog_bottom_task_description_title">日程描述</string>
+    <string name="dialog_bottom_task_description_hint">简单描述一下这项日程以备查阅吧。</string>
+    <string name="dialog_bottom_task_location_title">日程地点</string>
+    <string name="dialog_bottom_task_location_hint">简单描述一下日程的位置吧</string>
+    <string name="dialog_bottom_task_start_time_title">开始时间</string>
+    <string name="dialog_bottom_task_end_time_title">结束时间</string>
+    <string name="dialog_bottom_task_remind_title">事件提醒</string>
+    <string name="dialog_bottom_task_cycle_title">事件循环</string>
 
 
     <!--<string name="card_home_location_station">已关闭</string>-->

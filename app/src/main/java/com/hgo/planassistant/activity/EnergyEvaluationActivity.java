@@ -65,6 +65,7 @@ public class EnergyEvaluationActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_energy_evaluation);
         setToolbar(toolbar);
+
         mContext = this;
         evaluation_time = Calendar.getInstance();
         initDate();
@@ -144,7 +145,7 @@ public class EnergyEvaluationActivity extends BaseActivity {
                     livetime_timePickerDialog.show();
                 }
             });
-            mBottomSheetDialog.setContentView(dialogView);
+
             btn_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -177,6 +178,7 @@ public class EnergyEvaluationActivity extends BaseActivity {
             });
 
             btn_cancel.setOnClickListener(v -> mBottomSheetDialog.dismiss());
+            mBottomSheetDialog.setContentView(dialogView);
             mBottomSheetDialog.show();
 
         });
@@ -186,7 +188,7 @@ public class EnergyEvaluationActivity extends BaseActivity {
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         //下拉加载更多
-        swipeRefreshLayout = findViewById(R.id.swipe_energy_ecaluation_recycler_view);
+        swipeRefreshLayout = findViewById(R.id.swipe_energy_evaluation_recycler_view);
         swipeRefreshLayout.setColorSchemeResources(R.color.google_blue, R.color.google_green, R.color.google_red, R.color.google_yellow);
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
             if (color > 4) {

@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.EnergyEvaluationActivity">
+    tools:context=".activity.TaskActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbar_energy_evaluation_layout"
+        android:id="@+id/toolbar_task_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_energy_evaluation"
-            app:title="@string/title_toolbar_activity_energy_evaluation"
+            android:id="@+id/toolbar_task"
+            app:title="@string/toolbar_activity_task"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -24,24 +24,24 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/swipe_energy_evaluation_recycler_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_energy_evaluation"
+        android:id="@+id/swipe_task_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="@dimen/zero_margin_when_normal"
-        android:paddingEnd="@dimen/zero_margin_when_normal" >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_task"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/zero_margin_when_normal"
+            android:paddingEnd="@dimen/zero_margin_when_normal" >
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/efab_energy_evaluation_add"
+        android:id="@+id/efab_task_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

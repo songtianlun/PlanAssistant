@@ -428,12 +428,15 @@ public class MainActivity extends BaseActivity
             case R.id.nav_menu_mood_whisper:
                 startActivity(new Intent(MainActivity.this, MoodWhisperActivity.class));
                 break;
-            case R.id.nav_menu_liveline:
-                startActivity(new Intent(MainActivity.this, LiveLineActivity.class));
+            case R.id.nav_menu_task:
+                startActivity(new Intent(MainActivity.this, TaskActivity.class));
                 break;
-            case R.id.nav_menu_plan:
-                startActivity(new Intent(MainActivity.this, PlanActivity.class));
-                break;
+//            case R.id.nav_menu_liveline:
+////                startActivity(new Intent(MainActivity.this, LiveLineActivity.class));
+////                break;
+//            case R.id.nav_menu_plan:
+//                startActivity(new Intent(MainActivity.this, PlanActivity.class));
+//                break;
             case R.id.nav_menu_indoor:
                 startActivity(new Intent(MainActivity.this, IndoorActivity.class));
                 break;

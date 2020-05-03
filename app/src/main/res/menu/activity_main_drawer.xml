@@ -25,14 +25,19 @@
             android:id="@+id/nav_menu_energy_evaluation"
             android:icon="@drawable/arm_flex"
             android:title="@string/nav_menu_energy_evaluation" />
+<!--        <item-->
+<!--            android:id="@+id/nav_menu_liveline"-->
+<!--            android:icon="@drawable/chart_line"-->
+<!--            android:title="@string/nav_menu_liveline" />-->
         <item
-            android:id="@+id/nav_menu_liveline"
-            android:icon="@drawable/chart_line"
-            android:title="@string/nav_menu_liveline" />
-        <item
-            android:id="@+id/nav_menu_plan"
-            android:icon="@drawable/calendar_text"
-            android:title="@string/nav_menu_plan" />
+            android:id="@+id/nav_menu_task"
+            android:title="@string/nav_menu_task"
+            android:icon="@drawable/calendar_check"
+            />
+<!--        <item-->
+<!--            android:id="@+id/nav_menu_plan"-->
+<!--            android:icon="@drawable/calendar_text"-->
+<!--            android:title="@string/nav_menu_plan" />-->
         <item
             android:id="@+id/nav_menu_indoor"
             android:icon="@drawable/home_map_marker"

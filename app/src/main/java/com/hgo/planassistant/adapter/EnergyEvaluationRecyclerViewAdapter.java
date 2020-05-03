@@ -183,6 +183,89 @@ public class EnergyEvaluationRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
             //项目点击事件
             recyclerViewHolder.mView.setOnClickListener(view -> {
+                //底部Dialog
+                BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(context);
+                LayoutInflater localinflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialogView = localinflater.inflate(R.layout.dialog_bottom_energy_evaluation_edit, null);
+                Button btn_ok = dialogView.findViewById(R.id.btn_dialog_bottom_energy_evaluation_determination_edit_ok);
+                Button btn_cancel = dialogView.findViewById(R.id.btn_dialog_bottom_energy_evaluation_determination_edit_cancel);
+                Button btn_delete = dialogView.findViewById(R.id.btn_dialog_bottom_energy_evaluation_determination_edit_delete);
+                IndicatorSeekBar seekBar_thinking = dialogView.findViewById(R.id.dialog_bottom_energy_evaluation_thinking_edit);//seekbar控件
+                IndicatorSeekBar seekBar_determination = dialogView.findViewById(R.id.dialog_bottom_energy_evaluation_determination_edit);
+                TextView TV_time = dialogView.findViewById(R.id.dialog_bottom_energy_evaluation_edit_time);
+
+                Calendar evaluation_time = Calendar.getInstance();
+                evaluation_time.setTime(mItems.get(position).getDate("time"));
+                seekBar_thinking.setProgress(mItems.get(position).getInt("thinking"));
+                seekBar_determination.setProgress(mItems.get(position).getInt("determination"));
+                String time_string = (new SimpleDateFormat("HH:mm")).format(evaluation_time.getTime()); //获取当前时间并格式化
+                TV_time.setText(time_string);
+                TV_time.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TimePickerDialog livetime_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
+                            evaluation_time.set(Calendar.HOUR_OF_DAY,hour);
+                            evaluation_time.set(Calendar.MINUTE,minute);
+                            Log.i("TrackActivity",evaluation_time.get(Calendar.HOUR_OF_DAY) + ":" + evaluation_time.get(Calendar.MINUTE));
+                            TV_time.setText(hour+" 时 "+minute +"分");
+                        }, evaluation_time.get(Calendar.HOUR_OF_DAY), evaluation_time.get(Calendar.MINUTE),true);
+                        livetime_timePickerDialog.show();
+                    }
+                });
+                mBottomSheetDialog.setContentView(dialogView);
+                btn_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int score_thinking = seekBar_thinking.getProgress();
+                        int score_determination = seekBar_determination.getProgress();
+                        //存到云
+                        AVObject energyEvaluation = AVObject.createWithoutData("EnergyEvaluation",mItems.get(position).getObjectId());
+                        energyEvaluation.put("UserId",AVUser.getCurrentUser().getObjectId());
+                        energyEvaluation.put("time",evaluation_time.getTime());
+                        energyEvaluation.put("thinking",score_thinking);
+                        energyEvaluation.put("determination",score_determination);
+                        energyEvaluation.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    //成功
+                                    Toast.makeText(App.getContext(), "保存成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
+                                } else {
+                                    // 失败的原因可能有多种，常见的是用户名已经存在。
+//                        showProgress(false);
+                                    Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        mBottomSheetDialog.dismiss();
+                    }
+                });
+
+                btn_cancel.setOnClickListener(v -> mBottomSheetDialog.dismiss());
+                btn_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AVObject delete = AVObject.createWithoutData("EnergyEvaluation",mItems.get(position).getObjectId());
+                        delete.deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    //成功
+                                    Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
+                                } else {
+                                    // 失败的原因可能有多种，常见的是用户名已经存在。
+//                        showProgress(false);
+                                    Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        mBottomSheetDialog.dismiss();
+                    }
+                });
+                mBottomSheetDialog.show();
 //                Log.i("LIRVAdapter",String.valueOf(mItems.get(position).getObjectId()));
 //                Calendar livetime = Calendar.getInstance();
 //                livetime.setTime((Date)mItems.get(position).get("livetime"));//获取时间
