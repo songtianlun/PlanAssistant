@@ -44,6 +44,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private SwitchPreference pref_location_tencent_usegps;
     private SwitchPreference pref_location_tencent_indoor;
     private SeekBarPreference pref_list_personal_step_target;
+    private SeekBarPreference pref_seek_personal_urgent_day;
     private Preference pref_personal_start_sleep;
     private Preference pref_personal_end_sleep;
     private SharedPreferences SP_setting;
@@ -62,6 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         pref_location_tencent_usegps = findPreference("pref_location_tencent_usegps");
         pref_location_tencent_indoor = findPreference("pref_location_tencent_indoor");
         pref_list_personal_step_target = findPreference("pref_list_personal_step_target");
+        pref_seek_personal_urgent_day = findPreference("pref_seek_personal_urgent_day");
         pref_personal_start_sleep = findPreference("pref_personal_start_sleep");
         pref_personal_end_sleep = findPreference("pref_personal_end_sleep");
 
@@ -150,6 +152,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 pref_list_personal_step_target.setSummary("当前运动目标：每日" + trunc*100 + "步");
                 pref_list_personal_step_target.setValue(trunc*100);
                 SP_edit.putInt("pref_personal_step_target",trunc*100);
+                SP_edit.commit();
+                break;
+            case "pref_seek_personal_urgent_day":
+                pref_seek_personal_urgent_day.setSummary("剩余" + Integer.parseInt(newValue.toString()) + "天结束判为紧急事件，用于日程分类。");
+                pref_seek_personal_urgent_day.setValue(Integer.parseInt(newValue.toString()));
+                SP_edit.putInt("pref_seek_personal_urgent_day",Integer.parseInt(newValue.toString()));
                 SP_edit.commit();
                 break;
             case "pref_list_location_query_precision":
@@ -356,6 +364,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","international"));
         findPreference("pref_list_location_time").setDefaultValue(SP_setting.getString("pref_list_location_time","4000"));
         findPreference("pref_list_personal_step_target").setDefaultValue(SP_setting.getInt("pref_personal_step_target",4000));
+        findPreference("pref_seek_personal_urgent_day").setDefaultValue(SP_setting.getInt("pref_seek_personal_urgent_day",10));
 
         // 绑定点击事件
         findPreference("pref_personal_start_sleep").setOnPreferenceClickListener(this);
@@ -374,6 +383,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_location_tencent_usegps").setOnPreferenceChangeListener(this);
         findPreference("pref_list_personal_step_target").setOnPreferenceChangeListener(this);
         findPreference("pref_list_system_server").setOnPreferenceChangeListener(this);
+        findPreference("pref_seek_personal_urgent_day").setOnPreferenceChangeListener(this);
 
         //设置描述，根据默认值设置描述
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
@@ -383,6 +393,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
         onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north"));
         onPreferenceChange(findPreference("pref_list_personal_step_target"), (preferences.getInt("pref_list_personal_step_target",4000)));
+        onPreferenceChange(findPreference("pref_seek_personal_urgent_day"), preferences.getInt("pref_seek_personal_urgent_day",10));
 
         // 睡眠时间设置
         DateFormat dateFormat = new DateFormat();

@@ -20,7 +20,7 @@
     <string name="menu_send">Send</string>
 
     <string name="tab_title_main_1">Home</string>
-    <string name="tab_title_main_2">Plan</string>
+    <string name="tab_title_main_2">Task</string>
     <string name="tab_title_main_3">Energy</string>
     <string name="main_snack_bar">This is a snack bar</string>
     <string name="main_snack_bar_action">Okay</string>
@@ -63,6 +63,9 @@
     <string name="card_home_plan_completed_title">已完成</string>
     <string name="card_home_plan_total">×000</string>
     <string name="card_home_plan_total_title">共完成</string>
+
+    <!-- card_home_suggest_task_title -->
+    <string name="card_home_suggest_task_title">建议优先日程</string>
 
     <!--card_home_liveline-->
     <string name="card_home_liveline_title">精力曲线</string>
@@ -113,6 +116,12 @@
     <string name="card_energy_thinking_title">思维精力</string>
     <string name="card_energy_determination_title">意志精力</string>
 
+    <!--card_task-->
+    <string name="card_task_urgent_important_title">Ⅰ 重要且紧急</string>
+    <string name="card_task_noturgent_important_title">Ⅱ 重要但不紧急</string>
+    <string name="card_task_urgent_unimportant_title">Ⅲ 不重要但紧急</string>
+    <string name="card_task_noturgent_unimportant_title">Ⅳ 不重要也不紧急</string>
+
     <!-- Strings related to Settings -->
     <string name="settings_location_title">定位设置</string>
     <string name="settings_location_switch">轨迹记录功能</string>
@@ -136,6 +145,8 @@
     <string name="settings_personal_start_sleep_summer">开始睡眠时间</string>
     <string name="settings_personal_end_sleep">结束睡眠</string>
     <string name="settings_personal_end_sleep_summer">结束睡眠时间</string>
+    <string name="settings_personal_urgent_day">紧急事件判定</string>
+    <string name="settings_personal_urgent_day_summer">剩余10天结束判为紧急事件，用于日程分类。</string>
 
     <string name="settings_system_title">系统设置</string>
     <string name="settings_system_server">服务器节点</string>
@@ -279,11 +290,10 @@
     <string name="fab_adddata_mymmap">增加地图</string>
 
     <!--card_fragement_plan_vigor-->
-    <string name="card_fragement_plan_vigor_title">小贴士</string>
-    <string name="card_fragement_plan_vigor_head">根据您的记录，您当前的精力状况评分为：</string>
-    <string name="card_fragement_plan_vigor_score">**分</string>
-    <string name="card_fragement_plan_vigor_suggest">建议您当前。</string>
-    <string name="tv_card_fragement_plan_vigor_description">注：若数值不准，请修改或添加记录以尽可能拟合您的精力曲线。</string>
+    <string name="card_fragement_plan_tips_title">小贴士</string>
+    <string name="card_fragement_plan_tips_1">重要：凡有价值、有利于实现个人目标的就是要事。</string>
+    <string name="card_fragement_plan_tips_2">紧迫：必须立即处理</string>
+    <string name="tv_card_fragement_plan_tips_description">注：根据重要和紧急程度将日程分类，着重某一分类日程对个人发展意义重大，请点击相关卡片获取建议（点此刷新）。</string>
 
 
     <!--activity of PlanCounter-->
@@ -343,6 +353,7 @@
 
     <!-- toolbar_activity_task-->
     <string name="toolbar_activity_task">日程管理</string>
+    <string name="fab_add_task">新增评价</string>
 
     <!-- dialog_bottom_task-->
     <string name="dialog_bottom_task_title">新增日程</string>

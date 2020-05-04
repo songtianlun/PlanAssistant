@@ -123,19 +123,6 @@
             android:layout_below="@id/dialog_bottom_task_location_layout" />
 
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:id="@+id/dialog_bottom_task_start_time_clean"
-            android:text="CLEAN"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginTop="@dimen/dimen_common"
-            android:layout_marginLeft="@dimen/dimen_common"
-            android:layout_marginRight="@dimen/dimen_common"
-            android:layout_below="@id/dialog_bottom_task_location_layout"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            app:icon="@drawable/backspace" />
 
         <TextView
             android:id="@+id/dialog_bottom_task_start_time_date"
@@ -153,14 +140,12 @@
             android:padding="@dimen/dimen_common"
             android:text="null"
             android:layout_below="@id/dialog_bottom_task_location_layout"
-            android:layout_toLeftOf="@id/dialog_bottom_task_start_time_clean"
             android:layout_toRightOf="@+id/dialog_bottom_task_start_time_title"/>
 
         <TextView
             android:id="@+id/dialog_bottom_task_start_time"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_toLeftOf="@+id/dialog_bottom_task_start_time_clean"
             android:layout_toRightOf="@+id/dialog_bottom_task_start_time_title"
             android:layout_below="@id/dialog_bottom_task_start_time_date"
             android:layout_gravity="center_vertical"
@@ -184,20 +169,6 @@
             android:text="@string/dialog_bottom_task_end_time_title"
             android:layout_below="@id/dialog_bottom_task_start_time" />
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:id="@+id/dialog_bottom_task_end_time_clean"
-            android:text="CLEAN"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginTop="@dimen/dimen_common"
-            android:layout_marginLeft="@dimen/dimen_common"
-            android:layout_marginRight="@dimen/dimen_common"
-            android:layout_below="@id/dialog_bottom_task_start_time"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            app:icon="@drawable/backspace" />
-
         <TextView
             android:id="@+id/dialog_bottom_task_end_time_date"
             android:layout_width="match_parent"
@@ -214,14 +185,12 @@
             android:padding="@dimen/dimen_common"
             android:text="null"
             android:layout_below="@id/dialog_bottom_task_start_time"
-            android:layout_toLeftOf="@id/dialog_bottom_task_end_time_clean"
             android:layout_toRightOf="@+id/dialog_bottom_task_end_time_title"/>
 
         <TextView
             android:id="@+id/dialog_bottom_task_end_time"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_toLeftOf="@+id/dialog_bottom_task_end_time_clean"
             android:layout_toRightOf="@+id/dialog_bottom_task_end_time_title"
             android:layout_below="@id/dialog_bottom_task_end_time_date"
             android:layout_gravity="center_vertical"
@@ -255,25 +224,25 @@
             android:layout_toRightOf="@+id/dialog_bottom_task_remind_title"
             android:entries="@array/spinner_task_remind" />
 
-        <TextView
-            android:id="@+id/dialog_bottom_task_cycle_title"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/text_common"
-            android:layout_marginStart="@dimen/dimen_common"
-            android:layout_marginTop="@dimen/dimen_common"
-            android:text="@string/dialog_bottom_task_cycle_title"
-            android:layout_below="@id/dialog_bottom_task_remind_title" />
+<!--        <TextView-->
+<!--            android:id="@+id/dialog_bottom_task_cycle_title"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="@dimen/text_common"-->
+<!--            android:layout_marginStart="@dimen/dimen_common"-->
+<!--            android:layout_marginTop="@dimen/dimen_common"-->
+<!--            android:text="@string/dialog_bottom_task_cycle_title"-->
+<!--            android:layout_below="@id/dialog_bottom_task_remind_title" />-->
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/dialog_bottom_task_cycle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_common"
-            android:layout_marginTop="@dimen/dimen_common"
-            android:layout_below="@id/dialog_bottom_task_remind_title"
-            android:layout_toRightOf="@+id/dialog_bottom_task_cycle_title"
-            android:entries="@array/spinner_task_cycle" />
+<!--        <androidx.appcompat.widget.AppCompatSpinner-->
+<!--            android:id="@+id/dialog_bottom_task_cycle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="@dimen/dimen_common"-->
+<!--            android:layout_marginTop="@dimen/dimen_common"-->
+<!--            android:layout_below="@id/dialog_bottom_task_remind_title"-->
+<!--            android:layout_toRightOf="@+id/dialog_bottom_task_cycle_title"-->
+<!--            android:entries="@array/spinner_task_cycle" />-->
 
         <TextView
             android:id="@+id/dialog_bottom_task_description_title"
@@ -283,7 +252,7 @@
             android:layout_marginStart="@dimen/dimen_common"
             android:layout_marginTop="@dimen/dimen_common"
             android:text="@string/dialog_bottom_task_description_title"
-            android:layout_below="@id/dialog_bottom_task_cycle_title" />
+            android:layout_below="@id/dialog_bottom_task_remind" />
         <EditText
             android:id="@+id/dialog_bottom_task_description"
             android:layout_width="match_parent"
@@ -294,7 +263,7 @@
             android:layout_marginStart="@dimen/dimen_common"
             android:layout_marginTop="@dimen/dimen_common"
             android:layout_marginEnd="@dimen/dimen_common"
-            android:layout_below="@id/dialog_bottom_task_cycle_title"
+            android:layout_below="@id/dialog_bottom_task_remind"
             android:layout_toRightOf="@+id/dialog_bottom_task_description_title"/>
 
         <com.google.android.material.button.MaterialButton

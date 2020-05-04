@@ -35,7 +35,6 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestPasswordResetCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
@@ -44,7 +43,7 @@ import com.hgo.planassistant.R;
 import com.hgo.planassistant.adapter.FragmentAdapter;
 import com.hgo.planassistant.fragement.EnergyFragment;
 import com.hgo.planassistant.fragement.HomeFragment;
-import com.hgo.planassistant.fragement.PlanFragment;
+import com.hgo.planassistant.fragement.TaskFragment;
 import com.hgo.planassistant.service.DataCaptureService;
 import com.hgo.planassistant.tools.DateFormat;
 
@@ -75,7 +74,9 @@ public class MainActivity extends BaseActivity
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.ACCESS_WIFI_STATE
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
     };
     private AlertDialog dialog;
 
@@ -152,7 +153,7 @@ public class MainActivity extends BaseActivity
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
-        fragments.add(new PlanFragment());
+        fragments.add(new TaskFragment());
         fragments.add(new EnergyFragment());
         FragmentAdapter mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
         mViewPager.setAdapter(mFragmentAdapter);
@@ -511,6 +512,7 @@ public class MainActivity extends BaseActivity
 
             // Perosonal
             SP_editor.putInt("pref_personal_step_target",4000); //设置步数日目标
+            SP_editor.putInt("pref_seek_personal_urgent_day",10);
             // 睡眠时间设置
             DateFormat dateFormat = new DateFormat();
             Calendar start_sleep = Calendar.getInstance();

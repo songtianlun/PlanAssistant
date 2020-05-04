@@ -127,6 +127,17 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/settings_personal_step_target" />
+        <SeekBarPreference
+            android:dialogTitle="@string/settings_personal_urgent_day"
+            android:key="pref_seek_personal_urgent_day"
+            android:icon="@drawable/clock_fast"
+            android:max="100"
+            android:min="3"
+            android:defaultValue="10"
+            android:summary="@string/settings_personal_urgent_day_summer"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/settings_personal_urgent_day" />
         <Preference
             android:title="@string/settings_personal_start_sleep"
             android:summary="@string/settings_personal_start_sleep_summer"

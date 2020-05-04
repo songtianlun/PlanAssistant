@@ -1,6 +1,7 @@
 package com.hgo.planassistant.tools;
 
 import android.content.Context;
+import android.text.Html;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -18,6 +19,11 @@ public class SuggestionPopup {
     private String[] ThinkingEnergyDescription = new String[1];
     private String[] DeterminationEnergyTitle = new String[1];
     private String[] DeterminationEnergyDescription = new String[1];
+
+    private String urgent_important = new String();
+    private String noturgent_important = new String();
+    private String urgent_unimportant = new String();
+    private String noturgent_unimportant = new String();
 
     public SuggestionPopup(){
         PhysicalEnergyTitle[0] = "调整饮食方式。";
@@ -48,6 +54,32 @@ public class SuggestionPopup {
 
         DeterminationEnergyTitle[0] = "知晓生命的意义方能忍耐一切。";
         DeterminationEnergyDescription[0] = "生而没有意义的人是痛苦的,没有目标、没有目的、无需继续忍受。将个人利益置后起初会让人倍感不安,但加里却认为这样做回报颇丰——提升个人价值、丰富人生意义。深层的价值取向所带来的生活方式不仅是生活的主心骨,还能帮助我们更好地应对各种挑战。意志精力为所有层面的行为提供动力,带来激情、恒心和投入。意志精力源于价值取向和超出个人利益的目标。因此我们建议您将个人利益置后，提升个人价值，丰富人生意义。";
+
+        urgent_important = "<p>该类日程包括：危机、迫切问题以及在限定时间内必须完成等日程。精力分配偏重这一类日程的结果常常是：</p>" +
+                "<p> &#8226; 压力大 </p>" +
+                "<p> &#8226; 筋疲力尽 </p>" +
+                "<p> &#8226; 被危机牵着鼻子走 </p>" +
+                "<p> &#8226; 忙于收拾残局 </p>";
+
+        noturgent_important = "<p>该类日程包括：预防性措施、建立关系、明确新的发展机会以及制定计划和休闲等日程。精力分配偏重这一类日程的结果常常是：</p>" +
+                "<p> &#8226; 愿景、远见 </p>" +
+                "<p> &#8226; 平衡 </p>" +
+                "<p> &#8226; 自律 </p>" +
+                "<p> &#8226; 自制 </p>" +
+                "<p> &#8226; 很少发生危机 </p>";
+
+        urgent_unimportant = "<p>该类日程包括：接待访客、某些电话、某些邮件、某些报告、某些会议、迫切需要解决的事务以及公共活动等日程。精力分配偏重这一类日程的结果常常是：</p>" +
+                "<p> &#8226; 急功近利 </p>" +
+                "<p> &#8226; 被危机牵着鼻子走 </p>" +
+                "<p> &#8226; 被视为巧言令色 </p>" +
+                "<p> &#8226; 轻视目标和计划 </p>" +
+                "<p> &#8226; 认为自己是受害者，缺乏自制力 </p>" +
+                "<p> &#8226; 人际关系肤浅，甚至破裂 </p>";
+
+        noturgent_unimportant = "<p>该类日程包括：繁琐忙碌的工作、某些电话、某些邮件、消磨时间的活动以及令人愉快的活动等日程。精力分配偏重这一类日程的结果常常是：</p>" +
+                "<p> &#8226; 完全不负责任 </p>" +
+                "<p> &#8226; 被炒鱿鱼 </p>" +
+                "<p> &#8226; 基本生活都需要依赖他人或社会机构 </p>";
     }
 
     public String[] getPhysicalEnergyTitle() {
@@ -139,6 +171,35 @@ public class SuggestionPopup {
         new AlertDialog.Builder(context)
                 .setTitle("精力优化建议：" + getDeterminationTitle(index))
                 .setMessage(getDeterminationDescription(index))
+                .setPositiveButton(context.getString(R.string.dialog_ok), null)
+                .show();
+    }
+
+    public void GetUrgentImportantPopup(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("紧迫又重要类日程")
+                .setMessage( Html.fromHtml(urgent_important))
+                .setPositiveButton(context.getString(R.string.dialog_ok), null)
+                .show();
+    }
+    public void GetNotUrgentImportantPopup(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("不紧迫重要类日程")
+                .setMessage( Html.fromHtml(noturgent_important))
+                .setPositiveButton(context.getString(R.string.dialog_ok), null)
+                .show();
+    }
+    public void GetUrgentUnimportantPopup(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("紧迫不重要类日程")
+                .setMessage( Html.fromHtml(urgent_unimportant))
+                .setPositiveButton(context.getString(R.string.dialog_ok), null)
+                .show();
+    }
+    public void GetNotUrgentUnimportantPopup(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("不紧迫又不重要类日程")
+                .setMessage( Html.fromHtml(noturgent_unimportant))
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }

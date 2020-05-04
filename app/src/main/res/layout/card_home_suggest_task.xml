@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_home_suggest_task"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dimen_common"
+    android:layout_marginTop="@dimen/dimen_common_small"
+    android:layout_marginEnd="@dimen/dimen_common"
+    android:layout_marginBottom="@dimen/dimen_common_small"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:outlineAmbientShadowColor="@color/black"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/card_home_suggest_task_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/dimen_common_small"
+            android:text="@string/card_home_suggest_task_title"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/card_home_suggest_task_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_common"
+            android:layout_marginRight="@dimen/dimen_common"
+            android:layout_below="@id/card_home_suggest_task_title" />
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

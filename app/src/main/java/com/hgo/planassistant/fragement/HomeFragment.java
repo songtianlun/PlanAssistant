@@ -21,6 +21,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -102,14 +103,16 @@ import static android.content.Context.MODE_PRIVATE;
 public class HomeFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
         SeekBar.OnSeekBarChangeListener ,OnChartValueSelectedListener {
     // liveLinechart
-    private LineChart chart;
-    private Button loadlinechart,savetogallary,bt_start_location;
-    private CardView card__home_liveline, card__home_location, card__home_plan;
+//    private LineChart chart;
+//    private Button loadlinechart,savetogallary,bt_start_location;
+//    private CardView card__home_liveline, card__home_location, card__home_plan;
     NestedScrollView nestedScrollView;
     private static final int PERMISSION_STORAGE = 0;
 
     private com.google.android.material.card.MaterialCardView card_home_map;
     private com.google.android.material.card.MaterialCardView card_home_step_counter;
+    private com.google.android.material.card.MaterialCardView card_home_suggest_task;
+    private TextView card_home_suggest_task_textview;
 //    private TextView tv_card_home_location_station,tv_card_home_location_date;
 //    private TextView card_home_location_station_location,card_home_location_data;
     private Calendar now_calendar;
@@ -127,21 +130,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         nestedScrollView = (NestedScrollView) inflater.inflate(R.layout.fragment_home, container, false);
-        loadlinechart = nestedScrollView.findViewById(R.id.loadlinechart);
-        savetogallary = nestedScrollView.findViewById(R.id.savetogallary);
-        card__home_liveline = nestedScrollView.findViewById(R.id.card_home_liveline);
+//        loadlinechart = nestedScrollView.findViewById(R.id.loadlinechart);
+//        savetogallary = nestedScrollView.findViewById(R.id.savetogallary);
+//        card__home_liveline = nestedScrollView.findViewById(R.id.card_home_liveline);
 //        card__home_location = nestedScrollView.findViewById(R.id.card_home_location);
-        card__home_plan = nestedScrollView.findViewById(R.id.card_home_plan);
+//        card__home_plan = nestedScrollView.findViewById(R.id.card_home_plan);
         aMapView = nestedScrollView.findViewById(R.id.card_home_amapView);
         card_home_map = nestedScrollView.findViewById(R.id.card_home_map);
         card_home_step_counter = nestedScrollView.findViewById(R.id.card_home_step_counter);
         DayPieChart = nestedScrollView.findViewById(R.id.card_home_step_counter_piechart);
+        card_home_suggest_task = nestedScrollView.findViewById(R.id.card_home_suggest_task);
+        card_home_suggest_task_textview = nestedScrollView.findViewById(R.id.card_home_suggest_task_textview);
 
 //        tv_card_home_location_station = nestedScrollView.findViewById(R.id.card_home_location_station);
 //        tv_card_home_location_date = nestedScrollView.findViewById(R.id.tv_card_home_location_date);
 //        card_home_location_station_location = nestedScrollView.findViewById(R.id.card_home_location_station_location);
 //        card_home_location_data = nestedScrollView.findViewById(R.id.card_home_location_data);
-        Initchart(nestedScrollView);
+//        Initchart(nestedScrollView);
 
         now_calendar = Calendar.getInstance();//获取当前时间
 
@@ -158,13 +163,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //            Snackbar.make(v, "加载图表", Snackbar.LENGTH_SHORT).show();
 //        });
 
-        savetogallary.setOnClickListener(this);
-        loadlinechart.setOnClickListener(this);
-        card__home_liveline.setOnTouchListener(this);
+//        savetogallary.setOnClickListener(this);
+//        loadlinechart.setOnClickListener(this);
+//        card__home_liveline.setOnTouchListener(this);
 //        card__home_location.setOnTouchListener(this);
-        card__home_plan.setOnTouchListener(this);
+//        card__home_plan.setOnTouchListener(this);
         card_home_map.setOnClickListener(this);
         card_home_step_counter.setOnClickListener(this);
+        card_home_suggest_task.setOnClickListener(this);
 
 //        bt_start_location.setOnClickListener(this);
 
@@ -184,8 +190,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //        LoadDataTital(-6);
 
 
-        LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
-
+        LoadSuggestTask();
+//        LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
         initMap(savedInstanceState);
         initDayPieChart();
         setDayPieChartData();
@@ -196,11 +202,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     public void onClick(View v) {
         Log.i("HomeFragement","click");
         switch (v.getId()) {
-            case R.id.loadlinechart:
-                Log.i("HomeFragement","clickLoadChart");
-                Snackbar.make(v, "加载图表", Snackbar.LENGTH_SHORT).show();
-                LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
-                break;
+//            case R.id.loadlinechart:
+//                Log.i("HomeFragement","clickLoadChart");
+//                Snackbar.make(v, "加载图表", Snackbar.LENGTH_SHORT).show();
+//                LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
+//                break;
             case R.id.card_home_map:
                 Log.i("HomeFragement","click card_home_map");
                 startActivity(new Intent(getActivity(), TrackActivity.class));
@@ -208,9 +214,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             case R.id.card_home_step_counter:
                 startActivity(new Intent(getActivity(), StepCounterActivity.class));
                 break;
-            case R.id.savetogallary:
-                chartsavetogallary();
+            case R.id.card_home_suggest_task:
+                LoadSuggestTask();
                 break;
+//            case R.id.savetogallary:
+//                chartsavetogallary();
+//                break;
 //            case R.id.bt_card_home_map_location:
 //                break;
             default:
@@ -474,177 +483,177 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         });
     }
 
-    private void Initchart(NestedScrollView nestedScrollView){
-        chart = nestedScrollView.findViewById(R.id.livelinechart);
-        {   // // Chart Style // //
-
-            // background color
-            chart.setBackgroundColor(Color.WHITE);
-
-            // disable description text
-            chart.getDescription().setEnabled(false);
-
-            // enable touch gestures
-            chart.setTouchEnabled(true);
-
-            // set listeners
-            chart.setOnChartValueSelectedListener(this);
-            chart.setDrawGridBackground(false);
-
-            // create marker to display box when values are selected
-            MyMarkerView mv = new MyMarkerView(App.getContext(), R.layout.custom_marker_view);
-
-            // Set the marker to the chart
-            mv.setChartView(chart);
-            chart.setMarker(mv);
-
-            // enable scaling and dragging
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
-            // chart.setScaleXEnabled(true);
-            // chart.setScaleYEnabled(true);
-
-            // force pinch zoom along both axis
-            chart.setPinchZoom(true);
-        }
-
-        XAxis xAxis;
-        {   // // X-Axis Style // //
-            xAxis = chart.getXAxis();
-
-            // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 10f, 0f);
-
-            // axis range
-            xAxis.setAxisMaximum(24f);
-            xAxis.setAxisMinimum(0f);
-        }
-
-        YAxis yAxis;
-        {   // // Y-Axis Style // //
-            yAxis = chart.getAxisLeft();
-
-            // disable dual axis (only use LEFT axis)
-            chart.getAxisRight().setEnabled(false);
-
-            // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f);
-
-            // axis range
-            yAxis.setAxisMaximum(110f);
-            yAxis.setAxisMinimum(-10f);
-        }
-
-
-        {   // // Create Limit Lines // //
-            LimitLine llXAxis = new LimitLine(9f, "Index 10");
-            llXAxis.setLineWidth(4f);
-            llXAxis.enableDashedLine(10f, 10f, 0f);
-            llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-            llXAxis.setTextSize(10f);
-            //llXAxis.setTypeface(tfRegular);
-
-            LimitLine ll1 = new LimitLine(100f, "Upper Limit");
-            ll1.setLineWidth(2f);
-            ll1.enableDashedLine(10f, 10f, 0f);
-            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-            ll1.setTextSize(6f);
-            //ll1.setTypeface(tfRegular);
-
-            LimitLine ll2 = new LimitLine(0f, "Lower Limit");
-            ll2.setLineWidth(2f);
-            ll2.enableDashedLine(10f, 10f, 0f);
-            ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-            ll2.setTextSize(6f);
-            //ll2.setTypeface(tfRegular);
-
-            // draw limit lines behind data instead of on top
-            yAxis.setDrawLimitLinesBehindData(true);
-            xAxis.setDrawLimitLinesBehindData(true);
-
-            // add limit lines
-            yAxis.addLimitLine(ll1);
-            yAxis.addLimitLine(ll2);
-            //xAxis.addLimitLine(llXAxis);
-        }
-    }
-    private int[] LoadLinechartData(){
-        int[] chareData = new int[24];
-        Arrays.fill(chareData,0);//数组的批量赋值。
-
-        AVQuery<AVObject> query = new AVQuery<>("liveline");
-        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
-        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
-        query.limit(1000);
-        query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null){
-                Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                for (AVObject obj: list){
-                    Calendar livetime = Calendar.getInstance();
-                    livetime.setTime((Date)obj.get("livetime"));//获取时间
-                    int hour = livetime.get(Calendar.HOUR_OF_DAY);
-                    int score = (int)obj.get("score");
-//                    Log.i("HomeFragement",hour+"时刻的精力值为："+score);
-                    if(chareData[hour]==0){
-                        chareData[hour] = score;
-                    }else{
-                        chareData[hour] = (score+chareData[hour])/2;
-                    }
-//                    Log.i("HomeFragement",hour+"时刻的精力值修改为："+chareData[hour]);
-                }
-                LoadLinechart(chareData);
-                }
-
-            }
-        });
-        return chareData;
-    }
-    private void LoadLinechart(int[] chartdata){
-        Log.i("HomeFragement","Load liveline chart");
-
-
-        //1.设置x轴和y轴的点
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < 24; i++){
-
-//            entries.add(new Entry(i,new Random().nextInt(100)));
-            entries.add(new Entry(i,chartdata[i]));
-        }
-
-        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-
-
-        //3.chart设置数据
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate(); // refresh
-
-        List<ILineDataSet> sets = chart.getData()
-                .getDataSets();
-        for (ILineDataSet iSet : sets) {
-
-            // 绘制
-            LineDataSet set = (LineDataSet) iSet;
-            if (set.isDrawFilledEnabled())
-                set.setDrawFilled(false);
-            else
-                set.setDrawFilled(true);
-
-            //平滑
-            set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
-                    ? LineDataSet.Mode.LINEAR
-                    :  LineDataSet.Mode.CUBIC_BEZIER);
-        }
-        chart.invalidate();
-
-        //动画
-        chart.animateXY(2000, 2000);
-
-    }
+//    private void Initchart(NestedScrollView nestedScrollView){
+//        chart = nestedScrollView.findViewById(R.id.livelinechart);
+//        {   // // Chart Style // //
+//
+//            // background color
+//            chart.setBackgroundColor(Color.WHITE);
+//
+//            // disable description text
+//            chart.getDescription().setEnabled(false);
+//
+//            // enable touch gestures
+//            chart.setTouchEnabled(true);
+//
+//            // set listeners
+//            chart.setOnChartValueSelectedListener(this);
+//            chart.setDrawGridBackground(false);
+//
+//            // create marker to display box when values are selected
+//            MyMarkerView mv = new MyMarkerView(App.getContext(), R.layout.custom_marker_view);
+//
+//            // Set the marker to the chart
+//            mv.setChartView(chart);
+//            chart.setMarker(mv);
+//
+//            // enable scaling and dragging
+//            chart.setDragEnabled(true);
+//            chart.setScaleEnabled(true);
+//            // chart.setScaleXEnabled(true);
+//            // chart.setScaleYEnabled(true);
+//
+//            // force pinch zoom along both axis
+//            chart.setPinchZoom(true);
+//        }
+//
+//        XAxis xAxis;
+//        {   // // X-Axis Style // //
+//            xAxis = chart.getXAxis();
+//
+//            // vertical grid lines
+//            xAxis.enableGridDashedLine(10f, 10f, 0f);
+//
+//            // axis range
+//            xAxis.setAxisMaximum(24f);
+//            xAxis.setAxisMinimum(0f);
+//        }
+//
+//        YAxis yAxis;
+//        {   // // Y-Axis Style // //
+//            yAxis = chart.getAxisLeft();
+//
+//            // disable dual axis (only use LEFT axis)
+//            chart.getAxisRight().setEnabled(false);
+//
+//            // horizontal grid lines
+//            yAxis.enableGridDashedLine(10f, 10f, 0f);
+//
+//            // axis range
+//            yAxis.setAxisMaximum(110f);
+//            yAxis.setAxisMinimum(-10f);
+//        }
+//
+//
+//        {   // // Create Limit Lines // //
+//            LimitLine llXAxis = new LimitLine(9f, "Index 10");
+//            llXAxis.setLineWidth(4f);
+//            llXAxis.enableDashedLine(10f, 10f, 0f);
+//            llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//            llXAxis.setTextSize(10f);
+//            //llXAxis.setTypeface(tfRegular);
+//
+//            LimitLine ll1 = new LimitLine(100f, "Upper Limit");
+//            ll1.setLineWidth(2f);
+//            ll1.enableDashedLine(10f, 10f, 0f);
+//            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+//            ll1.setTextSize(6f);
+//            //ll1.setTypeface(tfRegular);
+//
+//            LimitLine ll2 = new LimitLine(0f, "Lower Limit");
+//            ll2.setLineWidth(2f);
+//            ll2.enableDashedLine(10f, 10f, 0f);
+//            ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//            ll2.setTextSize(6f);
+//            //ll2.setTypeface(tfRegular);
+//
+//            // draw limit lines behind data instead of on top
+//            yAxis.setDrawLimitLinesBehindData(true);
+//            xAxis.setDrawLimitLinesBehindData(true);
+//
+//            // add limit lines
+//            yAxis.addLimitLine(ll1);
+//            yAxis.addLimitLine(ll2);
+//            //xAxis.addLimitLine(llXAxis);
+//        }
+//    }
+//    private int[] LoadLinechartData(){
+//        int[] chareData = new int[24];
+//        Arrays.fill(chareData,0);//数组的批量赋值。
+//
+//        AVQuery<AVObject> query = new AVQuery<>("liveline");
+//        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+//        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+//        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+//        query.limit(1000);
+//        query.orderByDescending("createdAt");// 按时间，降序排列
+//        query.findInBackground(new FindCallback<AVObject>() {
+//            @Override
+//            public void done(List<AVObject> list, AVException e) {
+//                if(list!=null){
+//                Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
+//                for (AVObject obj: list){
+//                    Calendar livetime = Calendar.getInstance();
+//                    livetime.setTime((Date)obj.get("livetime"));//获取时间
+//                    int hour = livetime.get(Calendar.HOUR_OF_DAY);
+//                    int score = (int)obj.get("score");
+////                    Log.i("HomeFragement",hour+"时刻的精力值为："+score);
+//                    if(chareData[hour]==0){
+//                        chareData[hour] = score;
+//                    }else{
+//                        chareData[hour] = (score+chareData[hour])/2;
+//                    }
+////                    Log.i("HomeFragement",hour+"时刻的精力值修改为："+chareData[hour]);
+//                }
+//                LoadLinechart(chareData);
+//                }
+//
+//            }
+//        });
+//        return chareData;
+//    }
+//    private void LoadLinechart(int[] chartdata){
+//        Log.i("HomeFragement","Load liveline chart");
+//
+//
+//        //1.设置x轴和y轴的点
+//        List<Entry> entries = new ArrayList<>();
+//        for (int i = 0; i < 24; i++){
+//
+////            entries.add(new Entry(i,new Random().nextInt(100)));
+//            entries.add(new Entry(i,chartdata[i]));
+//        }
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
+//
+//
+//        //3.chart设置数据
+//        LineData lineData = new LineData(dataSet);
+//        chart.setData(lineData);
+//        chart.invalidate(); // refresh
+//
+//        List<ILineDataSet> sets = chart.getData()
+//                .getDataSets();
+//        for (ILineDataSet iSet : sets) {
+//
+//            // 绘制
+//            LineDataSet set = (LineDataSet) iSet;
+//            if (set.isDrawFilledEnabled())
+//                set.setDrawFilled(false);
+//            else
+//                set.setDrawFilled(true);
+//
+//            //平滑
+//            set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
+//                    ? LineDataSet.Mode.LINEAR
+//                    :  LineDataSet.Mode.CUBIC_BEZIER);
+//        }
+//        chart.invalidate();
+//
+//        //动画
+//        chart.animateXY(2000, 2000);
+//
+//    }
     private com.amap.api.maps.model.LatLng[] GenetateLatLngArratFromAvobject(List<AVObject> list){
         int sum = list.size();
         com.amap.api.maps.model.LatLng[] latlngs = new com.amap.api.maps.model.LatLng[sum];
@@ -698,72 +707,104 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         }
         return sumStep;
     }
-    private void LoadLinechart(){
-        Log.i("HomeFragement","Load liveline chart");
+//    private void LoadLinechart(){
+//        Log.i("HomeFragement","Load liveline chart");
+//
+//
+//        //1.设置x轴和y轴的点
+//        List<Entry> entries = new ArrayList<>();
+//        for (int i = 0; i < 24; i++){
+//
+//            entries.add(new Entry(i,new Random().nextInt(100)));
+//        }
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
+//
+//
+//        //3.chart设置数据
+//        LineData lineData = new LineData(dataSet);
+//        chart.setData(lineData);
+//        chart.invalidate(); // refresh
+//
+//        List<ILineDataSet> sets = chart.getData()
+//                .getDataSets();
+//        for (ILineDataSet iSet : sets) {
+//
+//            // 绘制
+//            LineDataSet set = (LineDataSet) iSet;
+//            if (set.isDrawFilledEnabled())
+//                set.setDrawFilled(false);
+//            else
+//                set.setDrawFilled(true);
+//
+//            //平滑
+//            set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
+//                    ? LineDataSet.Mode.LINEAR
+//                    :  LineDataSet.Mode.CUBIC_BEZIER);
+//        }
+//        chart.invalidate();
+//
+//        //动画
+//        chart.animateXY(2000, 2000);
+//
+//    }
+//    private void chartsavetogallary(){
+//        Log.i("HomeFragement","Chart Save to gallary!");
+//        if (ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//            if (chart.saveToGallery("规划助手—精力曲线" + "_" + System.currentTimeMillis(), 70))
+//                Toast.makeText(App.getContext(), "Saving SUCCESSFUL!",
+//                        Toast.LENGTH_SHORT).show();
+//            else
+//                Toast.makeText(App.getContext(), "Saving FAILED!", Toast.LENGTH_SHORT)
+//                        .show();
+//        } else {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                Activity activity = this.getActivity();
+//                Snackbar.make(chart, "Write permission is required to save image to gallery", Snackbar.LENGTH_INDEFINITE)
+//                        .setAction(android.R.string.ok, new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
+//                            }
+//                        }).show();
+//            } else {
+//                Toast.makeText(App.getContext(), "Permission Required!", Toast.LENGTH_SHORT)
+//                        .show();
+//                ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
+//            }
+//        }
+//    }
 
-
-        //1.设置x轴和y轴的点
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < 24; i++){
-
-            entries.add(new Entry(i,new Random().nextInt(100)));
-        }
-
-        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-
-
-        //3.chart设置数据
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate(); // refresh
-
-        List<ILineDataSet> sets = chart.getData()
-                .getDataSets();
-        for (ILineDataSet iSet : sets) {
-
-            // 绘制
-            LineDataSet set = (LineDataSet) iSet;
-            if (set.isDrawFilledEnabled())
-                set.setDrawFilled(false);
-            else
-                set.setDrawFilled(true);
-
-            //平滑
-            set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
-                    ? LineDataSet.Mode.LINEAR
-                    :  LineDataSet.Mode.CUBIC_BEZIER);
-        }
-        chart.invalidate();
-
-        //动画
-        chart.animateXY(2000, 2000);
-
-    }
-    private void chartsavetogallary(){
-        Log.i("HomeFragement","Chart Save to gallary!");
-        if (ContextCompat.checkSelfPermission(App.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            if (chart.saveToGallery("规划助手—精力曲线" + "_" + System.currentTimeMillis(), 70))
-                Toast.makeText(App.getContext(), "Saving SUCCESSFUL!",
-                        Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(App.getContext(), "Saving FAILED!", Toast.LENGTH_SHORT)
-                        .show();
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Activity activity = this.getActivity();
-                Snackbar.make(chart, "Write permission is required to save image to gallery", Snackbar.LENGTH_INDEFINITE)
-                        .setAction(android.R.string.ok, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
+    private void LoadSuggestTask(){
+        AVQuery<AVObject> query = new AVQuery<>("Task");
+        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query.whereNotEqualTo("done", true);
+        query.limit(10); // 根据重要性和截止时间筛选前十的事件
+        query.orderByDescending("task_importance"); // 按重要性降序
+        query.addAscendingOrder("end_time"); // 按结束时间升序
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, AVException e) {
+                query.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> list, AVException e) {
+                        if(list!=null){
+                            Log.i("HomeFragment","共查询到：" + list.size() + "条数据。");
+                            String string = new String();
+                            for(int j=0;j<list.size();j++){
+                                string += ("<p>" + " &#8226; " +  list.get(j).getString("task_name") + "</p>");
                             }
-                        }).show();
-            } else {
-                Toast.makeText(App.getContext(), "Permission Required!", Toast.LENGTH_SHORT)
-                        .show();
-                ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
+                            // Html.fromHtml可以将Html代码转换成对应的text
+                            card_home_suggest_task_textview.setText(Html.fromHtml(string));
+                        }else{
+                            card_home_suggest_task_textview.setText("当前无日程，请根据需要添加。");
+                        }
+                    }
+                });
             }
-        }
+        });
     }
 
     @Override

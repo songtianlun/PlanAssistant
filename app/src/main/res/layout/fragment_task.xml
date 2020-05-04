@@ -12,7 +12,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/card_f_plan_vigor" />
+        <include layout="@layout/card_task_tips" />
+        <include layout="@layout/card_task_urgent_important" />
+        <include layout="@layout/card_task_noturgent_important" />
+        <include layout="@layout/card_task_urgent_unimportant" />
+        <include layout="@layout/card_task_noturgent_unimportant" />
+
 
     </LinearLayout>
 
