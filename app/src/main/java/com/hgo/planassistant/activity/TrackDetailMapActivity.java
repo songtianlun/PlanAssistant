@@ -3,6 +3,7 @@ package com.hgo.planassistant.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
 import com.hgo.planassistant.tools.DateFormat;
+import com.hgo.planassistant.tools.PathSmoothTool;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +44,7 @@ public class TrackDetailMapActivity extends BaseActivity {
     private MapView aMapView = null;
     private AMap amap;
     private List<AVObject> now_list = null;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class TrackDetailMapActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_track_detail_map);
         setToolbar(toolbar);
         toolbar.setTitle("地图详情");
+
+        mContext = this;
 
         //获取地图控件引用
         aMapView = (MapView) findViewById(R.id.activity_track_detail_mapview);
@@ -122,7 +127,7 @@ public class TrackDetailMapActivity extends BaseActivity {
                                     if(now_list.size()==count){
                                         // 构建热力图 HeatmapTileProvider
                                         HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        builder.data(GenetateLatLngListFromAvobject(now_list,false)); // 设置热力图绘制的数据
                                         // 构造热力图对象
                                         HeatmapTileProvider heatmapTileProvider = builder.build();
                                         // 初始化 TileOverlayOptions
@@ -137,7 +142,7 @@ public class TrackDetailMapActivity extends BaseActivity {
 
                                         // 显示轨迹线
                                         Polyline polyline =amap.addPolyline(new PolylineOptions().
-                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                                addAll(GenetateLatLngListFromAvobject(now_list,true)).width(10).color(Color.argb(255, 1, 1, 1)));
 
                                     }
                                 }
@@ -229,33 +234,43 @@ public class TrackDetailMapActivity extends BaseActivity {
         aMapView.onSaveInstanceState(outState);
     }
 
-    private com.amap.api.maps.model.LatLng[] GenetateLatLngArratFromAvobject(List<AVObject> list){
+    private List<com.amap.api.maps.model.LatLng> GenetateLatLngListFromAvobject(List<AVObject> list, boolean isPathSmooth){
         int sum = list.size();
-        com.amap.api.maps.model.LatLng[] latlngs = new com.amap.api.maps.model.LatLng[sum];
+        List<com.amap.api.maps.model.LatLng> latlngs = new ArrayList<>(sum);
 
         int i=0;
         for (AVObject obj: list){
             AVGeoPoint geopoint = obj.getAVGeoPoint("point");
             double x = geopoint.getLatitude();
             double y = geopoint.getLongitude();
-            latlngs[i] = new com.amap.api.maps.model.LatLng(x, y);
+            latlngs.add(new com.amap.api.maps.model.LatLng(x, y));
 
             String coordinate = obj.getString("geo_coordinate");
 //            Log.i("TrackActivity","当前数据坐标："+coordinate + "数据信息:" + obj);
             if(coordinate.equals(Constant.GPS)){
                 // 将WGS-84坐标转换为高德坐标
-                CoordinateConverter converter  = new CoordinateConverter(this);
+                CoordinateConverter converter  = new CoordinateConverter(mContext);
                 // CoordType.GPS 待转换坐标类型
                 converter.from(CoordinateConverter.CoordType.GPS);
                 // sourceLatLng待转换坐标点 LatLng类型
-                converter.coord(latlngs[i]);
+                converter.coord(latlngs.get(i));
                 // 执行转换操作
-                latlngs[i] = converter.convert();
+                latlngs.set(i,converter.convert());
             }
             i++;
         }
 
-        return latlngs;
+        if(isPathSmooth){
+            // 平滑处理
+            PathSmoothTool mpathSmoothTool = new PathSmoothTool();
+            //设置平滑处理的等级
+            mpathSmoothTool.setIntensity(4);;
+            return mpathSmoothTool.pathOptimize(latlngs);
+        }else{
+            return latlngs;
+        }
+
+
     }
 
     //根据自定义内容获取缩放bounds

@@ -780,6 +780,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
         query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query.whereGreaterThanOrEqualTo("end_time",Calendar.getInstance().getTime());// 结束时间大于当前时间
         query.whereNotEqualTo("done", true);
         query.limit(10); // 根据重要性和截止时间筛选前十的事件
         query.orderByDescending("task_importance"); // 按重要性降序

@@ -20,18 +20,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.HeatmapTileProvider;
+import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlayOptions;
 import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.DistanceItem;
+import com.amap.api.services.route.DistanceResult;
+import com.amap.api.services.route.DistanceSearch;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -56,6 +62,7 @@ import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
+import com.hgo.planassistant.tools.PathSmoothTool;
 
 
 import org.geotools.geojson.geom.GeometryJSON;
@@ -235,12 +242,12 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                     Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
                                     if(now_list.size()==count){
                                         initChart(now_list);
-                                        TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
-                                                "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
-                                                "数据总数: "+ now_list.size());
+                                        List<LatLng> latLngList = GenetateLatLngListFromAvobject(now_list,false);
+                                        List<LatLng> latLngList_PathSmooth = GenetateLatLngListFromAvobject(now_list,true);
+                                        distanceStatistics(now_list);
                                         // 构建热力图 HeatmapTileProvider
                                         HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        builder.data(latLngList); // 设置热力图绘制的数据
                                         // 构造热力图对象
                                         HeatmapTileProvider heatmapTileProvider = builder.build();
                                         // 初始化 TileOverlayOptions
@@ -255,7 +262,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
                                         // 显示轨迹线
                                         Polyline polyline =amap.addPolyline(new PolylineOptions().
-                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                                addAll(latLngList_PathSmooth).width(10).color(Color.argb(255, 1, 1, 1)));
 
                                     }
                                 }
@@ -355,6 +362,36 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //            }
 //        });
 
+    }
+
+    private void distanceStatistics(List<AVObject> list){
+        float sumDistance = 0;
+        for (int i=0;i<list.size();i++){
+            if(i!=0){
+                if(list.get(i).getInt("precision")>=30){
+                    // 删除条目
+                    list.remove(i);
+                    i--;
+                }else{
+                    AVGeoPoint geopoint1 = list.get(i-1).getAVGeoPoint("point");
+                    AVGeoPoint geopoint2 = list.get(i).getAVGeoPoint("point");
+                    LatLng latLng1 = new com.amap.api.maps.model.LatLng(geopoint1.getLatitude(), geopoint1.getLongitude());
+                    LatLng latLng2 = new com.amap.api.maps.model.LatLng(geopoint2.getLatitude(), geopoint2.getLongitude());
+                    sumDistance += AMapUtils.calculateLineDistance(latLng1,latLng2);
+                }
+            }else{
+                if(list.get(i).getInt("precision")>=30){
+                    // 删除条目，重新计数
+                    list.remove(i);
+                    i=0;
+                }
+            }
+        }
+        String text = "开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
+                "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
+                "总长度: "+ sumDistance + "米" + "\n"+
+                "数据总数: "+ now_list.size();
+        TV_info.setText(text);
     }
 
     private void initChart(List<AVObject> list){
@@ -600,12 +637,13 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                     Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
                                     if(now_list.size()==count){
                                         initChart(now_list);
-                                        TV_info.setText("开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
-                                                "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
-                                                "数据总数: "+ now_list.size());
+                                        List<LatLng> latLngList = GenetateLatLngListFromAvobject(now_list,false);
+                                        List<LatLng> latLngList_PathSmooth = GenetateLatLngListFromAvobject(now_list,true);
+                                        distanceStatistics(now_list);
+
                                         // 构建热力图 HeatmapTileProvider
                                         HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        builder.data(latLngList); // 设置热力图绘制的数据
                                         // 构造热力图对象
                                         HeatmapTileProvider heatmapTileProvider = builder.build();
                                         // 初始化 TileOverlayOptions
@@ -620,7 +658,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
                                         // 显示轨迹线
                                         Polyline polyline =amap.addPolyline(new PolylineOptions().
-                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                                addAll(latLngList_PathSmooth).width(10).color(Color.argb(255, 1, 1, 1)));
 
                                     }
                                 }
@@ -829,36 +867,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //        Log.i("TrackActivity","为生成线读取到"+routeCoordinates.size()+"条数据");
 //        return routeCoordinates;
 //    }
-    private com.amap.api.maps.model.LatLng[] GenetateLatLngArratFromAvobject(List<AVObject> list){
-        int sum = list.size();
-        com.amap.api.maps.model.LatLng[] latlngs = new com.amap.api.maps.model.LatLng[sum];
-
-        int i=0;
-        for (AVObject obj: list){
-            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-            double x = geopoint.getLatitude();
-            double y = geopoint.getLongitude();
-            latlngs[i] = new com.amap.api.maps.model.LatLng(x, y);
-
-            String coordinate = obj.getString("geo_coordinate");
-//            Log.i("TrackActivity","当前数据坐标："+coordinate + "数据信息:" + obj);
-            if(coordinate.equals(Constant.GPS)){
-                // 将WGS-84坐标转换为高德坐标
-                CoordinateConverter converter  = new CoordinateConverter(track_context);
-                // CoordType.GPS 待转换坐标类型
-                converter.from(CoordinateConverter.CoordType.GPS);
-                // sourceLatLng待转换坐标点 LatLng类型
-                converter.coord(latlngs[i]);
-                // 执行转换操作
-                latlngs[i] = converter.convert();
-            }
-            i++;
-        }
-
-        return latlngs;
-    }
-
-    private List<com.amap.api.maps.model.LatLng> GenetateLatLngListFromAvobject(List<AVObject> list){
+    private List<com.amap.api.maps.model.LatLng> GenetateLatLngListFromAvobject(List<AVObject> list, boolean isPathSmooth){
         int sum = list.size();
         List<com.amap.api.maps.model.LatLng> latlngs = new ArrayList<>(sum);
 
@@ -870,6 +879,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             latlngs.add(new com.amap.api.maps.model.LatLng(x, y));
 
             String coordinate = obj.getString("geo_coordinate");
+//            Log.i("TrackActivity","当前数据坐标："+coordinate + "数据信息:" + obj);
             if(coordinate.equals(Constant.GPS)){
                 // 将WGS-84坐标转换为高德坐标
                 CoordinateConverter converter  = new CoordinateConverter(track_context);
@@ -880,12 +890,50 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 // 执行转换操作
                 latlngs.set(i,converter.convert());
             }
-
             i++;
         }
 
-        return latlngs;
+        if(isPathSmooth){
+            // 平滑处理
+            PathSmoothTool mpathSmoothTool = new PathSmoothTool();
+            //设置平滑处理的等级
+            mpathSmoothTool.setIntensity(4);;
+            return mpathSmoothTool.pathOptimize(latlngs);
+        }else{
+            return latlngs;
+        }
+
+
     }
+
+//    private List<com.amap.api.maps.model.LatLng> GenetateLatLngListFromAvobject(List<AVObject> list){
+//        int sum = list.size();
+//        List<com.amap.api.maps.model.LatLng> latlngs = new ArrayList<>(sum);
+//
+//        int i=0;
+//        for (AVObject obj: list){
+//            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+//            double x = geopoint.getLatitude();
+//            double y = geopoint.getLongitude();
+//            latlngs.add(new com.amap.api.maps.model.LatLng(x, y));
+//
+//            String coordinate = obj.getString("geo_coordinate");
+//            if(coordinate.equals(Constant.GPS)){
+//                // 将WGS-84坐标转换为高德坐标
+//                CoordinateConverter converter  = new CoordinateConverter(track_context);
+//                // CoordType.GPS 待转换坐标类型
+//                converter.from(CoordinateConverter.CoordType.GPS);
+//                // sourceLatLng待转换坐标点 LatLng类型
+//                converter.coord(latlngs.get(i));
+//                // 执行转换操作
+//                latlngs.set(i,converter.convert());
+//            }
+//
+//            i++;
+//        }
+//
+//        return latlngs;
+//    }
 
 
 

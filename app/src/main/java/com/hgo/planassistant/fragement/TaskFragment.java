@@ -134,6 +134,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener{
         query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.whereNotEqualTo("done", true);
+        query.whereGreaterThanOrEqualTo("end_time",Calendar.getInstance().getTime());// 结束时间大于当前时间
         query.limit(MaxQuery);
         query.orderByDescending("task_importance"); // 按重要性降序
         query.addAscendingOrder("start_time"); // 按开始时间升序

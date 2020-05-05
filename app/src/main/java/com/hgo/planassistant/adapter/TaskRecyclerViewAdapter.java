@@ -207,8 +207,8 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             if(mItems.get(position).getBoolean("done")){
                 //删除线
-                 recyclerViewHolder.tv_title.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-
+//                 recyclerViewHolder.tv_title.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                recyclerViewHolder.tv_title.setText(mItems.get(position).getString("task_name")+"（已完成）");
             }
 //            Log.i("LLRVAdapter","当前数据:"+mItems.get(position).get("score").toString());
 
@@ -612,7 +612,16 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             case R.id.btn_dialog_bottom_task_edit_done:
                 mBottomSheetDialog.dismiss();
                 AVObject done_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
-                done_task.put("done",true);
+                Log.d("TaskRecyclerViewAdapter","任务完成按钮，任务状态："+done_task.getBoolean("done"));
+                if(mItems.get(Position).getBoolean("done")){
+                    // 任务已完成，设为未完成
+                    done_task.put("done",false);
+                    Log.d("TaskRecyclerViewAdapter","任务完成按钮，任务已完成，设为未完成！");
+                }else{
+                    done_task.put("done",true);
+                    done_task.put("done_time", Calendar.getInstance().getTime());
+                }
+
                 done_task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {

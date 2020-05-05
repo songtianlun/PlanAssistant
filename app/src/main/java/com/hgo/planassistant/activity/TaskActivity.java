@@ -1,7 +1,6 @@
 package com.hgo.planassistant.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -13,12 +12,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +31,17 @@ import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.adapter.TaskRecyclerViewAdapter;
+import com.hgo.planassistant.tools.DateFormat;
 import com.hgo.planassistant.util.AppUtils;
 import com.hgo.planassistant.util.CalendarReminderUtils;
 import com.hgo.planassistant.view.ItemTouchHelperCallback;
 import com.warkiz.widget.IndicatorSeekBar;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,10 +61,11 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
     private Context mContext;
     private Calendar task_start_time;
     private Calendar task_end_time;
-
-    private int Pages = -1;
-    private int sumPages = -1;
-    private int MaxQuery = 100;
+//
+//    private int Pages = -1;
+//    private int sumPages = -1;
+    private int MaxQuery = 1000;
+    private String task_type = "all";
 
     private BottomSheetDialog mBottomSheetDialog;
 
@@ -94,8 +95,77 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         initDate();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_activity_task, menu);
+
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Intent intent = new Intent();
+        switch (item.getItemId()) {
+            case R.id.menu_home_task_all:
+                task_type = "all";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_today:
+                task_type = "today";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_today_planning:
+                task_type = "today_planning";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_late:
+                task_type = "late";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_undo:
+                task_type = "undo";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_do:
+                task_type = "do";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_urgent_importance:
+                task_type = "urgent_importance";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_noturgent_importance:
+                task_type = "noturgent_importance";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_urgent_unimportance:
+                task_type = "urgent_unimportance";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+            case R.id.menu_home_task_noturgent_unimportance:
+                task_type = "noturgent_unimportance";
+//                refreshData(task_type);
+                filterDataAndLoad(now_list,task_type);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initDate(){
-        Pages = 0;// 页数从0开始
+//        Pages = 0;// 页数从0开始
+        task_type = "all";
         now_list = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("Task");
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
@@ -108,7 +178,9 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         query.countInBackground(new CountCallback() {
             @Override
             public void done(int count, AVException e) {
-                sumPages = count/MaxQuery + 1;
+                if(count>=MaxQuery){
+                    Toast.makeText(App.getContext(), "您的任务总数超过系统限制，仅显示前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
+                }
                 query.findInBackground(new FindCallback<AVObject>() {
                     @Override
                     public void done(List<AVObject> list, AVException e) {
@@ -261,7 +333,7 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
             if (color > 4) {
                 color = 0;
             }
-            LoadMoreData();
+            refreshData(task_type);
 //            swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
         }, 20));
 
@@ -281,69 +353,214 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
 
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (!loading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
-                refreshData();
+                refreshData(task_type);
                 loading = true;
             }
         }
     };
 
-    private void refreshData(){
-        Pages = 0;// 页数从0开始
+    private void refreshData(String type){
+
+        int urgent_day = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getInt("pref_seek_personal_urgent_day",10);
+        Calendar forward7day_calendar = Calendar.getInstance();
+        forward7day_calendar.add(Calendar.DATE,urgent_day);
+        Date forward7day = forward7day_calendar.getTime();
+
         now_list.clear();//清除数据
         now_list = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("Task");
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
         query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+
+        // 已弃用，通过筛选条件分类任务
+//        switch(type){
+//            case "today_planning":
+//            case "today":
+//                DateFormat dateFormat = new DateFormat();
+//                Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+//                Calendar tomorrow = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+//                tomorrow.add(Calendar.DAY_OF_MONTH,1);
+//                query.whereGreaterThanOrEqualTo("start_time",today.getTime()); // 开始时间大于今天0时
+//                query.whereLessThanOrEqualTo("start_time",tomorrow.getTime()); // 开始时间小于明天0时
+//                query.whereEqualTo("done",false); //未完成事件
+//                break;
+//            case "all":
+//                break;
+//            case "late":
+//                break;
+//            case "undo":
+//                query.whereEqualTo("done",false); //未完成事件
+//                break;
+//            case "do":
+//                query.whereEqualTo("done",true); //已完成事件
+//                break;
+//            case "urgent_importance":
+//                // 重要且紧急事件
+//                query.whereLessThanOrEqualTo("end_time",forward7day); // 截止时间小于等于紧急
+//                query.whereEqualTo("done",false); //未完成事件
+//
+//                query.whereGreaterThan("task_importance",5); // 重要程度大于5
+//                break;
+//            case "noturgent_importance":
+//                // 重要但不紧急紧急事件
+//                query.whereGreaterThan("end_time",forward7day); // 截止时间大于紧急
+//                query.whereEqualTo("done",false); //未完成事件
+//
+//                query.whereGreaterThan("task_importance",5); // 重要程度大于5
+//                break;
+//            case "urgent_unimportance":
+//                // 不重要但紧急事件
+//                query.whereLessThanOrEqualTo("end_time",forward7day); // 截止时间小于等于紧急
+//                query.whereEqualTo("done",false); //未完成事件
+//
+//                query.whereLessThanOrEqualTo("task_importance",5); // 重要程度小于等于5
+//                break;
+//            case "noturgent_unimportance":
+//                // 不重要也不紧急事件
+//                query.whereGreaterThan("end_time",forward7day); // 截止时间大于等于紧急
+//                query.whereEqualTo("done",false); //未完成事件
+//
+//                query.whereLessThanOrEqualTo("task_importance",5); // 重要程度小于等于5
+//                break;
+//            default:
+//                // 默认显示全部事件 仅按照是否完成排序
+//                query.addAscendingOrder("done"); //按是否完成，升序,先false，后true
+//                break;
+//        }
+
         query.limit(MaxQuery);
-        query.orderByAscending("done"); //按是否完成，升序,先false，后true
+        query.addAscendingOrder("done"); //按是否完成，升序,先false，后true
         query.addDescendingOrder("task_importance"); // 按照重要程序降序
         query.addAscendingOrder("start_time"); //按开始时间升序
         query.countInBackground(new CountCallback() {
             @Override
             public void done(int count, AVException e) {
-                sumPages = count/MaxQuery + 1;
+                if(count>=MaxQuery){
+                    Toast.makeText(App.getContext(), "您的任务总数超过系统限制，仅显示前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
+                }
                 query.findInBackground(new FindCallback<AVObject>() {
                     @Override
                     public void done(List<AVObject> list, AVException e) {
                         Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
                         now_list.addAll(list);
-                        adapter=new TaskRecyclerViewAdapter(list,mContext);
-                        mRecyclerView.setAdapter(adapter);
+                        filterDataAndLoad(list,type);
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+
                     }
                 });
             }
         });
     }
 
-    private void LoadMoreData(){
-        if(Pages<(sumPages-1)){
-            Pages++;
-            AVQuery<AVObject> query = new AVQuery<>("Task");
-            query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
-            query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
-            query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-            query.limit(MaxQuery);
-            query.skip(Pages*100);
-            query.orderByAscending("done"); //按是否完成，升序,先false，后true
-            query.addDescendingOrder("task_importance"); // 按照重要程序降序
-            query.addAscendingOrder("start_time"); //按开始时间升序
-            query.findInBackground(new FindCallback<AVObject>() {
-                @Override
-                public void done(List<AVObject> list, AVException e) {
-                    Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                    now_list.addAll(list);
-                    adapter=new TaskRecyclerViewAdapter(now_list,mContext);
-                    mRecyclerView.setAdapter(adapter);
-                    swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
-                }
-            });
-        }else{
-            refreshData();
-            Toast.makeText(App.getContext(), "已刷新！(没有更多日程！)", Toast.LENGTH_SHORT).show();
-        }
+    private void filterDataAndLoad(List<AVObject> list, String type){
+        // 获取今日开始结束时刻
+        List<AVObject> filter = new ArrayList<>();
+        DateFormat dateFormat = new DateFormat();
+        Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+        Calendar tomorrow = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+        tomorrow.add(Calendar.DAY_OF_MONTH,1);
 
+        // 获取紧急日程判定依据及数据
+        int urgent_day = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getInt("pref_seek_personal_urgent_day",10);
+        Calendar forward7day_calendar = Calendar.getInstance();
+        forward7day_calendar.add(Calendar.DATE,urgent_day);
+        Date forward7day = forward7day_calendar.getTime();
+        for(AVObject obj: list){
+            switch(type){
+                case "today_planning":
+                case "today":
+                    // 未完成任务
+                    if(!obj.getBoolean("done")){
+                        // 开始时刻位于今日
+                        if(obj.getDate("start_time").getTime()>today.getTime().getTime() && obj.getDate("start_time").getTime()<tomorrow.getTime().getTime()){
+                            filter.add(obj);
+                        }else if(obj.getDate("end_time").getTime()>today.getTime().getTime() && obj.getDate("end_time").getTime()<tomorrow.getTime().getTime()){
+                            // 结束时刻位于今日
+                            filter.add(obj);
+                        }else if(obj.getDate("start_time").getTime()<today.getTime().getTime() && obj.getDate("end_time").getTime()>tomorrow.getTime().getTime()){
+                            // 开始结束越过今天
+                            filter.add(obj);
+                        }
+                    }
+                    break;
+                case "late":
+                    // 已延误任务
+                    if(!obj.getBoolean("done")){
+                        // 结束时间小于今日开始
+                        if(obj.getDate("end_time").getTime()<today.getTime().getTime()){
+                            filter.add(obj);
+                        }
+                    }
+                    break;
+                case "undo":
+                    //未完成事件
+                    if(!obj.getBoolean("done")){
+                        filter.add(obj);
+                    }
+                    break;
+                case "do":
+                    //已完成事件
+                    if(obj.getBoolean("done")){
+                        filter.add(obj);
+                    }
+                    break;
+                case "urgent_importance":
+                    // 重要且紧急事件
+                    if(!obj.getBoolean("done")){
+                        // 重要程度大于5
+                        if(obj.getInt("task_importance")>5){
+                            // 截止时间小于等于紧急
+                            if(obj.getDate("end_time").getTime()<=forward7day.getTime()){
+                                filter.add(obj);
+                            }
+                        }
+                    }
+                    break;
+                case "noturgent_importance":
+                    // 重要但不紧急紧急事件
+                    if(!obj.getBoolean("done")){
+                        // 重要程度大于5
+                        if(obj.getInt("task_importance")>5){
+                            // 截止时间大于紧急
+                            if(obj.getDate("end_time").getTime()>forward7day.getTime()){
+                                filter.add(obj);
+                            }
+                        }
+                    }
+                    break;
+                case "urgent_unimportance":
+                    // 不重要但紧急事件
+                    if(!obj.getBoolean("done")){
+                        // 重要程度小于等于5
+                        if(obj.getInt("task_importance")<=5){
+                            // 截止时间小于等于紧急
+                            if(obj.getDate("end_time").getTime()<=forward7day.getTime()){
+                                filter.add(obj);
+                            }
+                        }
+                    }
+                    break;
+                case "noturgent_unimportance":
+                    // 不重要也不紧急事件
+                    if(!obj.getBoolean("done")){
+                        // 重要程度小于等于5
+                        if(obj.getInt("task_importance")<=5){
+                            // 截止时间大于紧急
+                            if(obj.getDate("end_time").getTime()>forward7day.getTime()){
+                                filter.add(obj);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    // 默认显示全部事件 包括all
+                    filter.add(obj);
+                    break;
+            }
+        }
+        adapter=new TaskRecyclerViewAdapter(filter,mContext);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -402,7 +619,7 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
 
                                     }
 
-                                    refreshData();
+                                    refreshData(task_type);
 //                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
                                 } else {
                                     // 失败的原因可能有多种，常见的是用户名已经存在。

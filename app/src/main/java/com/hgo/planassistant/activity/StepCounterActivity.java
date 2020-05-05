@@ -324,7 +324,10 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
             @Override
             public String getFormattedValue(float value) {
                 int value_int = (int)value;
-                return value_int + "日";
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(start_time);
+                calendar.add(Calendar.DAY_OF_MONTH,value_int);
+                return calendar.get(Calendar.DAY_OF_MONTH) + "日";
             }
         };
         xAxis.setValueFormatter(valueFormatter);//设置自定义格式，在绘制之前动态调整x的值。
@@ -359,8 +362,8 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
 
                     // 将 开始时间到当前时间之间相差的天数 作为数组坐标
 //                    StepSum[(dateFormat.FilterHourAndMinuteAndSecond(getDay).get(Calendar.DATE)) - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).get(Calendar.DATE)] += avObjects.get(i).getInt("count");
+                    // 计算毫秒差 作为数组坐标
                     StepSum[(int)Math.abs( ( dateFormat.FilterHourAndMinuteAndSecond(getDay).getTime().getTime() - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).getTime().getTime())/86400000)] += avObjects.get(i).getInt("count");
-
                 }
                 for(int i=0;i<SumDay;i++){
                     // 直接获取日期+1，忽略月末异常，采用日期加一再取日期的方法解决
@@ -368,7 +371,7 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
                     Calendar nowday = Calendar.getInstance();
                     nowday.setTime(start_time);
                     nowday.add(Calendar.DATE,i);
-                    values.add(new BarEntry((nowday.get(Calendar.DATE)),StepSum[i]));
+                    values.add(new BarEntry(i,StepSum[i]));
                 }
                 BarDataSet set1;
 
