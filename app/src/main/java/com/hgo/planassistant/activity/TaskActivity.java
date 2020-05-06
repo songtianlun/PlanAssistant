@@ -64,7 +64,7 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
 //
 //    private int Pages = -1;
 //    private int sumPages = -1;
-    private int MaxQuery = 1000;
+    static public int MaxQuery = 1000;
     private String task_type = "all";
 
     private BottomSheetDialog mBottomSheetDialog;

@@ -67,14 +67,27 @@
     <string name="card_home_location_quantity_title">数量</string>
     <string name="card_home_location_date">××××年××月××日</string>
 
-    <!--card_home_plan-->
-    <string name="card_home_plan_title">规划事件</string>
-    <string name="card_home_plan_peding">*00</string>
-    <string name="card_home_plan_peding_title">待完成</string>
-    <string name="card_home_plan_completed">×00</string>
-    <string name="card_home_plan_completed_title">已完成</string>
-    <string name="card_home_plan_total">×000</string>
-    <string name="card_home_plan_total_title">共完成</string>
+    <!--card_home_task_statistics-->
+<!--    <string name="card_home_plan_title">规划事件</string>-->
+<!--    <string name="card_home_plan_peding">*00</string>-->
+<!--    <string name="card_home_plan_peding_title">待完成</string>-->
+<!--    <string name="card_home_plan_completed">×00</string>-->
+<!--    <string name="card_home_plan_completed_title">已完成</string>-->
+<!--    <string name="card_home_plan_total">×000</string>-->
+<!--    <string name="card_home_plan_total_title">共完成</string>-->
+
+    <!--card_home_task_statistics-->
+    <string name="card_home_task_statistics_title">日程统计</string>
+    <string name="card_home_task_statistics_today">***</string>
+    <string name="card_home_task_statistics_today_title">今日任务</string>
+    <string name="card_home_task_statistics_do">***</string>
+    <string name="card_home_task_statistics_do_title">今日完成</string>
+    <string name="card_home_task_statistics_undo">***</string>
+    <string name="card_home_task_statistics_undo_title">总待完成</string>
+
+    <!--card_home_task_counter_statistics_title-->
+    <string name="card_home_task_counter_statistics_title">今日百日计数器完成状态</string>
+    <string name="card_home_plan_counter_statistics_today">00/100</string>
 
     <!-- card_home_suggest_task_title -->
     <string name="card_home_suggest_task_title">建议优先日程</string>

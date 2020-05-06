@@ -109,6 +109,9 @@ public class PlanCounterRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             int percentage = nowcounter*100 / aimscounter;
 
             recyclerViewHolder.tv_title.setText(mItems.get(position).get("title").toString());
+            if(mItems.get(position).getBoolean("done")){
+                recyclerViewHolder.tv_title.setText(mItems.get(position).get("title").toString()+"（已完成）");
+            }
             recyclerViewHolder.tv_description.setText(mItems.get(position).get("description").toString());
 
             if(percentage>80){

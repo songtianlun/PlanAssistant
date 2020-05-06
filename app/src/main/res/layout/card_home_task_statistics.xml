@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_home_plan"
+    android:id="@+id/card_home_task_statistics"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/dimen_common"
@@ -20,46 +20,46 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/card_home_plan_title"
+            android:id="@+id/card_home_task_statistics_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:adjustViewBounds="true"
             android:layout_margin="@dimen/dimen_common_small"
-            android:text="@string/card_home_plan_title"
+            android:text="@string/card_home_task_statistics_title"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/card_home_plan_title"
-            android:id="@+id/card_home_plan_data"
+            android:layout_below="@id/card_home_task_statistics_title"
+            android:id="@+id/card_home_task_statistics_data"
             android:layout_margin="@dimen/dimen_common_very_small">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/card_home_plan_completed_layout"
+                android:id="@+id/card_home_task_statistics_today_layout"
                 android:layout_centerHorizontal="true">
                 <TextView
-                    android:id="@+id/card_home_plan_completed"
+                    android:id="@+id/card_home_task_statistics_today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_common"
-                    android:layout_marginTop="@dimen/dimen_common"
                     android:layout_marginEnd="@dimen/dimen_common"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/card_home_plan_completed"
+                    android:textSize="30dp"
+                    android:text="@string/card_home_task_statistics_today"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
                 <TextView
-                    android:id="@+id/card_home_plan_completed_title"
+                    android:id="@+id/card_home_task_statistics_today_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/card_home_plan_completed"
+                    android:layout_below="@id/card_home_task_statistics_today"
                     android:adjustViewBounds="true"
                     android:layout_centerInParent="true"
                     android:layout_margin="@dimen/dimen_common_very_small"
-                    android:text="@string/card_home_plan_completed_title"
+                    android:text="@string/card_home_task_statistics_today_title"
                     android:scaleType="centerCrop" />
             </RelativeLayout>
 
@@ -69,29 +69,29 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/card_home_plan_peding_layout"
-                android:layout_toStartOf="@id/card_home_plan_completed_layout"
+                android:id="@+id/card_home_task_statistics_undo_layout"
+                android:layout_toStartOf="@id/card_home_task_statistics_today_layout"
                 android:layout_margin="@dimen/dimen_common_very_small">
                 <TextView
-                    android:id="@+id/card_home_plan_peding"
+                    android:id="@+id/card_home_task_statistics_undo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_common"
-                    android:layout_marginTop="@dimen/dimen_common"
                     android:layout_marginEnd="@dimen/dimen_common"
+                    android:textSize="30dp"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/card_home_plan_peding"
+                    android:text="@string/card_home_task_statistics_undo"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
                 <TextView
-                    android:id="@+id/card_home_plan_peding_title"
+                    android:id="@+id/card_home_task_statistics_undo_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/card_home_plan_peding"
+                    android:layout_below="@id/card_home_task_statistics_undo"
                     android:layout_centerInParent="true"
                     android:adjustViewBounds="true"
                     android:layout_margin="@dimen/dimen_common_very_small"
-                    android:text="@string/card_home_plan_peding_title"
+                    android:text="@string/card_home_task_statistics_undo_title"
                     android:scaleType="centerCrop" />
 
             </RelativeLayout>
@@ -99,29 +99,29 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/card_home_plan_total_layout"
-                android:layout_toEndOf="@id/card_home_plan_completed_layout"
+                android:id="@+id/card_home_task_statistics_do_layout"
+                android:layout_toEndOf="@id/card_home_task_statistics_today_layout"
                 android:layout_margin="@dimen/dimen_common_very_small">
 
                 <TextView
-                    android:id="@+id/card_home_plan_total"
+                    android:id="@+id/card_home_task_statistics_do"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_common"
-                    android:layout_marginTop="@dimen/dimen_common"
                     android:layout_marginEnd="@dimen/dimen_common"
+                    android:textSize="30dp"
                     android:layout_centerHorizontal="true"
-                    android:text="@string/card_home_plan_total"
+                    android:text="@string/card_home_task_statistics_do"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
                 <TextView
-                    android:id="@+id/card_home_plan_total_title"
+                    android:id="@+id/card_home_task_statistics_do_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/card_home_plan_total"
+                    android:layout_below="@id/card_home_task_statistics_do"
                     android:layout_centerInParent="true"
                     android:adjustViewBounds="true"
                     android:layout_margin="@dimen/dimen_common_very_small"
-                    android:text="@string/card_home_plan_total_title"
+                    android:text="@string/card_home_task_statistics_do_title"
                     android:scaleType="centerCrop" />
             </RelativeLayout>
 

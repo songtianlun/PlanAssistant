@@ -96,8 +96,9 @@ public class PlanCounterActivity extends BaseActivity {
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
         query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-        query.limit(500);
-        query.orderByDescending("updatedAt");// 按时间，降序排列
+        query.limit(1000);
+        query.addAscendingOrder("done"); //按是否完成，升序,先false，后true
+        query.addDescendingOrder("updatedAt");// 按时间，降序排列
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -249,7 +250,8 @@ public class PlanCounterActivity extends BaseActivity {
                 AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
                 query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
                 query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
-                query.orderByDescending("updatedAt");// 按时间，降序排列
+                query.addAscendingOrder("done"); //按是否完成，升序,先false，后true
+                query.addDescendingOrder("updatedAt");// 按时间，降序排列
                 query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                 query.limit(1000);
                 query.findInBackground(new FindCallback<AVObject>() {

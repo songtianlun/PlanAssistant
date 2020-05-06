@@ -54,6 +54,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -84,8 +85,12 @@ import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.MainActivity;
+import com.hgo.planassistant.activity.PlanCounterActivity;
+import com.hgo.planassistant.activity.PlanCounterDetailActivity;
 import com.hgo.planassistant.activity.StepCounterActivity;
+import com.hgo.planassistant.activity.TaskActivity;
 import com.hgo.planassistant.activity.TrackActivity;
+import com.hgo.planassistant.adapter.TaskRecyclerViewAdapter;
 import com.hgo.planassistant.custom.MyMarkerView;
 import com.hgo.planassistant.tools.DateFormat;
 
@@ -95,6 +100,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import okhttp3.internal.concurrent.Task;
 
 import static android.content.Context.MODE_MULTI_PROCESS;
 import static android.content.Context.MODE_PRIVATE;
@@ -112,6 +119,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private com.google.android.material.card.MaterialCardView card_home_map;
     private com.google.android.material.card.MaterialCardView card_home_step_counter;
     private com.google.android.material.card.MaterialCardView card_home_suggest_task;
+    private com.google.android.material.card.MaterialCardView card_home_task_statistics;
+    private com.google.android.material.card.MaterialCardView card_home_task_counter_statistics;
     private TextView card_home_suggest_task_textview;
 //    private TextView tv_card_home_location_station,tv_card_home_location_date;
 //    private TextView card_home_location_station_location,card_home_location_data;
@@ -119,6 +128,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private com.amap.api.maps.MapView aMapView = null;
     private AMap amap = null;
     private List<AVObject> now_list = null;
+
+    private TextView card_home_task_statistics_today;
+    private TextView card_home_task_statistics_undo;
+    private TextView card_home_task_statistics_do;
+    private TextView card_home_plan_counter_statistics_today;
 
     private PieChart DayPieChart;
 
@@ -134,13 +148,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //        savetogallary = nestedScrollView.findViewById(R.id.savetogallary);
 //        card__home_liveline = nestedScrollView.findViewById(R.id.card_home_liveline);
 //        card__home_location = nestedScrollView.findViewById(R.id.card_home_location);
-//        card__home_plan = nestedScrollView.findViewById(R.id.card_home_plan);
+        card_home_task_statistics = nestedScrollView.findViewById(R.id.card_home_task_statistics);
         aMapView = nestedScrollView.findViewById(R.id.card_home_amapView);
         card_home_map = nestedScrollView.findViewById(R.id.card_home_map);
         card_home_step_counter = nestedScrollView.findViewById(R.id.card_home_step_counter);
         DayPieChart = nestedScrollView.findViewById(R.id.card_home_step_counter_piechart);
         card_home_suggest_task = nestedScrollView.findViewById(R.id.card_home_suggest_task);
         card_home_suggest_task_textview = nestedScrollView.findViewById(R.id.card_home_suggest_task_textview);
+        card_home_plan_counter_statistics_today = nestedScrollView.findViewById(R.id.card_home_plan_counter_statistics_today);
+
+        card_home_task_statistics_today = nestedScrollView.findViewById(R.id.card_home_task_statistics_today);
+        card_home_task_statistics_do = nestedScrollView.findViewById(R.id.card_home_task_statistics_do);
+        card_home_task_statistics_undo = nestedScrollView.findViewById(R.id.card_home_task_statistics_undo);
+        card_home_task_counter_statistics = nestedScrollView.findViewById(R.id.card_home_task_counter_statistics);
 
 //        tv_card_home_location_station = nestedScrollView.findViewById(R.id.card_home_location_station);
 //        tv_card_home_location_date = nestedScrollView.findViewById(R.id.tv_card_home_location_date);
@@ -171,6 +191,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         card_home_map.setOnClickListener(this);
         card_home_step_counter.setOnClickListener(this);
         card_home_suggest_task.setOnClickListener(this);
+        card_home_task_statistics.setOnClickListener(this);
+        card_home_task_counter_statistics.setOnClickListener(this);
 
 //        bt_start_location.setOnClickListener(this);
 
@@ -191,6 +213,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 
 
         LoadSuggestTask();
+        LoadTaskData();
+        LoadTaskCounterData();
 //        LoadLinechartData();//从数据库中读取经理数据,完毕后加载图表
         initMap(savedInstanceState);
         initDayPieChart();
@@ -216,6 +240,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 break;
             case R.id.card_home_suggest_task:
                 LoadSuggestTask();
+                break;
+            case R.id.card_home_task_statistics:
+                LoadTaskData();
+                break;
+            case R.id.card_home_task_counter_statistics:
+                LoadTaskCounterData();
+                startActivity(new Intent(getActivity(), PlanCounterActivity.class));
                 break;
 //            case R.id.savetogallary:
 //                chartsavetogallary();
@@ -438,7 +469,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 if(count>TrackActivity.QueryMaxNum){
                     Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
                 }else{
-                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
+                    Log.i("HomeFragment","共查询到：" + count + "条数据。");
 //                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
                     now_list = new ArrayList<>(count+1);
                     int querynum = count/1000 + 1;
@@ -839,9 +870,149 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //        Log.i("HomeFragement",preferences.getString("pref_list_location_time", ""));
         //return preferences.getString("pref_list_location_type", "");
         return preferences.getBoolean("pref_location_usegps", false);
+    }
 
+    private void LoadTaskData(){
+
+        DateFormat dateFormat = new DateFormat();
+        Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+
+        now_list = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("Task");
+        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query.limit(TaskActivity.MaxQuery);
+        query.whereGreaterThanOrEqualTo("end_time",today.getTime()); //结束时间大于今日开始时刻
+//        query.orderByAscending("done"); //按是否完成，升序,先false，后true
+//        query.addDescendingOrder("task_importance"); // 按照重要程序降序
+//        query.addAscendingOrder("start_time"); //按开始时间升序
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, AVException e) {
+                if(count>=TaskActivity.MaxQuery){
+                    Toast.makeText(App.getContext(), "您的任务总数超过系统限制，仅统计前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
+                }
+                query.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> list, AVException e) {
+                        if(list!=null){
+                            Log.d("HomeFragment","共查询到：" + list.size() + "条数据。");
+                            now_list.addAll(list);
+                        }
+                        card_home_task_statistics_today.setText(StatisticsTypeTask(list,"today_undo") + "");
+                        card_home_task_statistics_do.setText(StatisticsTypeTask(list,"today_do") + "");
+                        card_home_task_statistics_undo.setText(StatisticsTypeTask(list,"all_undo") + "");
+                    }
+                });
+            }
+        });
+    }
+
+    private int StatisticsTypeTask(List<AVObject> list, String type){
+        // 获取今日开始结束时刻
+        List<AVObject> filter = new ArrayList<>();
+        DateFormat dateFormat = new DateFormat();
+        Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+        Calendar tomorrow = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+        tomorrow.add(Calendar.DAY_OF_MONTH,1);
+
+        for(AVObject obj: list){
+            switch(type){
+                case "today_undo":
+                    if(!obj.getBoolean("done")){
+                        // 开始时刻位于今日
+                        if(obj.getDate("start_time").getTime()>today.getTime().getTime() && obj.getDate("start_time").getTime()<tomorrow.getTime().getTime()){
+                            filter.add(obj);
+                            Log.d("HomeFragment","今日待完成："+obj.getString("task_name")+", 完成标志："+obj.getBoolean("done"));
+                        }else if(obj.getDate("end_time").getTime()>today.getTime().getTime() && obj.getDate("end_time").getTime()<tomorrow.getTime().getTime()){
+                            // 结束时刻位于今日
+                            filter.add(obj);
+                            Log.d("HomeFragment","今日待完成："+obj.getString("task_name")+", 完成标志："+obj.getBoolean("done"));
+                        }else if(obj.getDate("start_time").getTime()<today.getTime().getTime() && obj.getDate("end_time").getTime()>tomorrow.getTime().getTime()){
+                            // 开始结束越过今天
+                            filter.add(obj);
+                            Log.d("HomeFragment","今日待完成："+obj.getString("task_name")+", 完成标志："+obj.getBoolean("done"));
+                        }
+                    }
+                    break;
+                case "today_do":
+                    if(obj.getBoolean("done")){
+//                        Log.d("HomeFragment",obj.getString("task_name") + "完成时间：" + dateFormat.GetDetailDescription(obj.getDate("done_time")));
+                        if(obj.getDate("done_time").getTime()>today.getTime().getTime() && obj.getDate("done_time").getTime()<tomorrow.getTime().getTime()){
+                            filter.add(obj);
+                            Log.d("HomeFragment","今日完成："+obj.getString("task_name"));
+                        }
+                    }
+                    break;
+                case "all_undo":
+                    if(!obj.getBoolean("done")){
+                        filter.add(obj);
+                        Log.d("HomeFragment","待完成事件："+obj.getString("task_name"));
+                    }
+                    break;
+                default:
+                    // 默认显示全部事件 包括all
+                    filter.add(obj);
+                    break;
+            }
+        }
+        Log.d("HomeFragment",type + "类型事件总数：" + filter.size());
+        return filter.size();
 
     }
+    private void LoadTaskCounterData(){
+
+        // 获取今日打卡记录统计数量作为今日打卡数量
+        // 获取未完成计数器总数作为未完成打卡数量
+
+        List<AVObject> filter = new ArrayList<>();
+        DateFormat dateFormat = new DateFormat();
+        Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+
+        now_list = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
+        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query.whereNotEqualTo("done",true); // 计划未完成
+        query.limit(TaskActivity.MaxQuery);
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, AVException e) {
+                if(count>=TaskActivity.MaxQuery){
+                    Toast.makeText(App.getContext(), "您的计数器总数超过系统限制，仅统计前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
+                }
+                query.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> list, AVException e) {
+                        if(list!=null){
+                            Log.d("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
+                            AVQuery<AVObject> query = new AVQuery<>("PlanCounterLog");
+                            query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+                            query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+                            query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+                            query.whereGreaterThanOrEqualTo("createdAt",today);
+                            query.findInBackground(new FindCallback<AVObject>() {
+                                @Override
+                                public void done(List<AVObject> avObjects, AVException avException) {
+                                    int sumUndo = 0;
+                                    for (AVObject obj: avObjects){
+                                        if(obj.getInt("NowCounter")>obj.getInt("AimsCounter")){
+                                            sumUndo++;
+                                        }
+                                    }
+                                    card_home_plan_counter_statistics_today.setText(sumUndo + " / " + count);
+                                }
+                            });
+                        }
+
+                    }
+                });
+            }
+        });
+    }
+
 
 //    private void LoadDataTital(int hour){
 //        Calendar start_time;

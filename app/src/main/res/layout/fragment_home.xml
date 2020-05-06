@@ -14,6 +14,10 @@
 
 <!--        <include layout="@layout/card_home_location" />-->
 
+        <include layout="@layout/card_home_task_statistics" />
+
+        <include layout="@layout/card_home_task_counter_statistics" />
+
         <include layout="@layout/card_home_suggest_task"/>
 
         <include layout="@layout/card_home_step_counter" />
@@ -21,8 +25,6 @@
         <include layout="@layout/card_home_map" />
 
 <!--        <include layout="@layout/card_home_liveline" />-->
-
-<!--        <include layout="@layout/card_home_plan" />-->
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -235,6 +235,7 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
 
                 if(TryToday()){
                     AVObject today_log = new AVObject("PlanCounterLog");// 构建对象
+                    today_log.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
                     today_log.put("PCID", ObjectId);
                     today_log.put("NowCounter",now_counter+1);
                     today_log.put("AimsCounter",aims_counter);
@@ -248,6 +249,10 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
                                 Snackbar.make(v, getString(R.string.succefully), Snackbar.LENGTH_LONG)
                                         .setAction(getString(R.string.main_snack_bar_action), view -> {
                                         }).show();
+                                if(now_counter>=(aims_counter-1)){
+                                    nowObject.put("done", true);
+                                    Toast.makeText(App.getContext(), "恭喜您完成该百日计划！", Toast.LENGTH_SHORT).show();
+                                }
                                 nowObject.put("NowCounter",now_counter+1);
                                 nowObject.saveInBackground();
                                 refresh();
