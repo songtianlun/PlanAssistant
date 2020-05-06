@@ -961,6 +961,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         return filter.size();
 
     }
+    int TaskCounterCountSum;
     private void LoadTaskCounterData(){
 
         // 获取今日打卡记录统计数量作为今日打卡数量
@@ -969,6 +970,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         List<AVObject> filter = new ArrayList<>();
         DateFormat dateFormat = new DateFormat();
         Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+
 
         now_list = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
@@ -980,6 +982,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query.countInBackground(new CountCallback() {
             @Override
             public void done(int count, AVException e) {
+                TaskCounterCountSum = count;
                 if(count>=TaskActivity.MaxQuery){
                     Toast.makeText(App.getContext(), "您的计数器总数超过系统限制，仅统计前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
                 }
@@ -992,19 +995,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                             query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
                             query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
                             query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-                            query.whereGreaterThanOrEqualTo("createdAt",today);
-                            query.findInBackground(new FindCallback<AVObject>() {
+                            query.whereGreaterThanOrEqualTo("createdAt",today.getTime());
+                            query.countInBackground(new CountCallback() {
                                 @Override
-                                public void done(List<AVObject> avObjects, AVException avException) {
-                                    int sumUndo = 0;
-                                    for (AVObject obj: avObjects){
-                                        if(obj.getInt("NowCounter")>obj.getInt("AimsCounter")){
-                                            sumUndo++;
-                                        }
-                                    }
-                                    card_home_plan_counter_statistics_today.setText(sumUndo + " / " + count);
+                                public void done(int count, AVException e) {
+                                    card_home_plan_counter_statistics_today.setText(count + "（今日完成） / " + TaskCounterCountSum + "（需完成）");
                                 }
                             });
+//                            query.findInBackground(new FindCallback<AVObject>() {
+//                                @Override
+//                                public void done(List<AVObject> avObjects, AVException avException) {
+//                                    int sumUndo = 0;
+//                                    for (AVObject obj: avObjects){
+//                                        if(obj.getInt("NowCounter")>=obj.getInt("AimsCounter")){
+//                                            sumUndo++;
+//                                        }
+//                                    }
+//
+//                                }
+//                            });
                         }
 
                     }
