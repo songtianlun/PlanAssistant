@@ -34,9 +34,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.SchedulePlanningActivity"></activity>
         <activity
             android:name=".activity.TaskActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.EnergyEvaluationActivity"
             android:label="@string/title_toolbar_activity_energy_evaluation"

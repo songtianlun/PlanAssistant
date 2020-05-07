@@ -489,51 +489,53 @@ public class DataCaptureService extends Service {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                Log.d("DataCaptureService","查询到当前时刻步数记录条数："+avObjects.size());
+                if(avObjects!=null){
+                    Log.d("DataCaptureService","查询到当前时刻步数记录条数："+avObjects.size());
 
-                if(avObjects.size()<1){
-                    // 当前时刻不存在数据
-                    Log.d("DataCaptureService","存储计步器数据，当前时刻不存在数据，新建记录");
-                    StorageLog("debug","DateCaptureService","存储计步器数据，当前时刻不存在数据，新建记录");
+                    if(avObjects.size()<1){
+                        // 当前时刻不存在数据
+                        Log.d("DataCaptureService","存储计步器数据，当前时刻不存在数据，新建记录");
+                        StorageLog("debug","DateCaptureService","存储计步器数据，当前时刻不存在数据，新建记录");
 
-                    // 构造方法传入的参数，对应的就是控制台中的 Class Name
-                    AVObject step_record = new AVObject("stepcounter");
-                    step_record.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
-                    step_record.put("time",NowHour.getTime()); //设置时间戳
-                    if(AddStep==-1){
-                        step_record.put("count",0);
-                    }else{
-                        step_record.put("count",AddStep);
-                    }
-                    step_record.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(AVException e) {
-                            StorageLog("debug","DateCaptureService","存储计步器数据，新建时刻步数：" + step_record.getInt("count"));
-                            Log.d("DataCaptureService","存储计步器数据,新建时刻步数：" + step_record.getInt("count"));
-                            AddStep -= step_record.getInt("count");
-                            // 避免更新数据期间的数据丢失
+                        // 构造方法传入的参数，对应的就是控制台中的 Class Name
+                        AVObject step_record = new AVObject("stepcounter");
+                        step_record.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
+                        step_record.put("time",NowHour.getTime()); //设置时间戳
+                        if(AddStep==-1){
+                            step_record.put("count",0);
+                        }else{
+                            step_record.put("count",AddStep);
                         }
-                    });
-//                    AddStep = 0;
-                }else{
-                    // 当前时刻存在数据
-                    Log.d("DataCaptureService","当前时刻有记录，更新步数");
-//                    Log.d("DataCaptureService","服务器时间："+avObjects.get(0).getDate("time")+",当前时间："+NowHour.getTime());
-                    AVObject step_record = AVObject.createWithoutData("stepcounter", avObjects.get(0).getObjectId());
-                    if(AddStep>0){
-                        step_record.put("count",(avObjects.get(0).getInt("count")+AddStep) );
-                        AddStep = 0;
                         step_record.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(AVException e) {
-                                Log.d("DataCaptureService","存储计步器数据，成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
-                                StorageLog("debug","DateCaptureService","存储计步器数据，成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
-//                                AddStep -= step_record.getInt("count") - avObjects.get(0).getInt("count");
+                                StorageLog("debug","DateCaptureService","存储计步器数据，新建时刻步数：" + step_record.getInt("count"));
+                                Log.d("DataCaptureService","存储计步器数据,新建时刻步数：" + step_record.getInt("count"));
+                                AddStep -= step_record.getInt("count");
                                 // 避免更新数据期间的数据丢失
                             }
                         });
+//                    AddStep = 0;
                     }else{
-                        Log.d("DataCaptureService","当前无新增步数需存储.");
+                        // 当前时刻存在数据
+                        Log.d("DataCaptureService","当前时刻有记录，更新步数");
+//                    Log.d("DataCaptureService","服务器时间："+avObjects.get(0).getDate("time")+",当前时间："+NowHour.getTime());
+                        AVObject step_record = AVObject.createWithoutData("stepcounter", avObjects.get(0).getObjectId());
+                        if(AddStep>0){
+                            step_record.put("count",(avObjects.get(0).getInt("count")+AddStep) );
+                            AddStep = 0;
+                            step_record.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    Log.d("DataCaptureService","存储计步器数据，成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
+                                    StorageLog("debug","DateCaptureService","存储计步器数据，成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
+//                                AddStep -= step_record.getInt("count") - avObjects.get(0).getInt("count");
+                                    // 避免更新数据期间的数据丢失
+                                }
+                            });
+                        }else{
+                            Log.d("DataCaptureService","当前无新增步数需存储.");
+                        }
                     }
                 }
             }

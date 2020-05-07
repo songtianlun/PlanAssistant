@@ -68,13 +68,13 @@
     <string name="card_home_location_date">××××年××月××日</string>
 
     <!--card_home_task_statistics-->
-<!--    <string name="card_home_plan_title">规划事件</string>-->
-<!--    <string name="card_home_plan_peding">*00</string>-->
-<!--    <string name="card_home_plan_peding_title">待完成</string>-->
-<!--    <string name="card_home_plan_completed">×00</string>-->
-<!--    <string name="card_home_plan_completed_title">已完成</string>-->
-<!--    <string name="card_home_plan_total">×000</string>-->
-<!--    <string name="card_home_plan_total_title">共完成</string>-->
+    <!--    <string name="card_home_plan_title">规划事件</string>-->
+    <!--    <string name="card_home_plan_peding">*00</string>-->
+    <!--    <string name="card_home_plan_peding_title">待完成</string>-->
+    <!--    <string name="card_home_plan_completed">×00</string>-->
+    <!--    <string name="card_home_plan_completed_title">已完成</string>-->
+    <!--    <string name="card_home_plan_total">×000</string>-->
+    <!--    <string name="card_home_plan_total_title">共完成</string>-->
 
     <!--card_home_task_statistics-->
     <string name="card_home_task_statistics_title">日程统计</string>
@@ -202,6 +202,7 @@
     <!--String related to login-->
     <string name="card_login_avuser_user">User Name</string>
     <string name="card_login_avuser_passwd">PassWord</string>
+    <string name="card_login_avuser_server">Server</string>
 
 
     <string name="card_login_button_login">登录</string>
@@ -369,6 +370,9 @@
     <!-- toolbar_activity_energy_evaluation-->
     <string name="title_toolbar_activity_energy_evaluation">精力评价</string>
     <string name="fab_add_energy_evaluation">新增评价</string>
+
+    <!-- toolbar_activity_schedule_planning-->
+    <string name="title_toolbar_toolbar_activity_schedule_planning">日程规划</string>
 
     <!-- dialog_bottom_energy_evaluation-->
     <string name="dialog_bottom_energy_evaluation_title">评价精力</string>

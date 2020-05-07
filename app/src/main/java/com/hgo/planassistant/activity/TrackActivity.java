@@ -1,19 +1,15 @@
 package com.hgo.planassistant.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,23 +17,15 @@ import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.HeatmapTileProvider;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlayOptions;
-import com.amap.api.maps.utils.SpatialRelationUtil;
-import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.route.DistanceItem;
-import com.amap.api.services.route.DistanceResult;
-import com.amap.api.services.route.DistanceSearch;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -45,27 +33,21 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.CountCallback;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
+import com.hgo.planassistant.datamodel.AVObjectsParcelable;
 import com.hgo.planassistant.tools.PathSmoothTool;
 
-
-import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -365,24 +347,26 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void distanceStatistics(List<AVObject> list){
+        List<AVObject> distance = new ArrayList<>();
+        distance.addAll(list);
         float sumDistance = 0;
-        for (int i=0;i<list.size();i++){
+        for (int i=0;i<distance.size();i++){
             if(i!=0){
-                if(list.get(i).getInt("precision")>=30){
+                if(distance.get(i).getInt("precision")>=30){
                     // 删除条目
-                    list.remove(i);
+                    distance.remove(i);
                     i--;
                 }else{
-                    AVGeoPoint geopoint1 = list.get(i-1).getAVGeoPoint("point");
-                    AVGeoPoint geopoint2 = list.get(i).getAVGeoPoint("point");
+                    AVGeoPoint geopoint1 = distance.get(i-1).getAVGeoPoint("point");
+                    AVGeoPoint geopoint2 = distance.get(i).getAVGeoPoint("point");
                     LatLng latLng1 = new com.amap.api.maps.model.LatLng(geopoint1.getLatitude(), geopoint1.getLongitude());
                     LatLng latLng2 = new com.amap.api.maps.model.LatLng(geopoint2.getLatitude(), geopoint2.getLongitude());
                     sumDistance += AMapUtils.calculateLineDistance(latLng1,latLng2);
                 }
             }else{
-                if(list.get(i).getInt("precision")>=30){
+                if(distance.get(i).getInt("precision")>=30){
                     // 删除条目，重新计数
-                    list.remove(i);
+                    distance.remove(i);
                     i=0;
                 }
             }
@@ -390,7 +374,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         String text = "开始时间:"+DateFormat.getDateTimeInstance().format(start_time.getTime())+"\n"+
                 "结束时间: " + DateFormat.getDateTimeInstance().format(end_time.getTime())+"\n"+
                 "总长度: "+ sumDistance + "米" + "\n"+
-                "数据总数: "+ now_list.size();
+                "数据总数: "+ list.size();
         TV_info.setText(text);
     }
 
@@ -502,10 +486,13 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 //以当前时间命名地图
                 String start_time_string = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS")).format(start_time.getTime());
                 String end_time_string = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS")).format(end_time.getTime());
-                SaveToMymap(now_list,start_time_string+" 至 "+end_time_string + "轨迹点");
+                Log.d("TrackActivity","传入存储地图点数："+now_list.size());
+                String name = start_time_string+" 至 "+end_time_string + "轨迹点";
+                SaveTrackToMyMap(name,start_time.getTime(),end_time.getTime(),PrecisionLessThen);
+//                SaveToMymap(now_list,name);
                 break;
             case R.id.card_activity_track_info_button_theme:
-                Intent intent = new Intent();
+                Intent intent = new Intent(track_context, TrackDetailMapActivity.class);
 //                AVObjectListDataParcelableSend avObjectListDataParcelableSend = new AVObjectListDataParcelableSend(now_list);
 //                Bundle bundle = new Bundle();
                 //Parcelable 序列化
@@ -516,11 +503,15 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                 long start_time_long = start_time_date.getTime();
                 long end_time_long = end_time_date.getTime();
                 com.hgo.planassistant.tools.DateFormat dateFormat = new com.hgo.planassistant.tools.DateFormat(start_time);
+//                AVObjectsSendToActivity avObjectsSendToActivity = new AVObjectsSendToActivity();
+//                avObjectsSendToActivity.setAvlist(now_list);
+//                AVObjectsParcelable avObjectsParcelable = new AVObjectsParcelable();
+//                avObjectsParcelable.setSend_list(now_list);
                 intent.putExtra("start_time", start_time_long);
                 intent.putExtra("end_time", end_time_long);
+//                intent.putExtra("track_list", avObjectsParcelable);
                 Log.i("TrackDetailMapActivity","发送开始时间："+ dateFormat.GetDetailDescription());
                 Log.i("TrackDetailMapActivity","发送结束时间："+ dateFormat.GetDetailDescription(end_time));
-                intent.setClass(this, TrackDetailMapActivity.class);
                 startActivity(intent);
 //                index++;
 //                if (index == listOfHeatmapColors.length - 1) {
@@ -988,75 +979,114 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 //        map_style.addLayer(lineLayer);
 //
 //    }
-    private void SaveToMymap(List<AVObject> map_list, String map_name){
-        // 第一步：创建空的个人地图
-        // 第二步：将数据提交到当前的个人地图
-        // 第三步：存储当前地图风格
-
-        if(map_list.size()>1000){
-            Toast.makeText(track_context,map_name + "数据点过多，请约束精度或时间将数据点数降至1000以下再试！",Toast.LENGTH_LONG).show();
-        }else{
-            // 构造方法传入的参数，对应的就是控制台中的 Class Name
-            AVObject mymap = new AVObject("personalmap");
-//        AVObject mappoint = new AVObject("mappoint");
-            ArrayList<AVObject> mappoints = new ArrayList<AVObject>();
-
-            // no.1
-            mymap.put("name",map_name);//地图名称
-            mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
-            mymap.put("mapstyle_index",0);//风格编号
-            mymap.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e == null) {
-                        // 存储成功
-//                    Toast.makeText(track_context,map_name + "地图创建成功!",Toast.LENGTH_LONG).show();
-
-                        for (AVObject mappoint : map_list) {
-                            AVObject point = new AVObject("mappoint");
-                            point.put("point",mappoint.getAVGeoPoint("point"));
-                            point.put("altutude",mappoint.get("altitude"));
-                            point.put("MapId",mymap.getObjectId());
-                            mappoints.add(point);
-                        }
-
-                        AVObject.saveAllInBackground(mappoints, new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e != null) {
-                                    // 出现错误
-                                    mymap.deleteInBackground();
-                                    Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
-                                } else {
-                                    // 保存成功
+    // 轨迹地图
+    private void SaveTrackToMyMap(String map_name, Date track_start_time, Date track_stop_time, int Percision){
+        // 构造方法传入的参数，对应的就是控制台中的 Class Name
+        AVObject mymap = new AVObject("personalmap");
+        mymap.put("name",map_name);//地图名称
+        mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
+        mymap.put("type","track_map");
+        mymap.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVObject track_map = new AVObject("PersonalMap_track");
+                track_map.put("track_start_time",track_start_time);
+                track_map.put("track_stop_time",track_stop_time);
+                track_map.put("track_precision",Percision);
+                track_map.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
+                track_map.put("MapId",mymap.getObjectId());
+                track_map.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e != null) {
+                            // 出现错误
+                            mymap.deleteInBackground();
+                            Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                        } else {
+                            // 保存成功
+                            Log.d("TrackActivity","地图创建成功！");
 //                                Toast.makeText(track_context,"地图存储成功!",Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-
-
-                    } else {
-                        // 失败的话，请检查网络环境以及 SDK 配置是否正确
-                        Toast.makeText(track_context,map_name + "地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-            });
-
-//        ArrayList<AVObject> save_mappoints = (ArrayList<AVObject>) map_list;
-
+                });
+            }
+        });
 
 
-
-//        for (AVObject obj: map_list){
-//            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
-//            geopoint.getLongitude();
-//            geopoint.getLatitude();
-//
-//
-//
-//        }
-        }
     }
+    // 弃用，调用api次数过多
+//    private void SaveToMymap(List<AVObject> map_list, String map_name){
+//        // 第一步：创建空的个人地图
+//        // 第二步：将数据提交到当前的个人地图
+//        // 第三步：存储当前地图风格
+//
+//        Log.d("TrackActivity","存到地图总数："+map_list.size());
+//
+//        if(map_list.size()>5000){
+//            Toast.makeText(track_context,map_name + "数据点过多，请约束精度或时间将数据点数降至1000以下再试！",Toast.LENGTH_LONG).show();
+//        }else{
+//            // 构造方法传入的参数，对应的就是控制台中的 Class Name
+//            AVObject mymap = new AVObject("personalmap");
+////        AVObject mappoint = new AVObject("mappoint");
+//            ArrayList<AVObject> mappoints = new ArrayList<AVObject>();
+//
+//            // no.1
+//            mymap.put("name",map_name);//地图名称
+//            mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
+//            mymap.put("mapstyle_index",0);//风格编号
+//            mymap.saveInBackground(new SaveCallback() {
+//                @Override
+//                public void done(AVException e) {
+//                    if (e == null) {
+//                        // 存储成功
+////                    Toast.makeText(track_context,map_name + "地图创建成功!",Toast.LENGTH_LONG).show();
+//
+//                        for (AVObject mappoint : map_list) {
+//                            AVObject point = new AVObject("mappoint");
+//                            point.put("point",mappoint.getAVGeoPoint("point"));
+//                            point.put("altutude",mappoint.get("altitude"));
+//                            point.put("MapId",mymap.getObjectId());
+//                            mappoints.add(point);
+//                        }
+//
+//                        AVObject.saveAllInBackground(mappoints, new SaveCallback() {
+//                            @Override
+//                            public void done(AVException e) {
+//                                if (e != null) {
+//                                    // 出现错误
+//                                    mymap.deleteInBackground();
+//                                    Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+//                                } else {
+//                                    // 保存成功
+//                                    Log.d("TrackActivity","地图创建成功！");
+////                                Toast.makeText(track_context,"地图存储成功!",Toast.LENGTH_LONG).show();
+//                                }
+//                            }
+//                        });
+//
+//
+//                    } else {
+//                        // 失败的话，请检查网络环境以及 SDK 配置是否正确
+//                        Toast.makeText(track_context,map_name + "地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            });
+//
+////        ArrayList<AVObject> save_mappoints = (ArrayList<AVObject>) map_list;
+//
+//
+//
+//
+////        for (AVObject obj: map_list){
+////            AVGeoPoint geopoint = obj.getAVGeoPoint("point");
+////            geopoint.getLongitude();
+////            geopoint.getLatitude();
+////
+////
+////
+////        }
+//        }
+//    }
     private void RagesQuare(List<AVObject> list){
         int i=0;
         double range_num = 0.2;

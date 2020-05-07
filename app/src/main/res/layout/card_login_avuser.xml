@@ -28,37 +28,102 @@
             <!--android:layout_height="1dp"-->
             <!--android:background="#EEEEEE" />-->
 
-        <EditText
-            android:id="@+id/et_card_login_account"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/et_card_login_account_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="?android:selectableItemBackground"
-            android:clickable="true"
-            android:hint="@string/card_login_avuser_user"
-            android:drawableStart="@drawable/account"
-            android:drawablePadding="@dimen/dimen_common"
-            android:drawableTint="@color/gray"
-            android:gravity="center_vertical"
-            android:padding="@dimen/dimen_common"
-            android:textStyle="italic"
-            android:maxLength="20" />
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:layout_below="@id/dialog_bottom_task_title"
+            android:layout_marginTop="@dimen/dimen_common">
 
-        <EditText
-            android:id="@+id/et_card_login_password"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_card_login_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/card_login_avuser_user"
+                android:maxLength="50"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/et_card_login_account"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="?android:selectableItemBackground"-->
+<!--            android:clickable="true"-->
+<!--            android:hint="@string/card_login_avuser_user"-->
+<!--            android:drawableStart="@drawable/account"-->
+<!--            android:drawablePadding="@dimen/dimen_common"-->
+<!--            android:drawableTint="@color/gray"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:padding="@dimen/dimen_common"-->
+<!--            android:textStyle="italic"-->
+<!--            android:maxLength="20" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/et_card_login_password_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="?android:selectableItemBackground"
-            android:clickable="true"
-            android:drawableStart="@drawable/key"
-            android:drawablePadding="@dimen/dimen_common"
-            android:drawableTint="@color/gray"
-            android:gravity="center_vertical"
-            android:padding="@dimen/dimen_common"
-            android:password="true"
-            android:hint="@string/card_login_avuser_passwd"
-            android:textStyle="italic"
-            android:maxLength="20"/>
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:layout_below="@id/dialog_bottom_task_title"
+            android:layout_marginTop="@dimen/dimen_common">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_card_login_password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/card_login_avuser_passwd"
+                android:maxLength="50"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_card_login_password_layout">
+            <TextView
+                android:id="@+id/card_login_server_title"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="@dimen/text_common"
+                android:layout_marginStart="@dimen/dimen_common"
+                android:layout_marginTop="@dimen/dimen_common"
+                android:text="@string/card_login_avuser_server" />
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/card_login_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/dimen_common"
+                android:layout_marginTop="@dimen/dimen_common"
+                android:layout_toRightOf="@+id/card_login_server_title"
+                android:entries="@array/settings_list_system_server_values" />
+
+        </RelativeLayout>
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/et_card_login_password"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="?android:selectableItemBackground"-->
+<!--            android:clickable="true"-->
+<!--            android:drawableStart="@drawable/key"-->
+<!--            android:drawablePadding="@dimen/dimen_common"-->
+<!--            android:drawableTint="@color/gray"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:padding="@dimen/dimen_common"-->
+<!--            android:password="true"-->
+<!--            android:hint="@string/card_login_avuser_passwd"-->
+<!--            android:textStyle="italic"-->
+<!--            android:maxLength="20"/>-->
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

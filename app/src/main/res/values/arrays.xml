@@ -69,13 +69,17 @@
     </string-array>
 
     <string-array name="settings_list_system_server_title">
-        <item>LeanCloud - 中国-华北</item>
-        <item>LeanCloud - 国际</item>
+        <item>LeanCloud - 中国-华北一区</item>
+        <item>LeanCloud - 中国-华北二区</item>
+        <item>LeanCloud - 中国-华北三区</item>
+        <item>LeanCloud - 国际区</item>
         <!--<item>FireBase</item>-->
     </string-array>
 
     <string-array name="settings_list_system_server_values">
-        <item>cn-north</item>
+        <item>cn-north-1</item>
+        <item>cn-north-2</item>
+        <item>cn-north-3</item>
         <item>international</item>
         <!--<item>firebase</item>-->
     </string-array>

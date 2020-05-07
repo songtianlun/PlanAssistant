@@ -98,7 +98,7 @@ public class MyMapActivity extends BaseActivity {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if(list!=null){
-                    Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
+                    Log.i("MyMapActivity","共查询到：" + list.size() + "条数据。");
                     mymap_data = list;
                 }
 

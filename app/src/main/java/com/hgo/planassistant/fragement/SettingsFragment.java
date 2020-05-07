@@ -20,6 +20,7 @@ import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
 
+import com.avos.avoscloud.AVUser;
 import com.google.android.material.snackbar.Snackbar;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
@@ -35,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.hgo.planassistant.App.getApplication;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
@@ -263,7 +265,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 SP_edit.putString("pref_list_system_server",newValue.toString());
                 SP_edit.commit();
 
-//                if(newValue.toString().equals("cn-north")){
+//                if(newValue.toString().equals("cn-north-1")){
 //                    new AlertDialog.Builder(getContext())
 //                            .setMessage("2019年10月1日后将停止“中国 - 华北”节点，请及时切换国际节点！ \n 注：若过期未切换会导致程序无法启动，此时请重新安装最新版软件解决！")
 //                            .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
@@ -275,7 +277,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 //                            .show();
 //                }
 
-                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "cn-north");
+                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "cn-north-1");
                 Log.i("SettingFragement","Server Old Value:" + oldvalue);
                 Log.i("SettingFragement","Server new Value:" + newValue.toString());
                 if(!oldvalue.equals(newValue.toString())){
@@ -284,7 +286,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                             .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    System.exit(0);
+                                    AVUser.logOut();
+//                                    System.exit(0);
+                                    final Intent intent = setting_context.getPackageManager().getLaunchIntentForPackage(setting_context.getPackageName());
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
                                 }
                             })
                             .show();
@@ -306,7 +312,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         //获取一个 SharedPreferences对象
         //第一个参数：指定文件的名字，只会续写不会覆盖
         //第二个参数：MODE_PRIVATE只有当前应用程序可以续写
-        SharedPreferences SP_setting = App.getContext().getSharedPreferences("setting",App.getContext().MODE_MULTI_PROCESS);
+        SharedPreferences SP_setting = getApplication().getSharedPreferences("setting",App.getContext().MODE_MULTI_PROCESS);
 //        Boolean FirsrUse = SP_setting.getBoolean("PlanAssistant_FirstUse",false); // 软件是否首次使用
 //
 //        SharedPreferences.Editor SP_editor = SP_setting.edit();
@@ -361,7 +367,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_list_location_query_precision").setDefaultValue(SP_setting.getString("settings_location_query_precision","300"));
         findPreference("pref_location_background_switch").setDefaultValue(SP_setting.getBoolean("pref_location_background_switch",false));
         findPreference("pref_list_location_ali_type").setDefaultValue(SP_setting.getString("pref_list_location_ali_type","Battery_Saving"));
-        findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","international"));
+        findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","cn-north-1"));
         findPreference("pref_list_location_time").setDefaultValue(SP_setting.getString("pref_list_location_time","4000"));
         findPreference("pref_list_personal_step_target").setDefaultValue(SP_setting.getInt("pref_personal_step_target",4000));
         findPreference("pref_seek_personal_urgent_day").setDefaultValue(SP_setting.getInt("pref_seek_personal_urgent_day",10));
@@ -391,7 +397,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         onPreferenceChange(findPreference("pref_list_location_query_precision"), preferences.getString("pref_list_location_query_precision", ""));
         onPreferenceChange(findPreference("pref_list_location_ali_type"), preferences.getString("pref_list_location_ali_type", "Battery_Saving"));
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
-        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north"));
+        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north-1"));
         onPreferenceChange(findPreference("pref_list_personal_step_target"), (preferences.getInt("pref_list_personal_step_target",4000)));
         onPreferenceChange(findPreference("pref_seek_personal_urgent_day"), preferences.getInt("pref_seek_personal_urgent_day",10));
 

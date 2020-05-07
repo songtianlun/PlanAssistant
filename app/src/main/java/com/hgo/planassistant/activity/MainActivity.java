@@ -523,7 +523,7 @@ public class MainActivity extends BaseActivity
             SP_editor.putLong("pref_personal_end_sleep",end_sleep.getTime().getTime());
 
             //System
-            SP_editor.putString("pref_list_system_server","cn-north"); // 后端服务，默认“cn-north”，备用“international”
+//            SP_editor.putString("pref_list_system_server","cn-north-1"); // 后端服务，默认“cn-north-1”，备用“international”
 
             // 调用apply方法将添加的数据提交，从而完成存储的动作
             SP_editor.commit();// 提交

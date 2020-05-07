@@ -328,31 +328,34 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                // Thinking
-                int[] ThinkingScore = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
-                int[] Determination = new int[24]; // 同理
-                for(int i=0;i<avObjects.size();i++){
-                    Calendar time = Calendar.getInstance();
-                    time.setTime(avObjects.get(i).getDate("time"));
-                    int hour = time.get(Calendar.HOUR_OF_DAY);
-                    if(ThinkingScore[hour]!=0){
-                        ThinkingScore[hour]+=avObjects.get(i).getInt("thinking");
-                        ThinkingScore[hour] /= 2;
-                    }else{
-                        ThinkingScore[hour] = avObjects.get(i).getInt("thinking");
+                if (avObjects!=null){
+                    // Thinking
+                    int[] ThinkingScore = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
+
+                    int[] Determination = new int[24]; // 同理
+                    for(int i=0;i<avObjects.size();i++){
+                        Calendar time = Calendar.getInstance();
+                        time.setTime(avObjects.get(i).getDate("time"));
+                        int hour = time.get(Calendar.HOUR_OF_DAY);
+                        if(ThinkingScore[hour]!=0){
+                            ThinkingScore[hour]+=avObjects.get(i).getInt("thinking");
+                            ThinkingScore[hour] /= 2;
+                        }else{
+                            ThinkingScore[hour] = avObjects.get(i).getInt("thinking");
+                        }
+                        if(Determination[hour]!=0){
+                            Determination[hour]+=avObjects.get(i).getInt("determination");
+                            Determination[hour] /= 2;
+                        }else{
+                            Determination[hour] = avObjects.get(i).getInt("determination");
+                        }
                     }
-                    if(Determination[hour]!=0){
-                        Determination[hour]+=avObjects.get(i).getInt("determination");
-                        Determination[hour] /= 2;
-                    }else{
-                        Determination[hour] = avObjects.get(i).getInt("determination");
-                    }
+                    // 加入图表
+                    LoadLineChartData(ThinkingLineChart,ThinkingScore);
+                    LoadLineChartData(DeterminationLineChart,Determination);
+                    // 传入思维和意志评分
+                    initEmotionLineChart(ThinkingScore,Determination);
                 }
-                // 加入图表
-                LoadLineChartData(ThinkingLineChart,ThinkingScore);
-                LoadLineChartData(DeterminationLineChart,Determination);
-                // 传入思维和意志评分
-                initEmotionLineChart(ThinkingScore,Determination);
             }
         });
     }
@@ -396,44 +399,47 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                int[] StepCounter = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
-                int sumStep = 0;
-                // 1.计算最近几天内产生的100条数据（大约三天）内24小时各个时刻的总步数
-                for(int i=0;i<avObjects.size();i++){
-                    Calendar time = Calendar.getInstance();
-                    time.setTime(avObjects.get(i).getDate("time"));
-                    int hour = time.get(Calendar.HOUR_OF_DAY);
-                    StepCounter[hour] += avObjects.get(i).getInt("count");
-                    sumStep += avObjects.get(i).getInt("count");
-                }
-                Log.d("EnergyFragement","总步数：" + sumStep);
-                // 2. 根据各个小时的总步数在总步数中的占比计算百分制评分
-                int[] Score = new int[24];
+                if(avObjects!=null){
+                    int[] StepCounter = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
+                    int sumStep = 0;
+                    // 1.计算最近几天内产生的100条数据（大约三天）内24小时各个时刻的总步数
+                    for(int i=0;i<avObjects.size();i++){
+                        Calendar time = Calendar.getInstance();
+                        time.setTime(avObjects.get(i).getDate("time"));
+                        int hour = time.get(Calendar.HOUR_OF_DAY);
+                        StepCounter[hour] += avObjects.get(i).getInt("count");
+                        sumStep += avObjects.get(i).getInt("count");
+                    }
+                    Log.d("EnergyFragement","总步数：" + sumStep);
+                    // 2. 根据各个小时的总步数在总步数中的占比计算百分制评分
+                    int[] Score = new int[24];
 //                for(int j=0;j<24;j++){
 //                    Score[j] = StepCounter[j] * 100 / sumStep;
 //                    Log.d("EnergyFragement",j+ "时刻" + "步数" + StepCounter[j]  +  ", 占比：" + Score[j]);
 //                }
-                // 步数 超总步数的50% 为100，40% 90 30% 80 20% 70 10 % 60
-                for(int k=0;k<24;k++){
-                    if(StepCounter[k]>(sumStep*0.2)){
-                        Score[k] = 100;
-                    }else if(StepCounter[k]>(sumStep*0.15)){
-                        Score[k] = 90;
-                    }else if(StepCounter[k]>(sumStep*0.10)){
-                        Score[k] = 80;
-                    }else if(StepCounter[k]>(sumStep*0.05)){
-                        Score[k] = 70;
-                    }else if(StepCounter[k]>(sumStep*0.02)){
-                        Score[k] = 60;
-                    }else if(StepCounter[k]>10){
-                        Score[k] = 10;
-                    }else{
-                        Score[k] = 0;
-                    }
+                    // 步数 超总步数的50% 为100，40% 90 30% 80 20% 70 10 % 60
+                    for(int k=0;k<24;k++){
+                        if(StepCounter[k]>(sumStep*0.2)){
+                            Score[k] = 100;
+                        }else if(StepCounter[k]>(sumStep*0.15)){
+                            Score[k] = 90;
+                        }else if(StepCounter[k]>(sumStep*0.10)){
+                            Score[k] = 80;
+                        }else if(StepCounter[k]>(sumStep*0.05)){
+                            Score[k] = 70;
+                        }else if(StepCounter[k]>(sumStep*0.02)){
+                            Score[k] = 60;
+                        }else if(StepCounter[k]>10){
+                            Score[k] = 10;
+                        }else{
+                            Score[k] = 0;
+                        }
 //                    Log.d("EnergyFragement",k+ "时刻" + "步数" + StepCounter[k]  +  ", 评分：" + Score[k]);
+                    }
+                    LoadLineChartData(PhysicalLineChart,Score);
+                    initEnergyLineChart(Score,emotional,thinking,determination);
                 }
-                LoadLineChartData(PhysicalLineChart,Score);
-                initEnergyLineChart(Score,emotional,thinking,determination);
+
             }
         });
     }

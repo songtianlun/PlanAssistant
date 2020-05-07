@@ -86,16 +86,22 @@ public class App extends Application {
         //第二个参数：MODE_PRIVATE只有当前应用程序可以续写
         //MODE_MULTI_PROCESS 允许多个进程访问同一个SharedPrecferences
         SharedPreferences SP_setting = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE);
-        String Server = SP_setting.getString("pref_list_system_server","cn-north"); // 检测当前设置的服务器类型
+        String Server = SP_setting.getString("pref_list_system_server","cn-north-2"); // 检测当前设置的服务器类型
 
-        if(Server.equals("cn-north")){
+        if(Server.equals("cn-north-1")){
             // leancloud cn init
             AVOSCloud.initialize(this,"eR1JFxB61gInL1GhmaURGdAx-gzGzoHsz","1nddY6z37rpVV2OzxXuWPdSI");
         }else if(Server.equals("international")){
             // leancloud international init
             AVOSCloud.initialize(this,"dRmA0kDOgX827gAlEM4JnX5Y-MdYXbMMI","HU07vgGnTDbGIl9faMgxhgzp");
-        }else{
+        }else if(Server.equals("cn-north-2")){
+            AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
+        }else if(Server.equals("cn-north-3")) {
+            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e");
+        }
+        else{
             // coming soon
+            AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
         }
 
         // 正式发布前去除

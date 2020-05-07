@@ -150,26 +150,27 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                int sumStep = 0;
-                Log.i("StepCounterActivity","查询到数据总数："+avObjects.size());
-                initDayBarChart(avObjects);
-                sumStep = getSumStep(avObjects);
-                int StepTarget = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getInt("pref_personal_step_target",4000); // 查询轨迹精度限制
-                Log.i("StepCounterActivity","目标步数："+StepTarget + " 当前已完成："+sumStep);
-                if(StepTarget > sumStep){
-                    entries.add(new PieEntry((StepTarget - sumStep),"剩余："+ (StepTarget - sumStep) + "步")); // 步数目标
-                }else{
-                    entries.add(new PieEntry((sumStep - StepTarget),"超额完成："+ (sumStep - StepTarget) + "步")); // 步数目标
-                }
-                entries.add(new PieEntry(sumStep,"已完成：" + sumStep + "步")); // 已完成
+                if(avObjects!=null){
+                    int sumStep = 0;
+                    Log.i("StepCounterActivity","查询到数据总数："+avObjects.size());
+                    initDayBarChart(avObjects);
+                    sumStep = getSumStep(avObjects);
+                    int StepTarget = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getInt("pref_personal_step_target",4000); // 查询轨迹精度限制
+                    Log.i("StepCounterActivity","目标步数："+StepTarget + " 当前已完成："+sumStep);
+                    if(StepTarget > sumStep){
+                        entries.add(new PieEntry((StepTarget - sumStep),"剩余："+ (StepTarget - sumStep) + "步")); // 步数目标
+                    }else{
+                        entries.add(new PieEntry((sumStep - StepTarget),"超额完成："+ (sumStep - StepTarget) + "步")); // 步数目标
+                    }
+                    entries.add(new PieEntry(sumStep,"已完成：" + sumStep + "步")); // 已完成
 
-                PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+                    PieDataSet dataSet = new PieDataSet(entries, "Election Results");
 
-                dataSet.setDrawIcons(false);
+                    dataSet.setDrawIcons(false);
 
-                dataSet.setSliceSpace(3f);
-                dataSet.setIconsOffset(new MPPointF(0, 40));
-                dataSet.setSelectionShift(5f);
+                    dataSet.setSliceSpace(3f);
+                    dataSet.setIconsOffset(new MPPointF(0, 40));
+                    dataSet.setSelectionShift(5f);
 
 //                //最终数据 PieData
 //                PieData pieData = new PieData(entries);
@@ -183,41 +184,42 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
 //                chart.invalidate();                    //将图表重绘以显示设置的属性和数据
 
 
-                // add a lot of colors
+                    // add a lot of colors
 
-                ArrayList<Integer> colors = new ArrayList<>();
+                    ArrayList<Integer> colors = new ArrayList<>();
 
-                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.VORDIPLOM_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.JOYFUL_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.JOYFUL_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.COLORFUL_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.COLORFUL_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.LIBERTY_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.LIBERTY_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.PASTEL_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.PASTEL_COLORS)
+                        colors.add(c);
 
-                colors.add(ColorTemplate.getHoloBlue());
+                    colors.add(ColorTemplate.getHoloBlue());
 
-                dataSet.setColors(colors);
-                dataSet.setSelectionShift(0f);
+                    dataSet.setColors(colors);
+                    dataSet.setSelectionShift(0f);
 
-                PieData data = new PieData(dataSet);
-                data.setValueFormatter(new PercentFormatter(DayPieChart));
-                data.setValueTextSize(11f);
-                data.setValueTextColor(Color.WHITE);
+                    PieData data = new PieData(dataSet);
+                    data.setValueFormatter(new PercentFormatter(DayPieChart));
+                    data.setValueTextSize(11f);
+                    data.setValueTextColor(Color.WHITE);
 //        data.setValueTypeface(tfLight);
-                DayPieChart.setData(data);
+                    DayPieChart.setData(data);
 
-                // undo all highlights
-                DayPieChart.highlightValues(null);
+                    // undo all highlights
+                    DayPieChart.highlightValues(null);
 
-                DayPieChart.invalidate();
+                    DayPieChart.invalidate();
+                }
             }
         });
 
@@ -351,53 +353,56 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
-                Log.d("StepCounterActivity","多日步数趋势共查到数据条数:"+avObjects.size());
-                int[] StepSum = new int[SumDay+1]; //初始化为默认值,int型为0
-                Calendar start_calendat = Calendar.getInstance();
-                start_calendat.setTime(start_time);
-                for(int i=0;i<avObjects.size();i++){
-                    Calendar getDay = Calendar.getInstance();
-                    getDay.setTime(avObjects.get(i).getDate("time"));
-                    Log.d("StepCounterActivity","处理数据时刻："+dateFormat.GetDetailDescription(getDay) + "索引："+getDay.get(Calendar.DATE));
+                if(avObjects!=null){
+                    Log.d("StepCounterActivity","多日步数趋势共查到数据条数:"+avObjects.size());
+                    int[] StepSum = new int[SumDay+1]; //初始化为默认值,int型为0
+                    Calendar start_calendat = Calendar.getInstance();
+                    start_calendat.setTime(start_time);
+                    for(int i=0;i<avObjects.size();i++){
+                        Calendar getDay = Calendar.getInstance();
+                        getDay.setTime(avObjects.get(i).getDate("time"));
+                        Log.d("StepCounterActivity","处理数据时刻："+dateFormat.GetDetailDescription(getDay) + "索引："+getDay.get(Calendar.DATE));
 
-                    // 将 开始时间到当前时间之间相差的天数 作为数组坐标
+                        // 将 开始时间到当前时间之间相差的天数 作为数组坐标
 //                    StepSum[(dateFormat.FilterHourAndMinuteAndSecond(getDay).get(Calendar.DATE)) - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).get(Calendar.DATE)] += avObjects.get(i).getInt("count");
-                    // 计算毫秒差 作为数组坐标
-                    StepSum[(int)Math.abs( ( dateFormat.FilterHourAndMinuteAndSecond(getDay).getTime().getTime() - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).getTime().getTime())/86400000)] += avObjects.get(i).getInt("count");
-                }
-                for(int i=0;i<SumDay;i++){
-                    // 直接获取日期+1，忽略月末异常，采用日期加一再取日期的方法解决
+                        // 计算毫秒差 作为数组坐标
+                        StepSum[(int)Math.abs( ( dateFormat.FilterHourAndMinuteAndSecond(getDay).getTime().getTime() - dateFormat.FilterHourAndMinuteAndSecond(start_calendat).getTime().getTime())/86400000)] += avObjects.get(i).getInt("count");
+                    }
+                    for(int i=0;i<SumDay;i++){
+                        // 直接获取日期+1，忽略月末异常，采用日期加一再取日期的方法解决
 //                    values.add(new BarEntry((start_calendat.get(Calendar.DATE)+i),StepSum[i]));
-                    Calendar nowday = Calendar.getInstance();
-                    nowday.setTime(start_time);
-                    nowday.add(Calendar.DATE,i);
-                    values.add(new BarEntry(i,StepSum[i]));
-                }
-                BarDataSet set1;
+                        Calendar nowday = Calendar.getInstance();
+                        nowday.setTime(start_time);
+                        nowday.add(Calendar.DATE,i);
+                        values.add(new BarEntry(i,StepSum[i]));
+                    }
+                    BarDataSet set1;
 
-                if (SevenDayBarChart.getData() != null &&
-                        SevenDayBarChart.getData().getDataSetCount() > 0) {
-                    set1 = (BarDataSet) SevenDayBarChart.getData().getDataSetByIndex(0);
-                    set1.setValues(values);
-                    SevenDayBarChart.getData().notifyDataChanged();
-                    SevenDayBarChart.notifyDataSetChanged();
-                } else {
-                    set1 = new BarDataSet(values, "Data Set");
-                    set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
-                    set1.setDrawValues(false);
+                    if (SevenDayBarChart.getData() != null &&
+                            SevenDayBarChart.getData().getDataSetCount() > 0) {
+                        set1 = (BarDataSet) SevenDayBarChart.getData().getDataSetByIndex(0);
+                        set1.setValues(values);
+                        SevenDayBarChart.getData().notifyDataChanged();
+                        SevenDayBarChart.notifyDataSetChanged();
+                    } else {
+                        set1 = new BarDataSet(values, "Data Set");
+                        set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                        set1.setDrawValues(false);
 
-                    ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-                    dataSets.add(set1);
+                        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+                        dataSets.add(set1);
 
 //            ArrayList<String> xVals = new ArrayList<String>();
 //            xVals.add("1.Q"); xVals.add("2.Q"); xVals.add("3.Q"); xVals.add("4.Q");
 
-                    BarData data = new BarData(dataSets);
-                    SevenDayBarChart.setData(data);
-                    SevenDayBarChart.setFitBars(true);
+                        BarData data = new BarData(dataSets);
+                        SevenDayBarChart.setData(data);
+                        SevenDayBarChart.setFitBars(true);
+                    }
+
+                    SevenDayBarChart.invalidate();
                 }
 
-                SevenDayBarChart.invalidate();
             }
         });
     }

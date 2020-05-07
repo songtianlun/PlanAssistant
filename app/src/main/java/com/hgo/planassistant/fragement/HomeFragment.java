@@ -127,7 +127,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private Calendar now_calendar;
     private com.amap.api.maps.MapView aMapView = null;
     private AMap amap = null;
-    private List<AVObject> now_list = null;
+    private List<AVObject> task_now_list = null;
+    private List<AVObject> track_now_list = null;
 
     private TextView card_home_task_statistics_today;
     private TextView card_home_task_statistics_undo;
@@ -352,24 +353,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             @Override
             public void done(List<AVObject> avObjects, AVException avException) {
                 int sumStep = 0;
-                Log.i("StepCounterActivity","查询到数据总数："+avObjects.size());
-                sumStep = getSumStep(avObjects);
-                int StepTarget = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getInt("pref_personal_step_target",4000); // 查询轨迹精度限制
-                Log.i("StepCounterActivity","目标步数："+StepTarget + " 当前已完成："+sumStep);
-                if(StepTarget > sumStep){
-                    entries.add(new PieEntry((StepTarget - sumStep),"剩余："+ (StepTarget - sumStep) + "步")); // 步数目标
-                }else{
-                    entries.add(new PieEntry((sumStep - StepTarget),"超额完成："+ (sumStep - StepTarget) + "步")); // 步数目标
-                }
-                entries.add(new PieEntry(sumStep,"已完成：" + sumStep + "步")); // 已完成
+                if(avObjects!=null){
+                    Log.i("StepCounterActivity","查询到数据总数："+avObjects.size());
+                    sumStep = getSumStep(avObjects);
+                    int StepTarget = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getInt("pref_personal_step_target",4000); // 查询轨迹精度限制
+                    Log.i("StepCounterActivity","目标步数："+StepTarget + " 当前已完成："+sumStep);
+                    if(StepTarget > sumStep){
+                        entries.add(new PieEntry((StepTarget - sumStep),"剩余："+ (StepTarget - sumStep) + "步")); // 步数目标
+                    }else{
+                        entries.add(new PieEntry((sumStep - StepTarget),"超额完成："+ (sumStep - StepTarget) + "步")); // 步数目标
+                    }
+                    entries.add(new PieEntry(sumStep,"已完成：" + sumStep + "步")); // 已完成
 
-                PieDataSet dataSet = new PieDataSet(entries, "Election Results");
+                    PieDataSet dataSet = new PieDataSet(entries, "Election Results");
 
-                dataSet.setDrawIcons(false);
+                    dataSet.setDrawIcons(false);
 
-                dataSet.setSliceSpace(3f);
-                dataSet.setIconsOffset(new MPPointF(0, 40));
-                dataSet.setSelectionShift(5f);
+                    dataSet.setSliceSpace(3f);
+                    dataSet.setIconsOffset(new MPPointF(0, 40));
+                    dataSet.setSelectionShift(5f);
 
 //                //最终数据 PieData
 //                PieData pieData = new PieData(entries);
@@ -383,41 +385,43 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //                chart.invalidate();                    //将图表重绘以显示设置的属性和数据
 
 
-                // add a lot of colors
+                    // add a lot of colors
 
-                ArrayList<Integer> colors = new ArrayList<>();
+                    ArrayList<Integer> colors = new ArrayList<>();
 
-                for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.VORDIPLOM_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.JOYFUL_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.JOYFUL_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.COLORFUL_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.COLORFUL_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.LIBERTY_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.LIBERTY_COLORS)
+                        colors.add(c);
 
-                for (int c : ColorTemplate.PASTEL_COLORS)
-                    colors.add(c);
+                    for (int c : ColorTemplate.PASTEL_COLORS)
+                        colors.add(c);
 
-                colors.add(ColorTemplate.getHoloBlue());
+                    colors.add(ColorTemplate.getHoloBlue());
 
-                dataSet.setColors(colors);
-                dataSet.setSelectionShift(0f);
+                    dataSet.setColors(colors);
+                    dataSet.setSelectionShift(0f);
 
-                PieData data = new PieData(dataSet);
-                data.setValueFormatter(new PercentFormatter(DayPieChart));
-                data.setValueTextSize(11f);
-                data.setValueTextColor(Color.WHITE);
+                    PieData data = new PieData(dataSet);
+                    data.setValueFormatter(new PercentFormatter(DayPieChart));
+                    data.setValueTextSize(11f);
+                    data.setValueTextColor(Color.WHITE);
 //        data.setValueTypeface(tfLight);
-                DayPieChart.setData(data);
+                    DayPieChart.setData(data);
 
-                // undo all highlights
-                DayPieChart.highlightValues(null);
+                    // undo all highlights
+                    DayPieChart.highlightValues(null);
 
-                DayPieChart.invalidate();
+                    DayPieChart.invalidate();
+                }
+
             }
         });
 
@@ -471,7 +475,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 }else{
                     Log.i("HomeFragment","共查询到：" + count + "条数据。");
 //                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
-                    now_list = new ArrayList<>(count+1);
+                    track_now_list = new ArrayList<>(count+1);
                     int querynum = count/1000 + 1;
                     Log.i("TrackActivity","查询次数："+querynum);
                     for(int i=0;i<querynum;i++){
@@ -482,12 +486,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                             @Override
                             public void done(List<AVObject> avObjects, AVException avException) {
                                 if(avObjects!=null&&avObjects.size()>0) {
-                                    now_list.addAll(avObjects);
-                                    Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
-                                    if(now_list.size()==count){
+                                    track_now_list.addAll(avObjects);
+                                    Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+track_now_list.size());
+                                    if(track_now_list.size()==count){
                                         // 构建热力图 HeatmapTileProvider
                                         HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))); // 设置热力图绘制的数据
+                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(track_now_list))); // 设置热力图绘制的数据
                                         // 构造热力图对象
                                         HeatmapTileProvider heatmapTileProvider = builder.build();
                                         // 初始化 TileOverlayOptions
@@ -497,12 +501,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                                         amap.addTileOverlay(tileOverlayOptions);
 
                                         // 全幅显示
-                                        com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(now_list);
+                                        com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(track_now_list);
                                         amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 
                                         // 显示轨迹线
                                         Polyline polyline =amap.addPolyline(new PolylineOptions().
-                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(track_now_list))).width(10).color(Color.argb(255, 1, 1, 1)));
 
                                     }
                                 }
@@ -877,7 +881,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         DateFormat dateFormat = new DateFormat();
         Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
 
-        now_list = new ArrayList<>();
+        task_now_list = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("Task");
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
         query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
@@ -898,11 +902,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                     public void done(List<AVObject> list, AVException e) {
                         if(list!=null){
                             Log.d("HomeFragment","共查询到：" + list.size() + "条数据。");
-                            now_list.addAll(list);
+                            task_now_list.addAll(list);
+                            card_home_task_statistics_today.setText(StatisticsTypeTask(list,"today_undo") + "");
+                            card_home_task_statistics_do.setText(StatisticsTypeTask(list,"today_do") + "");
+                            card_home_task_statistics_undo.setText(StatisticsTypeTask(list,"all_undo") + "");
                         }
-                        card_home_task_statistics_today.setText(StatisticsTypeTask(list,"today_undo") + "");
-                        card_home_task_statistics_do.setText(StatisticsTypeTask(list,"today_do") + "");
-                        card_home_task_statistics_undo.setText(StatisticsTypeTask(list,"all_undo") + "");
+
                     }
                 });
             }
@@ -916,6 +921,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
         Calendar tomorrow = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
         tomorrow.add(Calendar.DAY_OF_MONTH,1);
+
+        if(list==null){
+            return -1;
+        }
 
         for(AVObject obj: list){
             switch(type){
@@ -971,8 +980,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         DateFormat dateFormat = new DateFormat();
         Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
 
-
-        now_list = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
         query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
@@ -999,7 +1006,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                             query.countInBackground(new CountCallback() {
                                 @Override
                                 public void done(int count, AVException e) {
-                                    card_home_plan_counter_statistics_today.setText(count + "（今日完成） / " + TaskCounterCountSum + "（需完成）");
+                                    card_home_plan_counter_statistics_today.setText(count + " / " + TaskCounterCountSum);
                                 }
                             });
 //                            query.findInBackground(new FindCallback<AVObject>() {

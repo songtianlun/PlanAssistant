@@ -1,6 +1,5 @@
 package com.hgo.planassistant.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
@@ -29,8 +28,7 @@ import com.avos.avoscloud.FindCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.datamodel.AVObjectListDataParcelableSend;
-import com.hgo.planassistant.tools.DateFormat;
+import com.hgo.planassistant.datamodel.AVObjectsParcelable;
 import com.hgo.planassistant.tools.PathSmoothTool;
 
 import java.util.ArrayList;
@@ -43,8 +41,9 @@ public class TrackDetailMapActivity extends BaseActivity {
 
     private MapView aMapView = null;
     private AMap amap;
-    private List<AVObject> now_list = null;
+    private List<AVObject> now_list = new ArrayList<>();
     private Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +73,17 @@ public class TrackDetailMapActivity extends BaseActivity {
         start_time.setTime(new Date(start_time_long));
         Calendar end_time = Calendar.getInstance();
         end_time.setTime(new Date(end_time_long));
-
-        DateFormat dateFormat = new DateFormat(start_time);
-        Log.i("TrackDetailMapActivity","收到开始时间："+ dateFormat.GetDetailDescription());
-        Log.i("TrackDetailMapActivity","收到结束时间："+ dateFormat.GetDetailDescription(end_time));
+//        AVObjectsSendToActivity avObjectsSendToActivity = (AVObjectsSendToActivity)intent.getSerializableExtra("track_list");
+//        if(avObjectsSendToActivity.getAvlist()!=null){
+//            now_list.addAll(avObjectsSendToActivity.getAvlist());
+//        }
+//        AVObjectsParcelable avObjectsParcelable = (AVObjectsParcelable)intent.getParcelableExtra("track_list");
+//        if(avObjectsParcelable.getSend_list()!=null){
+//            now_list.addAll(avObjectsParcelable.getSend_list());
+//        }
+//        DateFormat dateFormat = new DateFormat(start_time);
+//        Log.i("TrackDetailMapActivity","收到开始时间："+ dateFormat.GetDetailDescription());
+//        Log.i("TrackDetailMapActivity","收到结束时间："+ dateFormat.GetDetailDescription(end_time));
 
         // 显示定位小蓝点
         MyLocationStyle myLocationStyle;
@@ -90,6 +96,7 @@ public class TrackDetailMapActivity extends BaseActivity {
         amap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         amap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+
 
         int PrecisionLessThen = Integer.parseInt(App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getString("settings_location_query_precision","300")); // 查询轨迹精度限制
         AVQuery<AVObject> query = new AVQuery<>("trajectory");
@@ -110,7 +117,7 @@ public class TrackDetailMapActivity extends BaseActivity {
                     Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
                 }else{
                     Log.i("TrackActivity","共查询到：" + count + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。", Toast.LENGTH_LONG).show();
                     now_list = new ArrayList<>(count+1);
                     int querynum = count/1000 + 1;
                     Log.i("TrackActivity","查询次数："+querynum);
