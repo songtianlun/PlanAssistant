@@ -90,25 +90,66 @@
             app:isb_only_thumb_draggable="false"
             />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dialog_bottom_task_edit_location_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_common"
-            android:layout_marginEnd="@dimen/dimen_common"
-            android:layout_marginTop="@dimen/dimen_common"
+            android:id="@+id/dialog_bottom_task_edit_location_relayout"
             android:layout_below="@id/dialog_bottom_task_edit_importance_title">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dialog_bottom_task_edit_location"
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/dialog_bottom_task_edit_location_marker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/google_assistant_background"
+                android:src="@drawable/map_marker"
+                android:adjustViewBounds="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dimen_common"
+                android:layout_centerVertical="true"/>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dialog_bottom_task_edit_location_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/dialog_bottom_task_location_title"
-                android:maxLength="100"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/dialog_bottom_task_edit_location_marker"
+                android:layout_marginStart="@dimen/dimen_common"
+                android:layout_marginEnd="@dimen/dimen_common"
+                android:layout_marginTop="@dimen/dimen_common">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dialog_bottom_task_edit_location"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/dialog_bottom_task_location_title"
+                    android:maxLength="100"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </RelativeLayout>
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/dialog_bottom_task_edit_location_layout"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="@dimen/dimen_common"-->
+<!--            android:layout_marginEnd="@dimen/dimen_common"-->
+<!--            android:layout_marginTop="@dimen/dimen_common"-->
+<!--            android:layout_below="@id/dialog_bottom_task_edit_importance_title">-->
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/dialog_bottom_task_edit_location"-->
+
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="@string/dialog_bottom_task_location_title"-->
+<!--                android:maxLength="100"-->
+<!--                android:maxLines="1" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
 
 
@@ -120,7 +161,7 @@
             android:layout_marginStart="@dimen/dimen_common"
             android:layout_marginTop="@dimen/dimen_common"
             android:text="@string/dialog_bottom_task_start_time_title"
-            android:layout_below="@id/dialog_bottom_task_edit_location_layout" />
+            android:layout_below="@id/dialog_bottom_task_edit_location_relayout" />
 
 
 <!--        <com.google.android.material.button.MaterialButton-->
@@ -152,7 +193,7 @@
             android:drawableTint="@color/gray"
             android:padding="@dimen/dimen_common"
             android:text="null"
-            android:layout_below="@id/dialog_bottom_task_edit_location_layout"
+            android:layout_below="@id/dialog_bottom_task_edit_location_relayout"
             android:layout_toRightOf="@+id/dialog_bottom_task_edit_start_time_title"/>
 
         <TextView

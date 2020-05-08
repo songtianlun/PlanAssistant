@@ -61,7 +61,7 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_counter_detail);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.pc_detail_toolbar);
         setSupportActionBar(toolbar);
         pc_detail_activity = this;
 

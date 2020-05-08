@@ -34,7 +34,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SchedulePlanningActivity"></activity>
+        <activity
+            android:name=".activity.TaskLocationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.TaskEditActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.TaskAddActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.SchedulePlanningActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.TaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -55,6 +66,7 @@
             android:name=".service.DataCaptureService"
             android:enabled="true"
             android:exported="true" />
+
         <service android:name="com.amap.api.location.APSService" />
 
         <activity

@@ -371,6 +371,12 @@
     <string name="title_toolbar_activity_energy_evaluation">精力评价</string>
     <string name="fab_add_energy_evaluation">新增评价</string>
 
+    <!-- toolbar_activity_task_add-->
+    <string name="title_toolbar_activity_task_add">添加日程</string>
+
+    <!-- toolbar_activity_task_location-->
+    <string name="title_toolbar_activity_task_location">选择位置</string>
+
     <!-- toolbar_activity_schedule_planning-->
     <string name="title_toolbar_toolbar_activity_schedule_planning">日程规划</string>
 
@@ -397,6 +403,34 @@
     <string name="dialog_bottom_task_end_time_title">结束时间</string>
     <string name="dialog_bottom_task_remind_title">事件提醒</string>
     <string name="dialog_bottom_task_cycle_title">事件循环</string>
+
+    <!-- activity_task_add-->
+    <string name="activity_task_add_title">新增日程</string>
+    <string name="activity_task_add_name_title">* 日程名称</string>
+    <string name="activity_task_add_name_hint">请输入日程名称，该项必填。</string>
+    <string name="activity_task_add_importance_title">* 重要性</string>
+    <string name="activity_task_add_description_title">日程描述</string>
+    <string name="activity_task_add_description_hint">简单描述一下这项日程以备查阅吧。</string>
+    <string name="activity_task_add_location_title">日程地点</string>
+    <string name="activity_task_add_location_hint">简单描述一下日程的位置吧</string>
+    <string name="activity_task_add_start_time_title">开始时间</string>
+    <string name="activity_task_add_end_time_title">结束时间</string>
+    <string name="activity_task_add_remind_title">事件提醒</string>
+    <string name="activity_task_add_cycle_title">事件循环</string>
+
+    <!-- activity_task_edit-->
+    <string name="activity_task_edit_title">修改日程</string>
+    <string name="activity_task_edit_name_title">* 日程名称</string>
+    <string name="activity_task_edit_name_hint">请输入日程名称，该项必填。</string>
+    <string name="activity_task_edit_importance_title">* 重要性</string>
+    <string name="activity_task_edit_description_title">日程描述</string>
+    <string name="activity_task_edit_description_hint">简单描述一下这项日程以备查阅吧。</string>
+    <string name="activity_task_edit_location_title">日程地点</string>
+    <string name="activity_task_edit_location_hint">简单描述一下日程的位置吧</string>
+    <string name="activity_task_edit_start_time_title">开始时间</string>
+    <string name="activity_task_edit_end_time_title">结束时间</string>
+    <string name="activity_task_edit_remind_title">事件提醒</string>
+    <string name="activity_task_edit_cycle_title">事件循环</string>
 
 
     <!--<string name="card_home_location_station">已关闭</string>-->

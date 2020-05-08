@@ -3,8 +3,12 @@ package com.hgo.planassistant.adapter;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +35,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.activity.TaskEditActivity;
 import com.hgo.planassistant.util.CalendarReminderUtils;
 import com.hgo.planassistant.view.onMoveAndSwipedListener;
 import com.warkiz.widget.IndicatorSeekBar;
+import com.zzhoujay.richtext.RichText;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,15 +63,15 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private BottomSheetDialog mBottomSheetDialog;
 
-    private TextView TV_start_time;
-    private TextView TV_start_date;
-    private TextView TV_end_time;
-    private TextView TV_end_date;
-    private TextInputEditText edit_name;
-    private TextInputEditText edit_location;
-    private IndicatorSeekBar seekBar_importance;
-    private TextView TV_description;
-    private AppCompatSpinner spinner_remind;
+//    private TextView TV_start_time;
+//    private TextView TV_start_date;
+//    private TextView TV_end_time;
+//    private TextView TV_end_date;
+//    private TextInputEditText edit_name;
+//    private TextInputEditText edit_location;
+//    private IndicatorSeekBar seekBar_importance;
+//    private TextView TV_description;
+//    private AppCompatSpinner spinner_remind;
 //    private AppCompatSpinner spinner_cycle;
 
     private int Position = -1;
@@ -165,8 +171,13 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             AlphaAnimation aa = new AlphaAnimation(0.1f, 1.0f);
             aa.setDuration(400);
 
-            recyclerViewHolder.rela_round.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.google_blue)));
 
+            if(mItems.get(position).getBoolean("done")){
+                recyclerViewHolder.rela_round.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.google_green)));
+            }else{
+                recyclerViewHolder.rela_round.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.google_red)));
+
+            }
 //            if (color == 1) {
 //                recyclerViewHolder.rela_round.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.google_blue)));
 //            } else if (color == 2) {
@@ -204,6 +215,13 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             recyclerViewHolder.tv_title.setText(mItems.get(position).getString("task_name"));
             recyclerViewHolder.tv_description.setText(mItems.get(position).getString("task_description"));
+//            if(mItems.get(position).getString("task_description")!=null){
+//
+//                // 解析markdown
+////                RichText.from(mItems.get(position).getString("task_description")).singleLoad(false).into(recyclerViewHolder.tv_description);
+//            }else{
+//                recyclerViewHolder.tv_description.setVisibility(View.GONE); // 不显示，且不保留其空间
+//            }
 
             if(mItems.get(position).getBoolean("done")){
                 //删除线
@@ -217,63 +235,68 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 Position = position;
 
+                Intent intent = new Intent(context, TaskEditActivity.class);
+                // 在Intent中传递数据
+                intent.putExtra("id", mItems.get(position).getObjectId());
+                // 启动Intent
+                context.startActivity(intent);
 
-                //底部Dialog
-                mBottomSheetDialog = new BottomSheetDialog(context);
-                LayoutInflater localinflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View dialogView = localinflater.inflate(R.layout.dialog_bottom_task_edit, null);
-                Button btn_ok = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_ok);
-                Button btn_cancel = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_cancel);
-                Button btn_delete = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_delete);
-                Button btn_done = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_done);
-                edit_name = dialogView.findViewById(R.id.dialog_bottom_task_edit_name);
-                edit_location = dialogView.findViewById(R.id.dialog_bottom_task_edit_location);
-                seekBar_importance = dialogView.findViewById(R.id.dialog_bottom_task_edit_importance);
-                TV_description = dialogView.findViewById(R.id.dialog_bottom_task_edit_description);
-                TV_start_time = dialogView.findViewById(R.id.dialog_bottom_task_edit_start_time);
-                TV_start_date = dialogView.findViewById(R.id.dialog_bottom_task_edit_start_time_date);
-                TV_end_time = dialogView.findViewById(R.id.dialog_bottom_task_edit_end_time);
-                TV_end_date = dialogView.findViewById(R.id.dialog_bottom_task_edit_end_time_date);
-//                MaterialButton clean_start = dialogView.findViewById(R.id.dialog_bottom_task_edit_start_time_clean);
-//                MaterialButton clean_end = dialogView.findViewById(R.id.dialog_bottom_task_edit_end_time_clean);
-                spinner_remind = dialogView.findViewById(R.id.dialog_bottom_task_edit_remind);
-//                spinner_cycle = dialogView.findViewById(R.id.dialog_bottom_task_edit_cycle);
-
-
-                btn_ok.setOnClickListener(this);
-                btn_cancel.setOnClickListener(this);
-                btn_delete.setOnClickListener(this);
-                btn_done.setOnClickListener(this);
-                TV_start_time.setOnClickListener(this);
-                TV_start_date.setOnClickListener(this);
-                TV_end_time.setOnClickListener(this);
-                TV_end_date.setOnClickListener(this);
-//                clean_start.setOnClickListener(this);
-//                clean_end.setOnClickListener(this);
-
-                if(mItems.get(position).getDate("start_time")!=null){
-                    task_start_time.setTime(mItems.get(position).getDate("start_time"));
-                    TV_start_date.setText(task_start_time.get(Calendar.YEAR)+"年"+(task_start_time.get(Calendar.MONTH)+1)+"月"+task_start_time.get(Calendar.DATE)+"日");
-                    TV_start_time.setText(task_start_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_start_time.get(Calendar.MINUTE) +"分");
-                }
-                if(mItems.get(position).getDate("end_time")!=null){
-                    task_end_time.setTime(mItems.get(position).getDate("end_time"));
-                    TV_end_date.setText(task_end_time.get(Calendar.YEAR)+"年"+(task_end_time.get(Calendar.MONTH)+1)+"月"+task_end_time.get(Calendar.DATE)+"日");
-                    TV_end_time.setText(task_end_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_end_time.get(Calendar.MINUTE) +"分");
-                }
-
-                if(mItems.get(position).getString("task_location")!=null)
-                    edit_location.setText(mItems.get(position).getString("task_location"));
-                if(mItems.get(position).getString("task_description")!=null)
-                    TV_description.setText(mItems.get(position).getString("task_description"));
-
-                edit_name.setText(mItems.get(position).getString("task_name"));
-                seekBar_importance.setProgress(mItems.get(position).getInt("task_importance"));
-                spinner_remind.setSelection(mItems.get(position).getInt("task_remind"));
-//                spinner_cycle.setSelection(mItems.get(position).getInt("task_cycle"));
-
-                mBottomSheetDialog.setContentView(dialogView);
-                mBottomSheetDialog.show();
+//                //底部Dialog
+//                mBottomSheetDialog = new BottomSheetDialog(context);
+//                LayoutInflater localinflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                View dialogView = localinflater.inflate(R.layout.dialog_bottom_task_edit, null);
+//                Button btn_ok = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_ok);
+//                Button btn_cancel = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_cancel);
+//                Button btn_delete = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_delete);
+//                Button btn_done = dialogView.findViewById(R.id.btn_dialog_bottom_task_edit_done);
+//                edit_name = dialogView.findViewById(R.id.dialog_bottom_task_edit_name);
+//                edit_location = dialogView.findViewById(R.id.dialog_bottom_task_edit_location);
+//                seekBar_importance = dialogView.findViewById(R.id.dialog_bottom_task_edit_importance);
+//                TV_description = dialogView.findViewById(R.id.dialog_bottom_task_edit_description);
+//                TV_start_time = dialogView.findViewById(R.id.dialog_bottom_task_edit_start_time);
+//                TV_start_date = dialogView.findViewById(R.id.dialog_bottom_task_edit_start_time_date);
+//                TV_end_time = dialogView.findViewById(R.id.dialog_bottom_task_edit_end_time);
+//                TV_end_date = dialogView.findViewById(R.id.dialog_bottom_task_edit_end_time_date);
+////                MaterialButton clean_start = dialogView.findViewById(R.id.dialog_bottom_task_edit_start_time_clean);
+////                MaterialButton clean_end = dialogView.findViewById(R.id.dialog_bottom_task_edit_end_time_clean);
+//                spinner_remind = dialogView.findViewById(R.id.dialog_bottom_task_edit_remind);
+////                spinner_cycle = dialogView.findViewById(R.id.dialog_bottom_task_edit_cycle);
+//
+//
+//                btn_ok.setOnClickListener(this);
+//                btn_cancel.setOnClickListener(this);
+//                btn_delete.setOnClickListener(this);
+//                btn_done.setOnClickListener(this);
+//                TV_start_time.setOnClickListener(this);
+//                TV_start_date.setOnClickListener(this);
+//                TV_end_time.setOnClickListener(this);
+//                TV_end_date.setOnClickListener(this);
+////                clean_start.setOnClickListener(this);
+////                clean_end.setOnClickListener(this);
+//
+//                if(mItems.get(position).getDate("start_time")!=null){
+//                    task_start_time.setTime(mItems.get(position).getDate("start_time"));
+//                    TV_start_date.setText(task_start_time.get(Calendar.YEAR)+"年"+(task_start_time.get(Calendar.MONTH)+1)+"月"+task_start_time.get(Calendar.DATE)+"日");
+//                    TV_start_time.setText(task_start_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_start_time.get(Calendar.MINUTE) +"分");
+//                }
+//                if(mItems.get(position).getDate("end_time")!=null){
+//                    task_end_time.setTime(mItems.get(position).getDate("end_time"));
+//                    TV_end_date.setText(task_end_time.get(Calendar.YEAR)+"年"+(task_end_time.get(Calendar.MONTH)+1)+"月"+task_end_time.get(Calendar.DATE)+"日");
+//                    TV_end_time.setText(task_end_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_end_time.get(Calendar.MINUTE) +"分");
+//                }
+//
+//                if(mItems.get(position).getString("task_location")!=null)
+//                    edit_location.setText(mItems.get(position).getString("task_location"));
+//                if(mItems.get(position).getString("task_description")!=null)
+//                    TV_description.setText(mItems.get(position).getString("task_description"));
+//
+//                edit_name.setText(mItems.get(position).getString("task_name"));
+//                seekBar_importance.setProgress(mItems.get(position).getInt("task_importance"));
+//                spinner_remind.setSelection(mItems.get(position).getInt("task_remind"));
+////                spinner_cycle.setSelection(mItems.get(position).getInt("task_cycle"));
+//
+//                mBottomSheetDialog.setContentView(dialogView);
+//                mBottomSheetDialog.show();
 
 //                //底部Dialog
 //                BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(context);
@@ -524,208 +547,208 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btn_dialog_bottom_task_edit_ok:
-                if(edit_name.length()==0){
-                    Toast.makeText(App.getContext(), "任务名称不能为空！", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    if(task_start_time.getTime().getTime()>task_end_time.getTime().getTime()){
-                        Toast.makeText(App.getContext(), "结束时间不能小于开始时间，请修改，您的修改未保存。", Toast.LENGTH_SHORT).show();
-                    }else{
-                        mBottomSheetDialog.dismiss();
-                        CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
-                        calendarReminderUtils.deleteCalendarEvent(context,mItems.get(Position).getString("task_name"));
-                        switch ((int)spinner_remind.getSelectedItemId()){
-                            case 0:
-                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime());
-                                break;
-                            case 1:
-                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),0);
-                                break;
-                            case 2:
-                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),15);
-                                break;
-                            case 3:
-                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),60);
-                                break;
-                            case 4:
-                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(), 24*60);
-                                break;
-                            default:
-                                break;
-
-                        }
-
-                        AVObject new_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
-                        new_task.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
-                        new_task.put("task_name",edit_name.getText());
-                        new_task.put("task_importance",seekBar_importance.getProgress());
-                        if(task_start_time!=null)
-                            new_task.put("start_time",task_start_time.getTime());
-                        if(task_end_time!=null)
-                            new_task.put("end_time",task_end_time.getTime());
-                        if(TV_description.length()!=0)
-                            new_task.put("task_description",TV_description.getText());
-                        if(edit_location.length()!=0)
-                            new_task.put("task_location",edit_location.getText());
-                        new_task.put("task_remind",spinner_remind.getSelectedItemId());
-//                    new_task.put("task_cycle",spinner_cycle.getSelectedItemId());
-                        new_task.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    //成功
-                                    Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                } else {
-                                    // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                    Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                }
-                break;
-            case R.id.btn_dialog_bottom_task_edit_cancel:
-                mBottomSheetDialog.dismiss();
-                break;
-            case R.id.btn_dialog_bottom_task_edit_delete:
-
-                CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
-                calendarReminderUtils.deleteCalendarEvent(context,mItems.get(Position).getString("task_name"));
-
-                mBottomSheetDialog.dismiss();
-                AVObject delete_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
-                delete_task.deleteInBackground(new DeleteCallback() {
-                    @Override
-                    public void done(AVException e) {
-                        if (e == null) {
-                            //成功
-                            Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                        } else {
-                            // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                            Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                break;
-            case R.id.btn_dialog_bottom_task_edit_done:
-                mBottomSheetDialog.dismiss();
-                AVObject done_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
-                Log.d("TaskRecyclerViewAdapter","任务完成按钮，任务状态："+done_task.getBoolean("done"));
-                if(mItems.get(Position).getBoolean("done")){
-                    // 任务已完成，设为未完成
-                    done_task.put("done",false);
-                    Log.d("TaskRecyclerViewAdapter","任务完成按钮，任务已完成，设为未完成！");
-                }else{
-                    done_task.put("done",true);
-                    done_task.put("done_time", Calendar.getInstance().getTime());
-                }
-
-                done_task.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(AVException e) {
-                        if (e == null) {
-                            //成功
-                            Toast.makeText(App.getContext(), "任务已完成！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                        } else {
-                            // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                            Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                break;
-//            case R.id.dialog_bottom_task_start_time_clean:
-//                TV_start_date.setText("null");
-//                TV_start_time.setText("null");
-//                task_start_time = null;
+//            case R.id.btn_dialog_bottom_task_edit_ok:
+//                if(edit_name.length()==0){
+//                    Toast.makeText(App.getContext(), "任务名称不能为空！", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    if(task_start_time.getTime().getTime()>task_end_time.getTime().getTime()){
+//                        Toast.makeText(App.getContext(), "结束时间不能小于开始时间，请修改，您的修改未保存。", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        mBottomSheetDialog.dismiss();
+//                        CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
+//                        calendarReminderUtils.deleteCalendarEvent(context,mItems.get(Position).getString("task_name"));
+//                        switch ((int)spinner_remind.getSelectedItemId()){
+//                            case 0:
+//                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime());
+//                                break;
+//                            case 1:
+//                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),0);
+//                                break;
+//                            case 2:
+//                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),15);
+//                                break;
+//                            case 3:
+//                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),60);
+//                                break;
+//                            case 4:
+//                                calendarReminderUtils.addCalendarEvent(context,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(), 24*60);
+//                                break;
+//                            default:
+//                                break;
+//
+//                        }
+//
+//                        AVObject new_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
+//                        new_task.put("UserId", AVUser.getCurrentUser().getObjectId());// 设置用户ID
+//                        new_task.put("task_name",edit_name.getText());
+//                        new_task.put("task_importance",seekBar_importance.getProgress());
+//                        if(task_start_time!=null)
+//                            new_task.put("start_time",task_start_time.getTime());
+//                        if(task_end_time!=null)
+//                            new_task.put("end_time",task_end_time.getTime());
+//                        if(TV_description.length()!=0)
+//                            new_task.put("task_description",TV_description.getText());
+//                        if(edit_location.length()!=0)
+//                            new_task.put("task_location",edit_location.getText());
+//                        new_task.put("task_remind",spinner_remind.getSelectedItemId());
+////                    new_task.put("task_cycle",spinner_cycle.getSelectedItemId());
+//                        new_task.saveInBackground(new SaveCallback() {
+//                            @Override
+//                            public void done(AVException e) {
+//                                if (e == null) {
+//                                    //成功
+//                                    Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
+////                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
+//                                } else {
+//                                    // 失败的原因可能有多种，常见的是用户名已经存在。
+////                        showProgress(false);
+//                                    Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
 //                break;
-//            case R.id.dialog_bottom_task_end_time_clean:
-//                TV_end_date.setText("null");
-//                TV_end_time.setText("null");
-//                task_end_time = null;
+//            case R.id.btn_dialog_bottom_task_edit_cancel:
+//                mBottomSheetDialog.dismiss();
 //                break;
-            case R.id.dialog_bottom_task_edit_start_time_date:
-                if(task_start_time!=null){
-                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
-                        task_start_time.set(Calendar.YEAR,year);
-                        task_start_time.set(Calendar.MONTH,monthOfYear);
-                        task_start_time.set(Calendar.DATE,dayOfMonth);
-                        TV_start_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
-                    }, task_start_time.get(Calendar.YEAR), task_start_time.get(Calendar.MONTH), task_start_time.get(Calendar.DAY_OF_MONTH));
-                    start_datePickerDialog.show();
-                }else{
-                    Calendar now = Calendar.getInstance();
-                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
-                        task_start_time.set(Calendar.YEAR,year);
-                        task_start_time.set(Calendar.MONTH,monthOfYear);
-                        task_start_time.set(Calendar.DATE,dayOfMonth);
-                        TV_start_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
-                    }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-                    start_datePickerDialog.show();
-                }
-                break;
-            case R.id.dialog_bottom_task_edit_start_time:
-                if(task_start_time!=null){
-                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
-                        task_start_time.set(Calendar.HOUR_OF_DAY,hour);
-                        task_start_time.set(Calendar.MINUTE,minute);
-                        TV_start_time.setText(hour+" 时 "+minute +"分");
-                    }, task_start_time.get(Calendar.HOUR_OF_DAY), task_start_time.get(Calendar.MINUTE),true);
-                    start_timePickerDialog.show();
-                }else{
-                    Calendar now = Calendar.getInstance();
-                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
-                        task_start_time.set(Calendar.HOUR_OF_DAY,hour);
-                        task_start_time.set(Calendar.MINUTE,minute);
-                        TV_start_time.setText(hour+" 时 "+minute +"分");
-                    }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),true);
-                    start_timePickerDialog.show();
-                }
-                break;
-            case R.id.dialog_bottom_task_edit_end_time_date:
-                if(task_end_time!=null){
-                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
-                        task_end_time.set(Calendar.YEAR,year);
-                        task_end_time.set(Calendar.MONTH,monthOfYear);
-                        task_end_time.set(Calendar.DATE,dayOfMonth);
-                        TV_end_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
-                    }, task_end_time.get(Calendar.YEAR), task_end_time.get(Calendar.MONTH), task_end_time.get(Calendar.DAY_OF_MONTH));
-                    start_datePickerDialog.show();
-                }else{
-                    Calendar now = Calendar.getInstance();
-                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
-                        task_end_time.set(Calendar.YEAR,year);
-                        task_end_time.set(Calendar.MONTH,monthOfYear);
-                        task_end_time.set(Calendar.DATE,dayOfMonth);
-                        TV_end_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
-                    }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-                    start_datePickerDialog.show();
-                }
-                break;
-            case R.id.dialog_bottom_task_edit_end_time:
-                if(task_end_time!=null){
-                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
-                        task_end_time.set(Calendar.HOUR_OF_DAY,hour);
-                        task_end_time.set(Calendar.MINUTE,minute);
-                        TV_end_time.setText(hour+" 时 "+minute +"分");
-                    }, task_end_time.get(Calendar.HOUR_OF_DAY), task_end_time.get(Calendar.MINUTE),true);
-                    start_timePickerDialog.show();
-                }else{
-                    Calendar now = Calendar.getInstance();
-                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
-                        task_end_time.set(Calendar.HOUR_OF_DAY,hour);
-                        task_end_time.set(Calendar.MINUTE,minute);
-                        TV_end_time.setText(hour+" 时 "+minute +"分");
-                    }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),true);
-                    start_timePickerDialog.show();
-                }
-                break;
+//            case R.id.btn_dialog_bottom_task_edit_delete:
+//
+//                CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
+//                calendarReminderUtils.deleteCalendarEvent(context,mItems.get(Position).getString("task_name"));
+//
+//                mBottomSheetDialog.dismiss();
+//                AVObject delete_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
+//                delete_task.deleteInBackground(new DeleteCallback() {
+//                    @Override
+//                    public void done(AVException e) {
+//                        if (e == null) {
+//                            //成功
+//                            Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+////                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
+//                        } else {
+//                            // 失败的原因可能有多种，常见的是用户名已经存在。
+////                        showProgress(false);
+//                            Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//                break;
+//            case R.id.btn_dialog_bottom_task_edit_done:
+//                mBottomSheetDialog.dismiss();
+//                AVObject done_task = AVObject.createWithoutData("Task",mItems.get(Position).getObjectId());
+//                Log.d("TaskRecyclerViewAdapter","任务完成按钮，任务状态："+done_task.getBoolean("done"));
+//                if(mItems.get(Position).getBoolean("done")){
+//                    // 任务已完成，设为未完成
+//                    done_task.put("done",false);
+//                    Log.d("TaskRecyclerViewAdapter","任务完成按钮，任务已完成，设为未完成！");
+//                }else{
+//                    done_task.put("done",true);
+//                    done_task.put("done_time", Calendar.getInstance().getTime());
+//                }
+//
+//                done_task.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(AVException e) {
+//                        if (e == null) {
+//                            //成功
+//                            Toast.makeText(App.getContext(), "任务已完成！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+////                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
+//                        } else {
+//                            // 失败的原因可能有多种，常见的是用户名已经存在。
+////                        showProgress(false);
+//                            Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//                break;
+////            case R.id.dialog_bottom_task_start_time_clean:
+////                TV_start_date.setText("null");
+////                TV_start_time.setText("null");
+////                task_start_time = null;
+////                break;
+////            case R.id.dialog_bottom_task_end_time_clean:
+////                TV_end_date.setText("null");
+////                TV_end_time.setText("null");
+////                task_end_time = null;
+////                break;
+//            case R.id.dialog_bottom_task_edit_start_time_date:
+//                if(task_start_time!=null){
+//                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
+//                        task_start_time.set(Calendar.YEAR,year);
+//                        task_start_time.set(Calendar.MONTH,monthOfYear);
+//                        task_start_time.set(Calendar.DATE,dayOfMonth);
+//                        TV_start_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
+//                    }, task_start_time.get(Calendar.YEAR), task_start_time.get(Calendar.MONTH), task_start_time.get(Calendar.DAY_OF_MONTH));
+//                    start_datePickerDialog.show();
+//                }else{
+//                    Calendar now = Calendar.getInstance();
+//                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
+//                        task_start_time.set(Calendar.YEAR,year);
+//                        task_start_time.set(Calendar.MONTH,monthOfYear);
+//                        task_start_time.set(Calendar.DATE,dayOfMonth);
+//                        TV_start_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
+//                    }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+//                    start_datePickerDialog.show();
+//                }
+//                break;
+//            case R.id.dialog_bottom_task_edit_start_time:
+//                if(task_start_time!=null){
+//                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
+//                        task_start_time.set(Calendar.HOUR_OF_DAY,hour);
+//                        task_start_time.set(Calendar.MINUTE,minute);
+//                        TV_start_time.setText(hour+" 时 "+minute +"分");
+//                    }, task_start_time.get(Calendar.HOUR_OF_DAY), task_start_time.get(Calendar.MINUTE),true);
+//                    start_timePickerDialog.show();
+//                }else{
+//                    Calendar now = Calendar.getInstance();
+//                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
+//                        task_start_time.set(Calendar.HOUR_OF_DAY,hour);
+//                        task_start_time.set(Calendar.MINUTE,minute);
+//                        TV_start_time.setText(hour+" 时 "+minute +"分");
+//                    }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),true);
+//                    start_timePickerDialog.show();
+//                }
+//                break;
+//            case R.id.dialog_bottom_task_edit_end_time_date:
+//                if(task_end_time!=null){
+//                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
+//                        task_end_time.set(Calendar.YEAR,year);
+//                        task_end_time.set(Calendar.MONTH,monthOfYear);
+//                        task_end_time.set(Calendar.DATE,dayOfMonth);
+//                        TV_end_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
+//                    }, task_end_time.get(Calendar.YEAR), task_end_time.get(Calendar.MONTH), task_end_time.get(Calendar.DAY_OF_MONTH));
+//                    start_datePickerDialog.show();
+//                }else{
+//                    Calendar now = Calendar.getInstance();
+//                    DatePickerDialog start_datePickerDialog = new DatePickerDialog(context, (view1, year, monthOfYear, dayOfMonth) -> {
+//                        task_end_time.set(Calendar.YEAR,year);
+//                        task_end_time.set(Calendar.MONTH,monthOfYear);
+//                        task_end_time.set(Calendar.DATE,dayOfMonth);
+//                        TV_end_date.setText(year+"年"+(monthOfYear+1)+"月"+dayOfMonth+"日");
+//                    }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+//                    start_datePickerDialog.show();
+//                }
+//                break;
+//            case R.id.dialog_bottom_task_edit_end_time:
+//                if(task_end_time!=null){
+//                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
+//                        task_end_time.set(Calendar.HOUR_OF_DAY,hour);
+//                        task_end_time.set(Calendar.MINUTE,minute);
+//                        TV_end_time.setText(hour+" 时 "+minute +"分");
+//                    }, task_end_time.get(Calendar.HOUR_OF_DAY), task_end_time.get(Calendar.MINUTE),true);
+//                    start_timePickerDialog.show();
+//                }else{
+//                    Calendar now = Calendar.getInstance();
+//                    TimePickerDialog start_timePickerDialog = new TimePickerDialog(context,(view1, hour, minute) -> {
+//                        task_end_time.set(Calendar.HOUR_OF_DAY,hour);
+//                        task_end_time.set(Calendar.MINUTE,minute);
+//                        TV_end_time.setText(hour+" 时 "+minute +"分");
+//                    }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),true);
+//                    start_timePickerDialog.show();
+//                }
+//                break;
             default:
                 break;
         }
