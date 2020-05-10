@@ -167,7 +167,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.fab_about_share:
-                startActivity(new Intent(AboutActivity.this, AppLogActivity.class));
+//                startActivity(new Intent(AboutActivity.this, AppLogActivity.class));
 //                intent.setAction(Intent.ACTION_SEND);
 //                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
 //                intent.setType("text/plain");

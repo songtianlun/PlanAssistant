@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:colorBackground">@color/background_color</item>
         <item name="colorSurface">@color/white</item>
+        <!-- Customize your theme here. -->
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -14,6 +14,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
@@ -70,6 +72,9 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
     private String task_type = "all";
 
     private BottomSheetDialog mBottomSheetDialog;
+
+    SharedPreferences SP_temporary;
+    SharedPreferences.Editor SP_temporary_editor;
 
 //    private AppCompatImageButton ib_marker;
 //    private TextView TV_start_time;
@@ -134,7 +139,14 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
             case R.id.menu_home_task_today_planning:
                 task_type = "today_planning";
 //                refreshData(task_type);
-                filterDataAndLoad(now_list,task_type);
+//                filterDataAndLoad(now_list,task_type);
+
+                String text = JSON.toJSONString(filterDataAndLoad(now_list,task_type));
+                Log.d("TaskLocationActivity","序列化task："+text);
+                SP_temporary_editor.putString("task_schedule_planning", text);
+                SP_temporary_editor.commit();
+
+                startActivity(new Intent(mContext, SchedulePlanningActivity.class));
                 break;
             case R.id.menu_home_task_late:
                 task_type = "late";
@@ -185,8 +197,8 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(MaxQuery);
         query.orderByAscending("done"); //按是否完成，升序,先false，后true
-        query.addDescendingOrder("task_importance"); // 按照重要程序降序
         query.addAscendingOrder("start_time"); //按开始时间升序
+        query.addDescendingOrder("task_importance"); // 按照重要程序降序
         query.countInBackground(new CountCallback() {
             @Override
             public void done(int count, AVException e) {
@@ -353,6 +365,9 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         }, 20));
 
         mRecyclerView.addOnScrollListener(scrollListener);
+
+        SP_temporary = App.getApplication().getSharedPreferences("temporary",MODE_PRIVATE);
+        SP_temporary_editor = SP_temporary.edit();
     }
 
     RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
@@ -446,8 +461,8 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
 
         query.limit(MaxQuery);
         query.addAscendingOrder("done"); //按是否完成，升序,先false，后true
-        query.addDescendingOrder("task_importance"); // 按照重要程序降序
         query.addAscendingOrder("start_time"); //按开始时间升序
+        query.addDescendingOrder("task_importance"); // 按照重要程序降序
         query.countInBackground(new CountCallback() {
             @Override
             public void done(int count, AVException e) {
@@ -468,7 +483,7 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    private void filterDataAndLoad(List<AVObject> list, String type){
+    private List<AVObject> filterDataAndLoad(List<AVObject> list, String type){
         // 获取今日开始结束时刻
         List<AVObject> filter = new ArrayList<>();
         DateFormat dateFormat = new DateFormat();
@@ -576,6 +591,7 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         }
         adapter=new TaskRecyclerViewAdapter(filter,mContext);
         mRecyclerView.setAdapter(adapter);
+        return filter;
     }
 
     @Override

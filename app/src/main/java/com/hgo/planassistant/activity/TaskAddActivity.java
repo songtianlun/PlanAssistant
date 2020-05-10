@@ -7,7 +7,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +19,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.amap.api.services.core.PoiItem;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
@@ -46,6 +54,12 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
     private Button btn_ok;
     private Button btn_cancel;
 
+    private double task_latitude = 0;
+    private double task_longitude = 0;
+
+    SharedPreferences SP_temporary;
+    SharedPreferences.Editor SP_temporary_editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +75,23 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
 
         initView();
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        String poi_item = SP_temporary.getString("location_poi_item","");
+        Log.d("TaskAddActivity","收到序列化的poi："+poi_item);
+
+        if(poi_item.length()>0){
+            JSONObject jsonObject = JSONObject.parseObject(poi_item); //反序列化
+            Log.d("TaskAddActivity","接收到poi数据"+jsonObject);
+            edit_location.setText(jsonObject.getString("title"));
+            JSONObject latlon_json = jsonObject.getJSONObject("latLonPoint");
+            task_longitude = latlon_json.getDouble("longitude");
+            task_latitude = latlon_json.getDouble("latitude");
+            Log.d("TaskAddActivity","Json解析结果：" + "标题：" + jsonObject.getString("title") + ", 经度：" + task_longitude + "，纬度："+task_latitude);
+        }
     }
 
     private void initView(){
@@ -87,11 +118,15 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
 //            clean_start.setOnClickListener(this);
 //            clean_end.setOnClickListener(this);
         ib_marker.setOnClickListener(this);
+        edit_location.setOnClickListener(this);
 
         TV_start_date.setText(task_start_time.get(Calendar.YEAR)+"年"+(task_start_time.get(Calendar.MONTH)+1)+"月"+task_start_time.get(Calendar.DATE)+"日");
         TV_start_time.setText(task_start_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_start_time.get(Calendar.MINUTE) +"分");
         TV_end_date.setText(task_end_time.get(Calendar.YEAR)+"年"+(task_end_time.get(Calendar.MONTH)+1)+"月"+task_end_time.get(Calendar.DATE)+"日");
         TV_end_time.setText(task_end_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_end_time.get(Calendar.MINUTE) +"分");
+
+        SP_temporary = App.getApplication().getSharedPreferences("temporary",MODE_PRIVATE);
+        SP_temporary_editor = SP_temporary.edit();
     }
 
     @Override
@@ -120,6 +155,9 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
                         if(edit_location.length()!=0)
                             new_task.put("task_location",edit_location.getText());
                         new_task.put("task_remind",spinner_remind.getSelectedItemId());
+                        if(task_latitude!=0.0&&task_longitude!=0.0){
+                            new_task.put("task_point", new AVGeoPoint(task_latitude, task_longitude));
+                        }
 //                        new_task.put("task_cycle",spinner_cycle.getSelectedItemId());
                         new_task.saveInBackground(new SaveCallback() {
                             @Override
@@ -127,7 +165,6 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
                                 if (e == null) {
                                     //成功
                                     Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
-
                                     CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
                                     switch ((int)spinner_remind.getSelectedItemId()){
                                         case 0:
@@ -147,7 +184,6 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
                                             break;
                                         default:
                                             break;
-
                                     }
 //                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
                                 } else {
@@ -271,7 +307,11 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.activity_task_add_location_marker:
                 Log.i("TaskActivity","选择位置");
-                View dialogView = getLayoutInflater().inflate(R.layout.activity_task_add, null);
+//                View dialogView = getLayoutInflater().inflate(R.layout.activity_task_add, null);
+                startActivity(new Intent(mContext, TaskLocationActivity.class));
+                break;
+            case R.id.activity_task_add_location:
+                startActivity(new Intent(mContext, TaskLocationActivity.class));
                 break;
             default:
                 break;

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.hgo.planassistant.App;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.message.PushAgent;
 
 /**
  * Created by zhangxiao on 2018/10/11
@@ -87,15 +88,18 @@ public abstract class BaseActivity extends AppCompatActivity {
          * Channel
          * default: fir.im (default)
          */
-        UMConfigure.init(this, "5e368c604ca357e87b00002c", "default", UMConfigure.DEVICE_TYPE_PHONE, null);
+//        UMConfigure.init(this, "5e368c604ca357e87b00002c", "default", UMConfigure.DEVICE_TYPE_PHONE, null);
 
         /**
          * 设置组件化的Log开关
          * 参数: boolean 默认为false，如需查看LOG设置为true
          */
-        UMConfigure.setLogEnabled(true);
-        // 选用AUTO页面采集模式
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+//        UMConfigure.setLogEnabled(true);
+//        // 选用AUTO页面采集模式
+//        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+
+        // umeng 消息推送 应用数据统计接口
+        PushAgent.getInstance(this).onAppStart();
     }
 
 }

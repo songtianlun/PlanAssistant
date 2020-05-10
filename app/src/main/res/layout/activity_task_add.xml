@@ -148,11 +148,12 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/activity_task_add_location"
-
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/activity_task_add_location_title"
-                            android:maxLength="100"
                             android:maxLines="1" />
 
                     </com.google.android.material.textfield.TextInputLayout>

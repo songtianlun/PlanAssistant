@@ -31,6 +31,12 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
+    <!--menu_activity_task_location-->
+    <string name="menu_task_location_checkout">确认</string>
+
+    <!--menu_activity_task_detail-->
+    <string name="menu_task_location_detail_navi">前往</string>
+
     <string name="tab_title_main_1">Home</string>
     <string name="tab_title_main_2">Task</string>
     <string name="tab_title_main_3">Energy</string>
@@ -419,7 +425,7 @@
     <string name="activity_task_add_cycle_title">事件循环</string>
 
     <!-- activity_task_edit-->
-    <string name="activity_task_edit_title">修改日程</string>
+    <string name="activity_task_edit_title">日程详情</string>
     <string name="activity_task_edit_name_title">* 日程名称</string>
     <string name="activity_task_edit_name_hint">请输入日程名称，该项必填。</string>
     <string name="activity_task_edit_importance_title">* 重要性</string>

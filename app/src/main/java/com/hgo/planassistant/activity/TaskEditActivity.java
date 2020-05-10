@@ -4,8 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +20,9 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 
+import com.alibaba.fastjson.JSONObject;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
@@ -63,6 +68,12 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
     private Button btn_delete;
     private Button btn_done;
 
+    private double task_latitude = 0;
+    private double task_longitude = 0;
+
+    SharedPreferences SP_temporary;
+    SharedPreferences.Editor SP_temporary_editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +91,51 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
 
         initData();
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        String poi_item = SP_temporary.getString("location_poi_item","");
+        Log.d("TaskAddActivity","收到序列化的poi："+poi_item);
+
+        if(poi_item.length()>0){
+            JSONObject jsonObject = JSONObject.parseObject(poi_item); //反序列化
+            Log.d("TaskEditActivity","接收到poi数据"+jsonObject);
+            edit_location.setText(jsonObject.getString("title"));
+            JSONObject latlon_json = jsonObject.getJSONObject("latLonPoint");
+            task_longitude = latlon_json.getDouble("longitude");
+            task_latitude = latlon_json.getDouble("latitude");
+            Log.d("TaskEditActivity","Json解析结果：" + "标题：" + jsonObject.getString("title") + ", 经度：" + task_longitude + "，纬度："+task_latitude);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_task_detail, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_task_location_detail_navi:
+                AmapNaviPage.getInstance().showRouteActivity(context, new AmapNaviParams(null), IndexActivity.this);
+//                if(snippet.length()>0){
+//
+//                    Log.d("TaskLocationActivity","当前位置："+snippet);
+//                    finish();
+//                }else{
+//                    Toast.makeText(mContext,"请选择列表位置。",Toast.LENGTH_SHORT);
+//                }
+//                finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initView(){
@@ -111,6 +167,7 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
 //            clean_end.setOnClickListener(this);
         ib_marker.setOnClickListener(this);
         edit_description.setOnClickListener(this);
+        edit_location.setOnClickListener(this);
 
         TV_start_date.setText(task_start_time.get(Calendar.YEAR)+"年"+(task_start_time.get(Calendar.MONTH)+1)+"月"+task_start_time.get(Calendar.DATE)+"日");
         TV_start_time.setText(task_start_time.get(Calendar.HOUR_OF_DAY)+" 时 "+task_start_time.get(Calendar.MINUTE) +"分");
@@ -125,6 +182,9 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
         edit_location.setText(task_location);
         seekBar_importance.setProgress(task_importance);
         spinner_remind.setSelection(task_remind);
+
+        SP_temporary = App.getApplication().getSharedPreferences("temporary",MODE_PRIVATE);
+        SP_temporary_editor = SP_temporary.edit();
     }
 
     private void initData(){
@@ -144,6 +204,12 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
                 task_importance = object.getInt("task_importance");
                 task_remind = object.getInt("task_remind");
                 task_location = object.getString("task_location");
+                AVGeoPoint task_point = object.getAVGeoPoint("task_point");
+                if(task_point!=null){
+                    task_latitude = task_point.getLatitude();
+                    task_longitude = task_point.getLatitude();
+                }
+
 
                 initView();
             }
@@ -231,6 +297,9 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
                             new_task.put("task_description",edit_description.getText());
                         if(edit_location.length()!=0)
                             new_task.put("task_location",edit_location.getText());
+                        if(task_latitude!=0.0&&task_longitude!=0.0){
+                            new_task.put("task_point", new AVGeoPoint(task_latitude, task_longitude));
+                        }
                         new_task.put("task_remind",spinner_remind.getSelectedItemId());
 //                        new_task.put("task_cycle",spinner_cycle.getSelectedItemId());
                         new_task.saveInBackground(new SaveCallback() {
@@ -383,7 +452,11 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.activity_task_edit_location_marker:
                 Log.i("TaskActivity","选择位置");
-                View dialogView = getLayoutInflater().inflate(R.layout.activity_task_edit, null);
+//                View dialogView = getLayoutInflater().inflate(R.layout.activity_task_edit, null);
+                startActivity(new Intent(mContext, TaskLocationActivity.class));
+                break;
+            case R.id.activity_task_edit_location:
+                startActivity(new Intent(mContext, TaskLocationActivity.class));
                 break;
             default:
                 break;
