@@ -21,6 +21,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.amap.api.navi.AmapNaviPage;
+import com.amap.api.navi.AmapNaviParams;
+import com.amap.api.navi.INaviInfoCallback;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -122,7 +125,7 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_task_location_detail_navi:
-                AmapNaviPage.getInstance().showRouteActivity(context, new AmapNaviParams(null), IndexActivity.this);
+//                AmapNaviPage.getInstance().showRouteActivity(mContext, new AmapNaviParams(null), TaskEditActivity.this);
 //                if(snippet.length()>0){
 //
 //                    Log.d("TaskLocationActivity","当前位置："+snippet);
