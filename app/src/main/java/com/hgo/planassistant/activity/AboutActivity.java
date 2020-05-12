@@ -104,7 +104,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         FirUpdater.getInstance(this)
                 .apiToken(DataSource.fir_im_API_TOKEN)
                 .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
-                .apkPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/")
                 .checkVersion();
 
         Log.i("AboutActivity","Check Update.");
@@ -161,25 +160,23 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 FirUpdater.getInstance(this_context)
                         .apiToken(DataSource.fir_im_API_TOKEN)
                         .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
-                        .apkPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/")
                         .checkVersion();
                 Log.i("AboutActivity","Check Update.");
                 break;
 
-            case R.id.fab_about_share:
-//                startActivity(new Intent(AboutActivity.this, AppLogActivity.class));
-//                intent.setAction(Intent.ACTION_SEND);
-//                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
-//                intent.setType("text/plain");
-//                startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
-                FirUpdater.getInstance(this_context)
-                          .apiToken(DataSource.fir_im_API_TOKEN)
-                          .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
-                          .apkPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/")
-                          .checkVersion();
-
-                Log.i("AboutActivity","Check Update.");
-                break;
+//            case R.id.fab_about_share:
+////                startActivity(new Intent(AboutActivity.this, AppLogActivity.class));
+////                intent.setAction(Intent.ACTION_SEND);
+////                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
+////                intent.setType("text/plain");
+////                startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
+//                FirUpdater.getInstance(this_context)
+//                          .apiToken(DataSource.fir_im_API_TOKEN)
+//                          .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+//                          .checkVersion();
+//
+//                Log.i("AboutActivity","Check Update.");
+//                break;
         }
     }
 

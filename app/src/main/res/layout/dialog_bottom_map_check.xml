@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/google_assistant_background"
+    android:paddingStart="@dimen/zero_margin_when_normal"
+    android:paddingEnd="@dimen/zero_margin_when_normal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<ImageView-->
+            <!--android:id="@+id/img_bottom_dialog"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:adjustViewBounds="true"-->
+            <!--android:scaleType="fitXY" />-->
+
+        <TextView
+            android:id="@+id/dialog_button_map_check_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/dimen_common"
+            android:text="@string/dialog_button_map_check_title"
+            android:scaleType="centerCrop"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"/>
+        <com.amap.api.maps.MapView
+            android:id="@+id/dialog_button_map_check_map"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/dialog_button_map_check_title"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_button_map_check_ok"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_button_map_check_map"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_common_very_small"
+            android:layout_marginBottom="@dimen/dimen_common_very_small"
+            android:text="@string/dialog_ok" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_button_map_check_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_button_map_check_map"
+            android:layout_marginEnd="@dimen/dimen_common_very_small"
+            android:layout_marginBottom="@dimen/dimen_common_very_small"
+            android:layout_toStartOf="@+id/btn_dialog_button_map_check_ok"
+            android:text="@string/dialog_delete" />
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

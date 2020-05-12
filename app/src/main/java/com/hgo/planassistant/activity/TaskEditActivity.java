@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,9 +22,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Poi;
+
 import com.amap.api.navi.AmapNaviPage;
 import com.amap.api.navi.AmapNaviParams;
-import com.amap.api.navi.INaviInfoCallback;
+import com.amap.api.navi.AmapNaviType;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -73,6 +77,8 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
 
     private double task_latitude = 0;
     private double task_longitude = 0;
+
+    private AVGeoPoint task_point;
 
     SharedPreferences SP_temporary;
     SharedPreferences.Editor SP_temporary_editor;
@@ -125,7 +131,35 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_task_location_detail_navi:
-//                AmapNaviPage.getInstance().showRouteActivity(mContext, new AmapNaviParams(null), TaskEditActivity.this);
+                Log.d("TaskEditActivity","调起高德应用内导航！");
+                if(task_point==null){
+                    Toast.makeText(mContext,"当前任务无指定地点，无法一键前往！",Toast.LENGTH_SHORT).show();
+                    Log.d("TaskEditActivity","当前任务无指定地点，无法一键前往！");
+//                    AmapNaviPage.getInstance().showRouteActivity(mContext,new AmapNaviParams(null), null);
+                }else {
+                    Poi end = new Poi(task_location, new LatLng(task_latitude, task_longitude), "");
+                    AmapNaviParams params = new AmapNaviParams(null, null, end, AmapNaviType.DRIVER);
+                    params.setUseInnerVoice(true);
+                    params.setMultipleRouteNaviMode(true);
+                    params.setNeedDestroyDriveManagerInstanceWhenNaviExit(true);
+                    AmapNaviPage.getInstance().showRouteActivity(mContext,params, null);
+//                    Intent intent = new Intent();
+//                    intent.setAction(Intent.ACTION_VIEW);
+//                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+//                    //将功能Scheme以URI的方式传入data
+//                    String text =
+//                            "androidamap://navi?sourceApplication="
+//                                    + "appname"
+//                                    + "&amp;poiname="
+//                                    + "fangheng"
+//                                    + "&amp;lat=" + task_latitude
+//                                    + "&amp;lon=" + task_longitude
+//                                    + "&amp;dev=1&amp;style=2";
+//                    Uri uri = Uri.parse("androidamap://navi?sourceApplication=appname&amp;poiname=fangheng&amp;lat=36.547901&amp;lon=104.258354&amp;dev=1&amp;style=2");
+//                    intent.setData(uri);
+//                    //启动该页面即可
+//                    mContext.startActivity(intent);
+                }
 //                if(snippet.length()>0){
 //
 //                    Log.d("TaskLocationActivity","当前位置："+snippet);
@@ -207,7 +241,7 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
                 task_importance = object.getInt("task_importance");
                 task_remind = object.getInt("task_remind");
                 task_location = object.getString("task_location");
-                AVGeoPoint task_point = object.getAVGeoPoint("task_point");
+                task_point = object.getAVGeoPoint("task_point");
                 if(task_point!=null){
                     task_latitude = task_point.getLatitude();
                     task_longitude = task_point.getLatitude();

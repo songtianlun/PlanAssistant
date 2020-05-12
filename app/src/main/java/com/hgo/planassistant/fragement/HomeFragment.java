@@ -101,8 +101,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import okhttp3.internal.concurrent.Task;
-
 import static android.content.Context.MODE_MULTI_PROCESS;
 import static android.content.Context.MODE_PRIVATE;
 

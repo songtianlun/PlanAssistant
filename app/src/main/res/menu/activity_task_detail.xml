@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_task_location_detail_navi"
-        android:icon="@drawable/check"
+        android:icon="@drawable/navigation"
         android:title="@string/menu_task_location_detail_navi"
         app:showAsAction="always"/>
 </menu>

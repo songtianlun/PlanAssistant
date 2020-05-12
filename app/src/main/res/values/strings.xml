@@ -123,6 +123,7 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_done">Done</string>
+    <string name="dialog_navigation">Navigation</string>
     <string name="dialog_neutral">Neutral</string>
     <string name="dialog_close">Close</string>
     <string name="main_dialog_simple">Simple dialog</string>
@@ -350,7 +351,9 @@
     <string name="dialog_pc_detail_items_finish_edit_title">目标长度</string>
 
     <!--activity_map_check-->
-    <string name="title_activity_map_check">到此一游</string>
+    <string name="title_activity_map_check">位置收藏</string>
+    <string name="fab_activity_map_check_add">新增位置</string>
+    <string name="dialog_button_map_check_title">收藏位置</string>
 
 
     <!--card_map_check_map-->

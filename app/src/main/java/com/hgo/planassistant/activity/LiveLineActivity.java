@@ -151,7 +151,6 @@ public class LiveLineActivity extends BaseActivity {
             //格式化当前时间
             String now_time_string = (new SimpleDateFormat("HH:mm")).format(liveline_time.getTime()); //获取当前时间并格式化
 
-            //底部Dialog
             BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(this);
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_bottom_liveline_score, null);
             Button btn_dialog_bottom_sheet_ok = dialogView.findViewById(R.id.btn_dialog_bottom_sheet_ok);

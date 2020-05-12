@@ -76,7 +76,8 @@ public class MainActivity extends BaseActivity
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.ACTIVITY_RECOGNITION
     };
     private AlertDialog dialog;
 

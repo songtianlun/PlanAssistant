@@ -419,7 +419,8 @@ public class DataCaptureService extends Service {
         startStorageTimeCount(); //开始数据存储倒计时
 
         StepCounterSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        StepCounterSensor = StepCounterSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER); // 计步器传感器
+
+
 
         StepCounterSensorListener = new SensorEventListener() {
             @Override
@@ -460,12 +461,19 @@ public class DataCaptureService extends Service {
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int i) {
-//                Log.d("DataCaptureService","计步传感器精度变化回调接口"+sensor.toString()+","+i);
+                Log.d("DataCaptureService","计步传感器精度变化回调接口"+sensor.toString()+","+i);
 
             }
         };
 
-        StepCounterSensorManager.registerListener(StepCounterSensorListener,StepCounterSensor,SensorManager.SENSOR_DELAY_NORMAL);
+        if(StepCounterSensorManager != null){
+            StepCounterSensor = StepCounterSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER); // 计步器传感器
+            StepCounterSensorManager.registerListener(StepCounterSensorListener,StepCounterSensor,SensorManager.SENSOR_DELAY_NORMAL);
+        }else{
+            Log.d("DataCaptureService","计步器传感器异常！");
+        }
+
+
     }
 
     public void saveStepData(){
