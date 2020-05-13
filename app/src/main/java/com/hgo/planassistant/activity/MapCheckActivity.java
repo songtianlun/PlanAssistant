@@ -282,6 +282,8 @@ public class MapCheckActivity extends BaseActivity {
         com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(task_list);
         amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
 
+        amap.clear();
+
         for(int i=0;i<task_list.size();i++){
             if(task_list.get(i).getAVGeoPoint("latLonPoint")!=null){
                 AVGeoPoint avGeoPoint = task_list.get(i).getAVGeoPoint("latLonPoint");

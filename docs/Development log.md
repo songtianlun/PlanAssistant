@@ -13,6 +13,7 @@
  - ~~解决Android10无法获取计步器传感器问题，需动态声明“Manifest.permission.ACTIVITY_RECOGNITION”权限~~
  - ~~解决about界面闪退问题，由于okhttp3冲突，已移除~~
  - ~~解决误删百度ai语言基础处理sdkjar包，已重新引入~~
+ - ~~解决位置收藏功能一个引发崩溃的异常~~
 
 ### 2020-5-12
 
