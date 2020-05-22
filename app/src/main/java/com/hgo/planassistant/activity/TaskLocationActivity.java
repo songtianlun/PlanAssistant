@@ -125,6 +125,15 @@ public class TaskLocationActivity extends BaseActivity implements LocationSource
 
         resultData = new ArrayList<>();
     }
+
+    @Override
+    public void onBackPressed() {
+        // 若点击返回退出，先清空数据
+        SP_temporary_editor.clear();
+        SP_temporary_editor.commit();
+        super.onBackPressed();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

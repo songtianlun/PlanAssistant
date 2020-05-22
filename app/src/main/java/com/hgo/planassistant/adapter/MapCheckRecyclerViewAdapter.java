@@ -1,5 +1,6 @@
 package com.hgo.planassistant.adapter;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,9 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
-import com.amap.api.navi.AmapNaviPage;
-import com.amap.api.navi.AmapNaviParams;
-import com.amap.api.navi.AmapNaviType;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -103,14 +101,14 @@ public class MapCheckRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     AVGeoPoint avGeoPoint = mItems.get(position).getAVGeoPoint("latLonPoint");
-                                    Poi end = new Poi(mItems.get(position).getString("title"), new LatLng(avGeoPoint.getLatitude(), avGeoPoint.getLongitude()), "");
-                                    AmapNaviParams params = new AmapNaviParams(null, null, end, AmapNaviType.DRIVER);
-                                    params.setUseInnerVoice(true);
-                                    params.setMultipleRouteNaviMode(true);
-                                    params.setNeedDestroyDriveManagerInstanceWhenNaviExit(true);
-                                    AmapNaviPage.getInstance().showRouteActivity(mContext,params, null);
+//                                    Poi end = new Poi(mItems.get(position).getString("title"), new LatLng(avGeoPoint.getLatitude(), avGeoPoint.getLongitude()), "");
+//                                    AmapNaviParams params = new AmapNaviParams(null, null, end, AmapNaviType.DRIVER);
+//                                    params.setUseInnerVoice(true);
+//                                    params.setMultipleRouteNaviMode(true);
+//                                    params.setNeedDestroyDriveManagerInstanceWhenNaviExit(true);
+//                                    AmapNaviPage.getInstance().showRouteActivity(mContext,params, null);
                                     // APP_NAME  自己应用的名字
-//                                    Log.d("MapCheckRecycleViewAp","准备调起高德地图");
+                                    Log.d("MapCheckRecycleViewAp","准备调起高德地图");
 //                                    Intent intent = new Intent();
 //                                    intent.setAction(Intent.ACTION_VIEW);
 //                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -129,7 +127,37 @@ public class MapCheckRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 //                                    //启动该页面即可
 //                                    mContext.startActivity(intent);
 
+//                                    Intent intent = new Intent();
+//                                    intent.setAction(Intent.ACTION_VIEW);
+//                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+//
+//                                    //将功能Scheme以URI的方式传入data
+//                                    Uri uri = Uri.parse("androidamap://navi?sourceApplication=appname&amp;lat=36.547901&amp;lon=104.258354&amp;dev=1&amp;style=2");
+//                                    intent.setData(uri);
+//
+//                                        //启动该页面即可
+//                                    mContext.startActivity(intent);
+
+
+                                    try {
+                                        double gdLatitude = avGeoPoint.getLatitude();
+                                        double gdLongitude = avGeoPoint.getLongitude();
+                                        String name = mItems.get(position).getString("title");
+                                        String uri = String.format("amapuri://route/plan/?dlat=%s&dlon=%s&dname=%s&dev=0&t=0",
+                                                gdLatitude, gdLongitude, name);
+                                        Intent intent = new Intent();
+                                        intent.setAction("android.intent.action.VIEW");
+                                        intent.addCategory("android.intent.category.DEFAULT");
+                                        intent.setData(Uri.parse(uri));
+                                        intent.setPackage("com.autonavi.minimap");
+                                        mContext.startActivity(intent);
+                                    }
+                                    catch (ActivityNotFoundException e) {
+                                        Toast.makeText(mContext, "请安装高德地图",Toast.LENGTH_SHORT).show();
+                                    }
+
                                 }
+
                             })
                             .setNegativeButton(mContext.getString(R.string.dialog_delete), new DialogInterface.OnClickListener() {
                                 @Override

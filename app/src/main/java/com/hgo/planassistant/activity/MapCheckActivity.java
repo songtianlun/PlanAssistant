@@ -67,6 +67,7 @@ public class MapCheckActivity extends BaseActivity {
     private int loadTimes;
     private AMap amap;
     private MapView aMapview;
+//    public boolean StorageLocation = false;
 
     SharedPreferences SP_temporary;
     SharedPreferences.Editor SP_temporary_editor;
@@ -97,10 +98,16 @@ public class MapCheckActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+
         String poi_item = SP_temporary.getString("location_poi_item","");
         Log.d("TaskAddActivity","收到序列化的poi："+poi_item);
 
         if(poi_item.length()>0){
+
+            // 清除数据，避免二次存储
+            SP_temporary_editor.clear();
+            SP_temporary_editor.commit();
+
             JSONObject jsonObject = JSONObject.parseObject(poi_item); //反序列化
             Log.d("TaskAddActivity","接收到poi数据"+jsonObject);
 
@@ -130,6 +137,7 @@ public class MapCheckActivity extends BaseActivity {
                 }
             });
         }
+
     }
 
     @Override

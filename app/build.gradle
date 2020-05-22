@@ -16,8 +16,8 @@ android {
         applicationId "com.hgo.planassistant"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 9
-        versionName "1.1.4.20200513"
+        versionCode 10
+        versionName "1.1.4.20200522"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        systemProp.https.proxyPort=1080
 //        systemProp.https.proxyHost=127.0.0.1
@@ -118,7 +118,7 @@ dependencies {
     // 高德地图
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //3D地图so及jar 导航包含3d
-//    implementation 'com.amap.api:3dmap:latest.integration'
+    implementation 'com.amap.api:3dmap:latest.integration'
     //定位功能
     implementation 'com.amap.api:location:latest.integration'
     //搜索功能
@@ -127,7 +127,7 @@ dependencies {
     implementation files('libs/gt-geojson-19.4.jar')
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     // 导航功能
-    implementation 'com.amap.api:navi-3dmap:latest.integration'
+//    implementation 'com.amap.api:navi-3dmap:latest.integration'
 
     //seekbar with bubble
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'

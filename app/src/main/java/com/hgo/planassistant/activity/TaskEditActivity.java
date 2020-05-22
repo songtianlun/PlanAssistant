@@ -2,6 +2,7 @@ package com.hgo.planassistant.activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,9 +26,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 
-import com.amap.api.navi.AmapNaviPage;
-import com.amap.api.navi.AmapNaviParams;
-import com.amap.api.navi.AmapNaviType;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
@@ -131,18 +129,36 @@ public class TaskEditActivity extends BaseActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_task_location_detail_navi:
-                Log.d("TaskEditActivity","调起高德应用内导航！");
+                Log.d("TaskEditActivity","调起高德导航！");
                 if(task_point==null){
                     Toast.makeText(mContext,"当前任务无指定地点，无法一键前往！",Toast.LENGTH_SHORT).show();
                     Log.d("TaskEditActivity","当前任务无指定地点，无法一键前往！");
 //                    AmapNaviPage.getInstance().showRouteActivity(mContext,new AmapNaviParams(null), null);
                 }else {
-                    Poi end = new Poi(task_location, new LatLng(task_latitude, task_longitude), "");
-                    AmapNaviParams params = new AmapNaviParams(null, null, end, AmapNaviType.DRIVER);
-                    params.setUseInnerVoice(true);
-                    params.setMultipleRouteNaviMode(true);
-                    params.setNeedDestroyDriveManagerInstanceWhenNaviExit(true);
-                    AmapNaviPage.getInstance().showRouteActivity(mContext,params, null);
+//                    Poi end = new Poi(task_location, new LatLng(task_latitude, task_longitude), "");
+//                    AmapNaviParams params = new AmapNaviParams(null, null, end, AmapNaviType.DRIVER);
+//                    params.setUseInnerVoice(true);
+//                    params.setMultipleRouteNaviMode(true);
+//                    params.setNeedDestroyDriveManagerInstanceWhenNaviExit(true);
+//                    AmapNaviPage.getInstance().showRouteActivity(mContext,params, null);
+
+                    try {
+                        double gdLatitude = task_latitude;
+                        double gdLongitude = task_longitude;
+                        String name = task_location;
+                        String uri = String.format("amapuri://route/plan/?dlat=%s&dlon=%s&dname=%s&dev=0&t=0",
+                                gdLatitude, gdLongitude, name);
+                        Intent intent = new Intent();
+                        intent.setAction("android.intent.action.VIEW");
+                        intent.addCategory("android.intent.category.DEFAULT");
+                        intent.setData(Uri.parse(uri));
+                        intent.setPackage("com.autonavi.minimap");
+                        startActivity(intent);
+                    }
+                    catch (ActivityNotFoundException e) {
+                        Toast.makeText(mContext, "请安装高德地图",Toast.LENGTH_SHORT).show();
+                    }
+
 //                    Intent intent = new Intent();
 //                    intent.setAction(Intent.ACTION_VIEW);
 //                    intent.addCategory(Intent.CATEGORY_DEFAULT);
