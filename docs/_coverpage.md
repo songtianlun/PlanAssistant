@@ -1,4 +1,3 @@
-
 <img src="https://i.loli.net/2019/05/26/5cea9bdf9020a96716.png" width = "150" height = "150" div align=center />
 
 # Plan-Assistant <small>1.1.1</small>
@@ -16,4 +15,4 @@
 - Data by LeanCloud / 对象数据库
 
 [Download](http://firim.frytea.com/xm19)
-[Get Started](Quick-Start.md)
+[Docs](https://www.yuque.com/songtianlun/personalassistant)
