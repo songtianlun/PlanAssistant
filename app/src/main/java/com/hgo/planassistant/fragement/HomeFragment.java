@@ -1068,46 +1068,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
             @Override
             public void done(AVObject object, AVException e) {
 
-                Date start = object.getCreatedAt();
-                String income = object.getString("prince");
+                if(object!=null){
+                    Date start = object.getCreatedAt();
+                    String income = object.getString("prince");
 
-                DateFormat dateFormat = new DateFormat();
-                String string_days = dateFormat.daysBetween(start.getTime(),new Date().getTime()) + "天";
-                card_home_bookkeeping_statistics_days.setText(string_days);
+                    DateFormat dateFormat = new DateFormat();
+                    String string_days = dateFormat.daysBetween(start.getTime(),new Date().getTime()) + "天";
+                    card_home_bookkeeping_statistics_days.setText(string_days);
 
-                AVQuery<AVObject> query_pay = new AVQuery<>("Bookkeeping");
-                query_pay.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
-                query_pay.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
-                query_pay.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-                query_pay.whereGreaterThanOrEqualTo("createdAt",start);// 大于当前收入
-                query_pay.whereEqualTo("revenue","支出");
-                query_pay.limit(1000);
-                // 按 createdAt 降序排列
-                query_pay.orderByDescending("createdAt");
-                query_pay.findInBackground(new FindCallback<AVObject>() {
-                    @Override
-                    public void done(List<AVObject> avObjects, AVException avException) {
-                        float sum_pays = 0;
-                        for (AVObject obj: avObjects){
-                            sum_pays += Float.parseFloat(obj.getString("prince"));
+                    AVQuery<AVObject> query_pay = new AVQuery<>("Bookkeeping");
+                    query_pay.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+                    query_pay.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+                    query_pay.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+                    query_pay.whereGreaterThanOrEqualTo("createdAt",start);// 大于当前收入
+                    query_pay.whereEqualTo("revenue","支出");
+                    query_pay.limit(1000);
+                    // 按 createdAt 降序排列
+                    query_pay.orderByDescending("createdAt");
+                    query_pay.findInBackground(new FindCallback<AVObject>() {
+                        @Override
+                        public void done(List<AVObject> avObjects, AVException avException) {
+                            float sum_pays = 0;
+                            for (AVObject obj: avObjects){
+                                sum_pays += Float.parseFloat(obj.getString("prince"));
+                            }
+                            float remaining = Float.parseFloat(income) - sum_pays;
+                            float parent10 = (float) (Float.parseFloat(income) * 0.1);
+                            if(remaining<= parent10){
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("小提醒")
+                                        .setMessage("您的生活账户余额不足10%，请注意！")
+                                        .setPositiveButton(getContext().getString(R.string.dialog_ok), null)
+                                        .show();
+                            }
+
+                            String string_spend = sum_pays+"￥";
+                            String string_remaining = remaining + "￥";
+                            card_home_bookkeeping_statistics_spend.setText(string_spend);
+
+                            card_home_bookkeeping_statistics_remaining.setText(string_remaining);
                         }
-                        float remaining = Float.parseFloat(income) - sum_pays;
-                        float parent10 = (float) (Float.parseFloat(income) * 0.1);
-                        if(remaining<= parent10){
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle("小提醒")
-                                    .setMessage("您的生活账户余额不足10%，请注意！")
-                                    .setPositiveButton(getContext().getString(R.string.dialog_ok), null)
-                                    .show();
-                        }
+                    });
+                }
 
-                        String string_spend = sum_pays+"￥";
-                        String string_remaining = remaining + "￥";
-                        card_home_bookkeeping_statistics_spend.setText(string_spend);
 
-                        card_home_bookkeeping_statistics_remaining.setText(string_remaining);
-                    }
-                });
             }
         });
 
