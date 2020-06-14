@@ -162,5 +162,34 @@ public class DateFormat {
         return results;
     }
 
+    /**
+     * 计算两个时间相差多少天，两个时间 间隔 n * 24 个小时
+     *
+     * @param time1
+     * @param time2
+     * @return
+     */
+    public static int daysBetween(long time1, long time2) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time1);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTimeInMillis(time2);
+        cal2.set(Calendar.HOUR, 0);
+        cal2.set(Calendar.MINUTE, 0);
+        cal2.set(Calendar.SECOND, 0);
+        cal2.set(Calendar.MILLISECOND, 0);
+
+        long between_days = (cal2.getTimeInMillis() - cal.getTimeInMillis()) / (1000 * 3600 * 24);
+        int betweenDays = Math.abs(Integer.parseInt(String.valueOf(between_days)));
+        System.out.println("daysBetween:"+betweenDays);
+        return betweenDays ;
+    }
+
 
 }

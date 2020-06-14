@@ -4,16 +4,16 @@
     android:id="@+id/card_home_liveline"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/dimen_common"
-    android:layout_marginTop="@dimen/dimen_common_small"
-    android:layout_marginEnd="@dimen/dimen_common"
-    android:layout_marginBottom="@dimen/dimen_common_small"
+    android:layout_marginStart="@dimen/zero_margin_when_normal"
+    android:layout_marginTop="@dimen/zero_margin_when_normal"
+    android:layout_marginEnd="@dimen/zero_margin_when_normal"
+    android:layout_marginBottom="@dimen/zero_margin_when_normal"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     android:outlineAmbientShadowColor="@color/black"
     app:cardUseCompatPadding="true"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="10dp">
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"

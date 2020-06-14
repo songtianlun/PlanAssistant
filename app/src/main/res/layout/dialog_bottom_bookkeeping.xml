@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/google_assistant_background"
+    android:paddingStart="@dimen/zero_margin_when_normal"
+    android:paddingEnd="@dimen/zero_margin_when_normal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/dialog_bottom_bookkeeping_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_margin="@dimen/dimen_common"
+            android:text="@string/dialog_bottom_bookkeeping_title"
+            android:scaleType="centerCrop"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/edit_dialog_bottom_bookkeeping_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:layout_below="@id/dialog_bottom_bookkeeping_title"
+            android:layout_marginTop="@dimen/dimen_common">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_bottom_bookkeeping_name_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dialog_bottom_bookkeeping_name_title"
+                android:maxLength="20"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:id="@+id/dialog_bottom_bookkeeping_prince_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:layout_below="@id/edit_dialog_bottom_bookkeeping_title_layout"
+            android:layout_marginTop="@dimen/dimen_common">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_bottom_bookkeeping_prince"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dialog_bottom_bookkeeping_prince"
+                android:maxLength="20"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/dialog_bottom_bookkeeping_revenue_title"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_common"
+            android:layout_marginLeft="@dimen/dimen_common"
+            android:layout_marginTop="@dimen/dimen_common"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/dialog_bottom_bookkeeping_prince_layout"
+            android:text="@string/dialog_bottom_bookkeeping_revenue" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/dialog_bottom_bookkeeping_revenue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginTop="32dp"
+            android:layout_below="@id/dialog_bottom_bookkeeping_prince_layout"
+            android:layout_toRightOf="@+id/dialog_bottom_bookkeeping_revenue_title"
+            android:entries="@array/spinner_bookkeeping_revenue" />
+
+        <TextView
+            android:id="@+id/dialog_bottom_bookkeeping_type_title"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_common"
+            android:layout_marginLeft="@dimen/dimen_common"
+            android:layout_marginTop="@dimen/dimen_common"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/dialog_bottom_bookkeeping_revenue_title"
+            android:text="@string/dialog_bottom_bookkeeping_type" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/dialog_bottom_bookkeeping_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginTop="32dp"
+            android:layout_below="@id/dialog_bottom_bookkeeping_revenue_title"
+            android:layout_toRightOf="@+id/dialog_bottom_bookkeeping_type_title"
+            android:entries="@array/spinner_bookkeeping_type" />
+
+
+        <TextView
+            android:id="@+id/dialog_bottom_bookkeeping_description_title"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/text_common"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginTop="@dimen/dimen_common"
+            android:text="@string/dialog_bottom_bookkeeping_description_title"
+            android:layout_below="@id/dialog_bottom_bookkeeping_type_title" />
+        <EditText
+            android:id="@+id/dialog_bottom_bookkeeping_description"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/text_multiline_small"
+            android:hint="@string/dialog_bottom_bookkeeping_description_hint"
+            android:inputType="textMultiLine"
+            android:gravity="left|top"
+            android:layout_marginStart="@dimen/dimen_common"
+            android:layout_marginTop="@dimen/dimen_common"
+            android:layout_marginEnd="@dimen/dimen_common"
+            android:layout_below="@id/dialog_bottom_bookkeeping_type_title"
+            android:layout_toRightOf="@+id/dialog_bottom_bookkeeping_description_title"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_bottom_bookkeeping_ok"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_bottom_bookkeeping_description"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimen_common_very_small"
+            android:layout_marginBottom="@dimen/dimen_common_very_small"
+            android:text="@string/dialog_ok" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_bottom_bookkeeping_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialog_bottom_bookkeeping_description"
+            android:layout_marginEnd="@dimen/dimen_common_very_small"
+            android:layout_marginBottom="@dimen/dimen_common_very_small"
+            android:layout_toStartOf="@+id/btn_dialog_bottom_bookkeeping_ok"
+            android:text="@string/dialog_cancel" />
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -20,6 +20,8 @@
 
         <include layout="@layout/card_home_suggest_task"/>
 
+        <include layout="@layout/card_home_bookkeeping_statistics"/>
+
         <include layout="@layout/card_home_step_counter" />
 
         <include layout="@layout/card_home_map" />

@@ -91,6 +91,15 @@
     <string name="card_home_task_statistics_undo">***</string>
     <string name="card_home_task_statistics_undo_title">总待完成</string>
 
+    <!--card_home_bookkeeping_statistics-->
+    <string name="card_home_bookkeeping_statistics_title">记账本</string>
+    <string name="card_home_bookkeeping_statistics_spend">***</string>
+    <string name="card_home_bookkeeping_statistics_spend_title">花费</string>
+    <string name="card_home_bookkeeping_statistics_remaining">***</string>
+    <string name="card_home_bookkeeping_statistics_remaining_title">余额</string>
+    <string name="card_home_bookkeeping_statistics_days">***</string>
+    <string name="card_home_bookkeeping_statistics_days_title">已用时间</string>
+
     <!--card_home_task_counter_statistics_title-->
     <string name="card_home_task_counter_statistics_title">今日百日计数器完成状态</string>
     <string name="card_home_plan_counter_statistics_today">00/100</string>
@@ -254,6 +263,7 @@
     <string name="nav_menu_step_counter">计步器</string>
     <string name="nav_menu_plan">规划事件</string>
     <string name="nav_menu_task">日程管理</string>
+    <string name="nav_menu_bookkeeping">记账本</string>
     <string name="nav_menu_indoor">三维支持</string>
     <string name="nav_menu_plan_counter">百日计划</string>
     <string name="nav_menu_map_check">位置收藏</string>
@@ -355,6 +365,10 @@
     <string name="fab_activity_map_check_add">新增位置</string>
     <string name="dialog_button_map_check_title">收藏位置</string>
 
+    <!--activity_bookkeeping-->
+    <string name="title_activity_bookkeeping">记账本</string>
+    <string name="fab_activity_bookkeeping_add">新增支出</string>
+    
 
     <!--card_map_check_map-->
     <string name="card_map_check_map_title">签到汇总</string>
@@ -412,6 +426,16 @@
     <string name="dialog_bottom_task_end_time_title">结束时间</string>
     <string name="dialog_bottom_task_remind_title">事件提醒</string>
     <string name="dialog_bottom_task_cycle_title">事件循环</string>
+
+    <!-- dialog_bottom_bookkeeping-->
+    <string name="dialog_bottom_bookkeeping_title">新增账目</string>
+    <string name="dialog_bottom_bookkeeping_name_title">账目名称</string>
+    <string name="dialog_bottom_bookkeeping_prince">金额</string>
+    <string name="dialog_bottom_bookkeeping_revenue">收支类型</string>
+    <string name="dialog_bottom_bookkeeping_type">支出类型</string>
+    <string name="dialog_bottom_bookkeeping_description_title">账目描述</string>
+    <string name="dialog_bottom_bookkeeping_description_hint">备注</string>
+
 
     <!-- activity_task_add-->
     <string name="activity_task_add_title">新增日程</string>

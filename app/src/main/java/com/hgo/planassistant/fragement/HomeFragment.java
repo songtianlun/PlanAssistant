@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -84,6 +85,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.activity.BookKeepingActivity;
 import com.hgo.planassistant.activity.MainActivity;
 import com.hgo.planassistant.activity.PlanCounterActivity;
 import com.hgo.planassistant.activity.PlanCounterDetailActivity;
@@ -93,6 +95,7 @@ import com.hgo.planassistant.activity.TrackActivity;
 import com.hgo.planassistant.adapter.TaskRecyclerViewAdapter;
 import com.hgo.planassistant.custom.MyMarkerView;
 import com.hgo.planassistant.tools.DateFormat;
+import com.orient.me.widget.rv.adapter.FirstItemCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,6 +122,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private com.google.android.material.card.MaterialCardView card_home_suggest_task;
     private com.google.android.material.card.MaterialCardView card_home_task_statistics;
     private com.google.android.material.card.MaterialCardView card_home_task_counter_statistics;
+    private com.google.android.material.card.MaterialCardView card_home_bookkeeping_statistics;
     private TextView card_home_suggest_task_textview;
 //    private TextView tv_card_home_location_station,tv_card_home_location_date;
 //    private TextView card_home_location_station_location,card_home_location_data;
@@ -132,6 +136,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
     private TextView card_home_task_statistics_undo;
     private TextView card_home_task_statistics_do;
     private TextView card_home_plan_counter_statistics_today;
+
+    private TextView card_home_bookkeeping_statistics_spend;
+    private TextView card_home_bookkeeping_statistics_remaining;
+    private TextView card_home_bookkeeping_statistics_days;
 
     private PieChart DayPieChart;
 
@@ -160,6 +168,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         card_home_task_statistics_do = nestedScrollView.findViewById(R.id.card_home_task_statistics_do);
         card_home_task_statistics_undo = nestedScrollView.findViewById(R.id.card_home_task_statistics_undo);
         card_home_task_counter_statistics = nestedScrollView.findViewById(R.id.card_home_task_counter_statistics);
+
+        card_home_bookkeeping_statistics = nestedScrollView.findViewById(R.id.card_home_bookkeeping_statistics);
+        card_home_bookkeeping_statistics_spend = nestedScrollView.findViewById(R.id.card_home_bookkeeping_statistics_spend);
+        card_home_bookkeeping_statistics_remaining = nestedScrollView.findViewById(R.id.card_home_bookkeeping_statistics_remaining);
+        card_home_bookkeeping_statistics_days = nestedScrollView.findViewById(R.id.card_home_bookkeeping_statistics_days);
 
 //        tv_card_home_location_station = nestedScrollView.findViewById(R.id.card_home_location_station);
 //        tv_card_home_location_date = nestedScrollView.findViewById(R.id.tv_card_home_location_date);
@@ -192,6 +205,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         card_home_suggest_task.setOnClickListener(this);
         card_home_task_statistics.setOnClickListener(this);
         card_home_task_counter_statistics.setOnClickListener(this);
+        card_home_bookkeeping_statistics.setOnClickListener(this);
 
 //        bt_start_location.setOnClickListener(this);
 
@@ -218,6 +232,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         initMap(savedInstanceState);
         initDayPieChart();
         setDayPieChartData();
+        LoadBookkeepingData();
 
     }
 
@@ -239,13 +254,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 break;
             case R.id.card_home_suggest_task:
                 LoadSuggestTask();
+                startActivity(new Intent(getActivity(), TaskActivity.class));
                 break;
             case R.id.card_home_task_statistics:
                 LoadTaskData();
+                startActivity(new Intent(getActivity(), TaskActivity.class));
                 break;
             case R.id.card_home_task_counter_statistics:
                 LoadTaskCounterData();
                 startActivity(new Intent(getActivity(), PlanCounterActivity.class));
+                break;
+            case R.id.card_home_bookkeeping_statistics:
+                LoadBookkeepingData();
+                startActivity(new Intent(getActivity(), BookKeepingActivity.class));
                 break;
 //            case R.id.savetogallary:
 //                chartsavetogallary();
@@ -1025,6 +1046,71 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 });
             }
         });
+    }
+
+    private void LoadBookkeepingData(){
+        // 获取今日打卡记录统计数量作为今日打卡数量
+        // 获取未完成计数器总数作为未完成打卡数量
+
+        List<AVObject> filter = new ArrayList<>();
+        DateFormat dateFormat = new DateFormat();
+        Calendar today = dateFormat.FilterHourAndMinuteAndSecond(Calendar.getInstance());
+
+        AVQuery<AVObject> query_income = new AVQuery<>("Bookkeeping");
+        query_income.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+        query_income.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+        query_income.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+        query_income.whereEqualTo("revenue","收入");
+        query_income.limit(1000);
+        // 按 createdAt 降序排列
+        query_income.orderByDescending("createdAt");
+        query_income.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+
+                Date start = object.getCreatedAt();
+                String income = object.getString("prince");
+
+                DateFormat dateFormat = new DateFormat();
+                String string_days = dateFormat.daysBetween(start.getTime(),new Date().getTime()) + "天";
+                card_home_bookkeeping_statistics_days.setText(string_days);
+
+                AVQuery<AVObject> query_pay = new AVQuery<>("Bookkeeping");
+                query_pay.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
+                query_pay.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+                query_pay.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+                query_pay.whereGreaterThanOrEqualTo("createdAt",start);// 大于当前收入
+                query_pay.whereEqualTo("revenue","支出");
+                query_pay.limit(1000);
+                // 按 createdAt 降序排列
+                query_pay.orderByDescending("createdAt");
+                query_pay.findInBackground(new FindCallback<AVObject>() {
+                    @Override
+                    public void done(List<AVObject> avObjects, AVException avException) {
+                        float sum_pays = 0;
+                        for (AVObject obj: avObjects){
+                            sum_pays += Float.parseFloat(obj.getString("prince"));
+                        }
+                        float remaining = Float.parseFloat(income) - sum_pays;
+                        float parent10 = (float) (Float.parseFloat(income) * 0.1);
+                        if(remaining<= parent10){
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("小提醒")
+                                    .setMessage("您的生活账户余额不足10%，请注意！")
+                                    .setPositiveButton(getContext().getString(R.string.dialog_ok), null)
+                                    .show();
+                        }
+
+                        String string_spend = sum_pays+"￥";
+                        String string_remaining = remaining + "￥";
+                        card_home_bookkeeping_statistics_spend.setText(string_spend);
+
+                        card_home_bookkeeping_statistics_remaining.setText(string_remaining);
+                    }
+                });
+            }
+        });
+
     }
 
 

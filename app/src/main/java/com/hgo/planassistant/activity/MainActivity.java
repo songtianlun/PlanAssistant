@@ -455,6 +455,9 @@ public class MainActivity extends BaseActivity
             case R.id.nav_menu_step_counter:
                 startActivity(new Intent(MainActivity.this, StepCounterActivity.class));
                 break;
+            case R.id.nav_menu_bookkeeping:
+                startActivity(new Intent(MainActivity.this, BookKeepingActivity.class));
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

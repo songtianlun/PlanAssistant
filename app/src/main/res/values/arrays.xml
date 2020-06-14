@@ -133,6 +133,18 @@
         <item>1天之前</item>
     </string-array>
 
+    <string-array name="spinner_bookkeeping_revenue">
+        <item>支出</item>
+        <item>收入</item>
+    </string-array>
+
+    <string-array name="spinner_bookkeeping_type">
+        <item>日常支出</item>
+        <item>学习提升</item>
+        <item>娱乐休闲</item>
+        <item>其他支出</item>
+    </string-array>
+
     <string-array name="spinner_task_cycle">
         <item>不重复</item>
         <item>每天</item>

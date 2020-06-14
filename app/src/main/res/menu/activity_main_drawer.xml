@@ -32,8 +32,14 @@
         <item
             android:id="@+id/nav_menu_task"
             android:title="@string/nav_menu_task"
-            android:icon="@drawable/calendar_check"
-            />
+            android:icon="@drawable/calendar_check" />
+
+        <item
+            android:id="@+id/nav_menu_bookkeeping"
+            android:title="@string/nav_menu_bookkeeping"
+            android:icon="@drawable/currency_usd" />
+
+
 <!--        <item-->
 <!--            android:id="@+id/nav_menu_plan"-->
 <!--            android:icon="@drawable/calendar_text"-->
