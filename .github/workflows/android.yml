@@ -32,6 +32,5 @@ jobs:
       run: fir login ${{ secrets.FIRTOKEN }}
     - run: fir publish app/build/outputs/apk/release/app-release.apk
     - run: curl -X POST ${{ secrets.WeChart_Push_URL }} -H 'content-type:application/json' -d '{ "channelName":"GitHubPlanAssistant","text":"Android程序已成功打包并提交fir.im！" }'
-    
-      
+
   
