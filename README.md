@@ -3,7 +3,7 @@
 
 # Plan-Assistant
 
-[![pipeline status](https://code.frytea.com/songtianlun/PlanAssistant/badges/master/pipeline.svg)](https://code.frytea.com/songtianlun/PlanAssistant/commits/master)
+![Android CI](https://github.com/songtianlun/PlanAssistant/workflows/Android%20CI/badge.svg)
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 ![CRAN/METACRAN](https://img.shields.io/cran/l/devtools.svg?color=green&label=LIcanse&logo=green&logoColor=red)
 [![](https://img.shields.io/badge/作者博客-frytea.com-green.svg)](https://frytea.com)  
