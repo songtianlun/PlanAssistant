@@ -456,7 +456,6 @@ public class DataCaptureService extends Service {
                     Log.d("DataCaptureService","计步器已清零，重设当前步数："+ AddStep);
                     CurrentStep = (int)sensorEvent.values[0];
                 }
-
             }
 
             @Override

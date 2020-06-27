@@ -82,8 +82,6 @@ public class MainActivity extends BaseActivity
     };
     private AlertDialog dialog;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,10 +160,8 @@ public class MainActivity extends BaseActivity
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(pageChangeListener);
 
-
         tv_nickname = (TextView) headview.findViewById(R.id.nav_header_nickname);
         tv_introduction = (TextView) headview.findViewById(R.id.nav_header_introduction);
-
     }
     private void initnavi_view(){
         //检测是否已登录
