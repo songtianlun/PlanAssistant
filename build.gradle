@@ -1,7 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-
     repositories {
 //        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' } // 阿里云公共maven仓库
         maven { url 'https://jitpack.io' }
