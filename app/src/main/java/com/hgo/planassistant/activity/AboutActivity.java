@@ -101,12 +101,12 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         tv_about_version.startAnimation(alphaAnimation);
 
         // 检查更新
-        FirUpdater.getInstance(this)
-                .apiToken(DataSource.fir_im_API_TOKEN)
-                .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
-                .checkVersion();
-
-        Log.i("AboutActivity","Check Update.");
+//        FirUpdater.getInstance(this)
+//                .apiToken(DataSource.fir_im_API_TOKEN)
+//                .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+//                .checkVersion();
+//
+//        Log.i("AboutActivity","Check Update.");
     }
 
     @Override
