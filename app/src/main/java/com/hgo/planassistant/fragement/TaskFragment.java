@@ -14,12 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CountCallback;
-import com.avos.avoscloud.FindCallback;
 import com.google.android.material.card.MaterialCardView;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
@@ -30,6 +24,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -138,20 +138,50 @@ public class TaskFragment extends Fragment implements View.OnClickListener{
         query.limit(MaxQuery);
         query.orderByDescending("task_importance"); // 按重要性降序
         query.addAscendingOrder("start_time"); // 按开始时间升序
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                sumPages = count/MaxQuery + 1;
-                query.findInBackground(new FindCallback<AVObject>() {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                sumPages = integer/MaxQuery + 1;
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.i("TaskFragment","共查询到：" + list.size() + "条数据。");
-                            now_list.addAll(list);
-                            ClassificationTask(list);
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.i("TaskFragment","共查询到：" + avObjects.size() + "条数据。");
+                            now_list.addAll(avObjects);
+                            ClassificationTask(avObjects);
                         }
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }

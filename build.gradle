@@ -10,6 +10,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
+//        classpath 'com.huawei.agconnect:agcp:1.2.1.301'
 //        classpath 'com.baidu.mobstat:mtj-circle-plugin:latest.integration'
 //        classpath 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 //        classpath 'com.baidu.mobstat:mtj-sdk:latest.integration'

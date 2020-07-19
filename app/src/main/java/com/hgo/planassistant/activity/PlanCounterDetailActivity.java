@@ -5,13 +5,6 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,6 +33,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class PlanCounterDetailActivity extends AppCompatActivity {
 
@@ -91,28 +90,35 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
 
         // 方法一
         AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
-        query.getInBackground(ObjectId, new GetCallback<AVObject>() {
+        query.getInBackground(ObjectId).subscribe(new Observer<AVObject>() {
             @Override
-            public void done(AVObject avObject, AVException e) {
-                // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
-                // objectId 为空时不会报错，
-                // 可以通过检验 avObject.getObjectId 方法是否返回空字符串判断其存在性
-                if(e==null){
-                    nowObject = avObject;
-                    initView();
-                }else{
-                    Log.i("PCDetailActivity","error："+ e.toString());
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVObject avObject) {
+                nowObject = avObject;
+                initView();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("PCDetailActivity","error："+ e.toString());
 //                    Toast.makeText(App.getContext(),"error："+ e.toString(),Toast.LENGTH_LONG).show();
-                    new AlertDialog.Builder(pc_detail_activity)
-                            .setMessage("当前计数器不存在,请刷新.")
-                            .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    PlanCounterDetailActivity.this.finish();
-                                }
-                            })
-                            .show();
-                }
+                new AlertDialog.Builder(pc_detail_activity)
+                        .setMessage("当前计数器不存在,请刷新.")
+                        .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PlanCounterDetailActivity.this.finish();
+                            }
+                        })
+                        .show();
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
@@ -240,30 +246,37 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
                     today_log.put("NowCounter",now_counter+1);
                     today_log.put("AimsCounter",aims_counter);
 //                    today_log.saveInBackground();// 保存到服务端
-
-                    today_log.saveInBackground(new SaveCallback() {
+                    today_log.saveInBackground().subscribe(new Observer<AVObject>() {
                         @Override
-                        public void done(AVException e) {
-                            if (e == null) {
-                                //成功
-                                Snackbar.make(v, getString(R.string.succefully), Snackbar.LENGTH_LONG)
-                                        .setAction(getString(R.string.main_snack_bar_action), view -> {
-                                        }).show();
-                                if(now_counter>=(aims_counter-1)){
-                                    nowObject.put("done", true);
-                                    Toast.makeText(App.getContext(), "恭喜您完成该百日计划！", Toast.LENGTH_SHORT).show();
-                                }
-                                nowObject.put("NowCounter",now_counter+1);
-                                nowObject.saveInBackground();
-                                refresh();
+                        public void onSubscribe(Disposable d) {
 
-                            } else {
-                                // 失败的原因可能有多种，常见的是用户名已经存在。
-                                Toast.makeText(App.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNext(AVObject avObject) {
+                            //成功
+                            Snackbar.make(v, getString(R.string.succefully), Snackbar.LENGTH_LONG)
+                                    .setAction(getString(R.string.main_snack_bar_action), view -> {
+                                    }).show();
+                            if(now_counter>=(aims_counter-1)){
+                                nowObject.put("done", true);
+                                Toast.makeText(App.getContext(), "恭喜您完成该百日计划！", Toast.LENGTH_SHORT).show();
                             }
+                            nowObject.put("NowCounter",now_counter+1);
+                            nowObject.saveInBackground();
+                            refresh();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(App.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
                         }
                     });
-
 
                 }else{
                     Toast.makeText(App.getContext(),"今日已记录, 请明天继续",Toast.LENGTH_LONG).show();
@@ -298,11 +311,14 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
     private void refresh(){
 
         AVQuery<AVObject> query = new AVQuery<>("PlanCounter");
-        query.getInBackground(ObjectId, new GetCallback<AVObject>() {
+        query.getInBackground(ObjectId).subscribe(new Observer<AVObject>() {
             @Override
-            public void done(AVObject avObject, AVException e) {
-                // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
-                // objectId 为空时不会报错，
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVObject avObject) {
                 // 可以通过检验 avObject.getObjectId 方法是否返回空字符串判断其存在性
                 nowObject = avObject;
 
@@ -328,13 +344,18 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
                 // 启动查询缓存
                 query_log.whereEqualTo("PCID", ObjectId);
                 query_log.limit(1000);
-                query_log.findInBackground(new FindCallback<AVObject>() {
+                query_log.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        Log.i("PCDetailActivity","共查询到：" + list.size() + "条数据。");
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        Log.i("PCDetailActivity","共查询到：" + avObjects.size() + "条数据。");
 //                        Toast.makeText(App.getContext(),"共查询到：" + list.size() + "条数据。",Toast.LENGTH_LONG).show();
                         String PCDlog = "";
-                        for (AVObject obj: list){
+                        for (AVObject obj: avObjects){
 //                            AVObject point = obj.getAVObject("point");
                             int nowcounter = (int)obj.get("NowCounter");
                             int aimscounter = (int)obj.get("AimsCounter");
@@ -342,8 +363,26 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
                         }
                         tv_card_pc_detail_log_info.setText(PCDlog);
                     }
-                });
 
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
@@ -352,16 +391,27 @@ public class PlanCounterDetailActivity extends AppCompatActivity {
         AVQuery<AVObject> log_query = new AVQuery<>("PlanCounterLog");
         log_query.whereEqualTo("PCID",ObjectId);
         log_query.orderByDescending("createdAt");// 按时间，降序排列
-        log_query.getFirstInBackground(new GetCallback<AVObject>() {
+        log_query.getFirstInBackground().subscribe(new Observer<AVObject>() {
             @Override
-            public void done(AVObject avObject, AVException e) {
-                if (avObject!=null){
-                    Last_Log = avObject;
-                    refresh_finish_button();
-                }else{
-                    Last_Log = null;
-                    refresh_finish_button();
-                }
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVObject avObject) {
+                Last_Log = avObject;
+                refresh_finish_button();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Last_Log = null;
+                refresh_finish_button();
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 

@@ -26,13 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CountCallback;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -50,6 +44,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.upload.QCloudUploader;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class TaskActivity extends BaseActivity implements View.OnClickListener {
 
@@ -199,24 +200,56 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         query.orderByAscending("done"); //按是否完成，升序,先false，后true
         query.addAscendingOrder("start_time"); //按开始时间升序
         query.addDescendingOrder("task_importance"); // 按照重要程序降序
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>=MaxQuery){
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>=MaxQuery){
                     Toast.makeText(App.getContext(), "您的任务总数超过系统限制，仅显示前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
                 }
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                            now_list.addAll(list);
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                            now_list.addAll(avObjects);
                         }
-                        initView(list);
+                        initView(avObjects);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
+
 
         loadTimes = 0;
     }
@@ -463,22 +496,51 @@ public class TaskActivity extends BaseActivity implements View.OnClickListener {
         query.addAscendingOrder("done"); //按是否完成，升序,先false，后true
         query.addAscendingOrder("start_time"); //按开始时间升序
         query.addDescendingOrder("task_importance"); // 按照重要程序降序
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>=MaxQuery){
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>=MaxQuery){
                     Toast.makeText(App.getContext(), "您的任务总数超过系统限制，仅显示前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
                 }
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                        now_list.addAll(list);
-                        filterDataAndLoad(list,type);
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                        now_list.addAll(avObjects);
+                        filterDataAndLoad(avObjects,type);
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }

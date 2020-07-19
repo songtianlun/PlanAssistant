@@ -18,17 +18,10 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlayOptions;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CountCallback;
-import com.avos.avoscloud.FindCallback;
+
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.datamodel.AVObjectsParcelable;
 import com.hgo.planassistant.tools.PathSmoothTool;
 
 import java.util.ArrayList;
@@ -36,6 +29,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class TrackDetailMapActivity extends BaseActivity {
 
@@ -110,28 +110,38 @@ public class TrackDetailMapActivity extends BaseActivity {
         query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>TrackActivity.QueryMaxNum){
-                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>TrackActivity.QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
                 }else{
-                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。", Toast.LENGTH_LONG).show();
-                    now_list = new ArrayList<>(count+1);
-                    int querynum = count/1000 + 1;
+                    Log.i("TrackActivity","共查询到：" + integer + "条数据。");
+                    Toast.makeText(App.getContext(),"共查询到：" + integer + "条数据。", Toast.LENGTH_LONG).show();
+                    now_list = new ArrayList<>(integer+1);
+                    int querynum = integer/1000 + 1;
                     Log.i("TrackActivity","查询次数："+querynum);
                     for(int i=0;i<querynum;i++){
                         Log.i("TrackActivity","第"+i+"次查询");
                         int skip = i*1000;
                         query.skip(skip);
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                             @Override
-                            public void done(List<AVObject> avObjects, AVException avException) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<AVObject> avObjects) {
                                 if(avObjects!=null&&avObjects.size()>0) {
                                     now_list.addAll(avObjects);
                                     Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
-                                    if(now_list.size()==count){
+                                    if(now_list.size()==integer){
                                         // 构建热力图 HeatmapTileProvider
                                         HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
                                         builder.data(GenetateLatLngListFromAvobject(now_list,false)); // 设置热力图绘制的数据
@@ -154,13 +164,32 @@ public class TrackDetailMapActivity extends BaseActivity {
                                     }
                                 }
                             }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
                         });
                     }
                 }
+            }
 
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
 //        query.findInBackground(new FindCallback<AVObject>() {
 //            @Override
 //            public void done(List<AVObject> list, AVException e) {

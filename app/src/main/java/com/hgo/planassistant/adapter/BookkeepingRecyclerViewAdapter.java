@@ -27,12 +27,6 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hgo.planassistant.App;
@@ -42,6 +36,13 @@ import com.hgo.planassistant.tools.MoneyValueFilter;
 
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.DeleteCallback;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class BookkeepingRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
@@ -215,18 +216,25 @@ public class BookkeepingRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 bookkeeping.put("revenue",spinner_revenue.getSelectedItem().toString());
                                 bookkeeping.put("type",spinner_type.getSelectedItem().toString());
 
-                                bookkeeping.saveInBackground(new SaveCallback() {
+                                bookkeeping.saveInBackground().subscribe(new Observer<AVObject>() {
                                     @Override
-                                    public void done(AVException e) {
-                                        if (e == null) {
-                                            //成功
-                                            Toast.makeText(App.getContext(), "修改成功！", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                        } else {
-                                            // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                            Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(AVObject avObject) {
+                                        Toast.makeText(App.getContext(), "修改成功！", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
                                     }
                                 });
 
@@ -246,20 +254,28 @@ public class BookkeepingRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                         @Override
                         public void onClick(View v) {
                             AVObject bookkeeping = AVObject.createWithoutData("Bookkeeping",mItems.get(position).getObjectId());
-                            bookkeeping.deleteInBackground(new DeleteCallback() {
+                            bookkeeping.deleteInBackground().subscribe(new Observer<AVNull>() {
                                 @Override
-                                public void done(AVException e) {
-                                    if (e == null) {
-                                        //成功
-                                        Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                    } else {
-                                        // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                        Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(AVNull avNull) {
+                                    Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
                                 }
                             });
+
                             mBottomSheetDialog.dismiss();
                         }
                     });

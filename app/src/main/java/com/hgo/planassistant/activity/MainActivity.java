@@ -30,9 +30,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.RequestPasswordResetCallback;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -50,6 +48,9 @@ import com.hgo.planassistant.tools.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.RequestPasswordResetCallback;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -384,28 +385,29 @@ public class MainActivity extends BaseActivity
                 MainActivity.this.finish();
                 break;
             case R.id.nav_changepassword:
-                AVUser.requestPasswordResetInBackground(AVUser.getCurrentUser().getEmail(), new RequestPasswordResetCallback() {
-                    @Override
-                    public void done(AVException e) {
-                        if (e == null) {
-//                            Toast.makeText(MainActivity.this, "重置密码邮箱已发送，请检查您的邮箱！", Toast.LENGTH_SHORT).show();
-//                            Snackbar.make(getWindow().getDecorView().findViewById(R.id.nav_changepassword), getString(R.string.main_snack_bar), Snackbar.LENGTH_LONG)
-//                                    .setAction(getString(R.string.main_snack_bar_action), view -> {
-//                                    }).show();
-                            new AlertDialog.Builder(mainactivity_context)
-                                    .setMessage("重置密码邮件已发送至您的邮箱，请注意查收！")
-                                    .setPositiveButton(getString(R.string.dialog_ok), null)
-                                    .show();
-                        } else {
-                            e.printStackTrace();
-                            Log.i("MainActivity",e.toString());
-                            new AlertDialog.Builder(mainactivity_context)
-                                    .setMessage("出现错误，错误原因为: "+ e.toString())
-                                    .setPositiveButton(getString(R.string.dialog_ok), null)
-                                    .show();
-                        }
-                    }
-                });
+                AVUser.requestPasswordResetInBackground(AVUser.getCurrentUser().getEmail()).blockingSubscribe();
+//                AVUser.requestPasswordResetInBackground(AVUser.getCurrentUser().getEmail(), new RequestPasswordResetCallback() {
+//                    @Override
+//                    public void done(AVException e) {
+//                        if (e == null) {
+////                            Toast.makeText(MainActivity.this, "重置密码邮箱已发送，请检查您的邮箱！", Toast.LENGTH_SHORT).show();
+////                            Snackbar.make(getWindow().getDecorView().findViewById(R.id.nav_changepassword), getString(R.string.main_snack_bar), Snackbar.LENGTH_LONG)
+////                                    .setAction(getString(R.string.main_snack_bar_action), view -> {
+////                                    }).show();
+//                            new AlertDialog.Builder(mainactivity_context)
+//                                    .setMessage("重置密码邮件已发送至您的邮箱，请注意查收！")
+//                                    .setPositiveButton(getString(R.string.dialog_ok), null)
+//                                    .show();
+//                        } else {
+//                            e.printStackTrace();
+//                            Log.i("MainActivity",e.toString());
+//                            new AlertDialog.Builder(mainactivity_context)
+//                                    .setMessage("出现错误，错误原因为: "+ e.toString())
+//                                    .setPositiveButton(getString(R.string.dialog_ok), null)
+//                                    .show();
+//                        }
+//                    }
+//                });
                 break;
             case R.id.nav_info:
                 startActivity(new Intent(MainActivity.this, PersonInfoActivity.class));

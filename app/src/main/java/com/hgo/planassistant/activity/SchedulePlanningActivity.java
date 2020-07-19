@@ -26,8 +26,6 @@ import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.timeline.RecyclerAdapter;
@@ -42,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.leancloud.AVObject;
+import cn.leancloud.types.AVGeoPoint;
 
 import static com.hgo.planassistant.App.getContext;
 

@@ -17,11 +17,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSON;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.baidu.aip.nlp.AipNlp;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.DetailPMapActivity;
@@ -35,6 +30,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MoodWhisperRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
@@ -99,10 +99,25 @@ public class MoodWhisperRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     AVObject MoodWhisper = AVObject.createWithoutData("MoodWhisper",mItems.get(position).getObjectId());
-                                    MoodWhisper.deleteInBackground(new DeleteCallback() {
+                                    MoodWhisper.deleteInBackground().subscribe(new Observer<AVNull>() {
                                         @Override
-                                        public void done(AVException e) {
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(AVNull avNull) {
                                             Toast.makeText(mContext, "删除成功！（下拉刷新）",Toast.LENGTH_LONG).show();
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
                                         }
                                     });
                                 }
@@ -163,10 +178,24 @@ public class MoodWhisperRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 MoodWhisper.put("negative_prob",emotionalTrendResultsItems.getNegative_prob());
                 MoodWhisper.put("confidence",emotionalTrendResultsItems.getConfidence());
                 MoodWhisper.put("sentiment",emotionalTrendResultsItems.getSentiment());
-                MoodWhisper.saveInBackground(new SaveCallback() {
+                MoodWhisper.saveInBackground().subscribe(new Observer<AVObject>() {
                     @Override
-                    public void done(AVException e) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(AVObject avObject) {
                         Toast.makeText(mContext, "更新成功！（下拉刷新查看）",Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });

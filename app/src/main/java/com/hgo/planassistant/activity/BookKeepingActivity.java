@@ -22,12 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -44,6 +38,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVException;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.SaveCallback;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class BookKeepingActivity extends BaseActivity {
 
@@ -134,7 +136,7 @@ public class BookKeepingActivity extends BaseActivity {
                         }else{
                             //存到云
                             AVObject bookkeeping = new AVObject("Bookkeeping");
-                            bookkeeping.put("UserId",AVUser.getCurrentUser().getObjectId());
+                            bookkeeping.put("UserId", AVUser.getCurrentUser().getObjectId());
                             bookkeeping.put("time",new Date());
                             bookkeeping.put("prince",edit_prince.getText());
                             bookkeeping.put("title",edit_title.getText());
@@ -142,19 +144,26 @@ public class BookKeepingActivity extends BaseActivity {
                             bookkeeping.put("revenue",spinner_revenue.getSelectedItem().toString());
                             bookkeeping.put("type",spinner_type.getSelectedItem().toString());
 
-                            bookkeeping.saveInBackground(new SaveCallback() {
+                            bookkeeping.saveInBackground().subscribe(new Observer<AVObject>() {
                                 @Override
-                                public void done(AVException e) {
-                                    if (e == null) {
-                                        //成功
-                                        Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
-                                        loadMoreData();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                    } else {
-                                        // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                        Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(AVObject avObject) {
+                                    Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
+                                    loadMoreData();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
                                 }
                             });
 
@@ -239,14 +248,29 @@ public class BookKeepingActivity extends BaseActivity {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(1000);
         query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null){
-                    Log.d("MyMapActivity","共查询到：" + list.size() + "条数据。");
-                    location_list.addAll(list);
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                if(avObjects!=null){
+                    Log.d("MyMapActivity","共查询到：" + avObjects.size() + "条数据。");
+                    location_list.addAll(avObjects);
                 }
                 initView();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 //        data = new ArrayList<>();
@@ -267,17 +291,31 @@ public class BookKeepingActivity extends BaseActivity {
                 query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                 query.limit(1000);
                 query.orderByDescending("createdAt");// 按时间，降序排列
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                            location_list.addAll(list);
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                            location_list.addAll(avObjects);
                             adapter=new BookkeepingRecyclerViewAdapter(location_list,context);
                             mRecyclerView.setAdapter(adapter);
                         }
-
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
             }

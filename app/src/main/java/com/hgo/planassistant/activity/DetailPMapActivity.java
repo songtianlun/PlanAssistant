@@ -19,14 +19,7 @@ import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlayOptions;
 import com.amap.api.trace.TraceStatusListener;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CountCallback;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
+
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
@@ -34,6 +27,13 @@ import com.hgo.planassistant.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class DetailPMapActivity extends BaseActivity {
 
@@ -73,17 +73,27 @@ public class DetailPMapActivity extends BaseActivity {
         //通过传入的objetid，从云端获取avobject
         String mapsObjectId = getIntent().getStringExtra("pmapObjectId");
         AVObject avObject = AVObject.createWithoutData("personalmap", mapsObjectId);
-        avObject.fetchInBackground(new GetCallback<AVObject>() {
+        avObject.fetchInBackground().subscribe(new Observer<AVObject>() {
             @Override
-            public void done(AVObject avObject, AVException e) {
-//                String mapname = avObject.getString("title");// 读取 title
-                if (avObject != null) {
-                    mapObject = avObject;
-                    initView(avObject);
-                    loadMap(avObject);
-                }else{
-                    Toast.makeText(nowActContext,"拉取数据失败!",Toast.LENGTH_SHORT).show();
-                }
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVObject avObject) {
+                mapObject = avObject;
+                initView(avObject);
+                loadMap(avObject);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(nowActContext,"拉取数据失败!",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 
@@ -118,9 +128,14 @@ public class DetailPMapActivity extends BaseActivity {
             case "track_map":
                 AVQuery<AVObject> query = new AVQuery<>("PersonalMap_track");
                 query.whereEqualTo("MapId", avObject.getObjectId());//地图id
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> avObjects, AVException avException) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
                         if(avObjects.size()>0){
                             avObjects.get(0);
                             AVQuery<AVObject> query_track = new AVQuery<>("trajectory");
@@ -133,23 +148,33 @@ public class DetailPMapActivity extends BaseActivity {
                             query.whereLessThan("precision",avObjects.get(0).getInt("track_precision"));
                             query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
                             query.limit(1000);
-                            query.countInBackground(new CountCallback() {
+                            query.countInBackground().subscribe(new Observer<Integer>() {
                                 @Override
-                                public void done(int count, AVException e) {
-                                    if(count> TrackActivity.QueryMaxNum){
-                                        Toast.makeText(App.getContext(),"查询数据过大无法获取！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(Integer integer) {
+                                    if(integer> TrackActivity.QueryMaxNum){
+                                        Toast.makeText(App.getContext(),"查询数据过大无法获取！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
                                     }else{
-                                        Log.i("TrackActivity","共查询到：" + count + "条数据。");
-                                        Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
-                                        int querynum = count/1000 + 1;
+                                        Log.i("TrackActivity","共查询到：" + integer + "条数据。");
+                                        Toast.makeText(App.getContext(),"共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
+                                        int querynum = integer/1000 + 1;
                                         Log.i("TrackActivity","查询次数："+querynum);
                                         for(int i=0;i<querynum;i++){
                                             Log.i("TrackActivity","第"+i+"次查询");
                                             int skip = i*1000;
                                             query.skip(skip);
-                                            query.findInBackground(new FindCallback<AVObject>() {
+                                            query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                                                 @Override
-                                                public void done(List<AVObject> avObjects, AVException avException) {
+                                                public void onSubscribe(Disposable d) {
+
+                                                }
+
+                                                @Override
+                                                public void onNext(List<AVObject> avObjects) {
                                                     if(avObjects!=null&&avObjects.size()>0) {
                                                         Log.i("TrackActivity","共查询到：" + avObjects.size() + "条数据。");
                                                         Toast.makeText(App.getContext(),"共查询到：" + avObjects.size() + "条数据。",Toast.LENGTH_LONG).show();
@@ -173,13 +198,42 @@ public class DetailPMapActivity extends BaseActivity {
                                                                 addAll(Arrays.asList(GenetateLatLngArratFromAvobject(avObjects))).width(10).color(Color.argb(255, 1, 1, 1)));
                                                     }
                                                 }
+
+                                                @Override
+                                                public void onError(Throwable e) {
+
+                                                }
+
+                                                @Override
+                                                public void onComplete() {
+
+                                                }
                                             });
                                         }
                                     }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
 
                                 }
                             });
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
             default:

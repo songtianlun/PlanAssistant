@@ -20,10 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.DeleteCallback;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.DetailPMapActivity;
@@ -31,6 +28,12 @@ import com.hgo.planassistant.activity.DetailPMapActivity;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.types.AVGeoPoint;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MapCheckRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
@@ -163,10 +166,25 @@ public class MapCheckRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     AVObject del = AVObject.createWithoutData("MapCheck",mItems.get(position).getObjectId());
-                                    del.deleteInBackground(new DeleteCallback() {
+                                    del.deleteInBackground().subscribe(new Observer<AVNull>() {
                                         @Override
-                                        public void done(AVException e) {
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(AVNull avNull) {
                                             Toast.makeText(mContext,"删除成功，下拉刷新查看！",Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
                                         }
                                     });
                                 }

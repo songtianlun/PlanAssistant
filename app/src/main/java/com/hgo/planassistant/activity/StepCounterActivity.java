@@ -9,11 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -42,6 +37,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener,
         OnChartValueSelectedListener {
@@ -147,9 +148,14 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
         quaretime.add(Calendar.HOUR_OF_DAY,24);
         Log.i("StepCounterActivity","增加24小时后时间："+dateFormat.GetDetailDescription(quaretime));
         query.whereLessThan("time",quaretime.getTime());
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 if(avObjects!=null){
                     int sumStep = 0;
                     Log.i("StepCounterActivity","查询到数据总数："+avObjects.size());
@@ -221,7 +227,18 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
                     DayPieChart.invalidate();
                 }
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
 
 
     }
@@ -350,9 +367,14 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.whereGreaterThan("time",start_time);
         query.whereLessThan("time",end_time);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 if(avObjects!=null){
                     Log.d("StepCounterActivity","多日步数趋势共查到数据条数:"+avObjects.size());
                     int[] StepSum = new int[SumDay+1]; //初始化为默认值,int型为0
@@ -402,9 +424,19 @@ public class StepCounterActivity extends BaseActivity implements SeekBar.OnSeekB
 
                     SevenDayBarChart.invalidate();
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
     }
 
     private void setData(int count, float range) {

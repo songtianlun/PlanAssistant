@@ -14,14 +14,15 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.SignUpCallback;
 import com.hgo.planassistant.R;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener{
 
@@ -153,21 +154,30 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             user.put("sex","保密");
 
             user.put("nickname",username);
-
-            user.signUpInBackground(new SignUpCallback() {
+            user.signUpInBackground().subscribe(new Observer<AVUser>() {
                 @Override
-                public void done(AVException e) {
-                    if (e == null) {
-                        // 注册成功，把用户对象赋值给当前用户 AVUser.getCurrentUser()
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        RegisterActivity.this.finish();
-                    } else {
-                        // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                        Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(AVUser avUser) {
+                    // 注册成功，把用户对象赋值给当前用户 AVUser.getCurrentUser()
+                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    RegisterActivity.this.finish();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onComplete() {
+
                 }
             });
+
         }
     }
     private boolean isPasswordValid(String password) {

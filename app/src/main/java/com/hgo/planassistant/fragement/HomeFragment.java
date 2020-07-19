@@ -48,14 +48,7 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlayOptions;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CountCallback;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
+
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -103,6 +96,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static android.content.Context.MODE_MULTI_PROCESS;
 import static android.content.Context.MODE_PRIVATE;
@@ -368,9 +368,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         quaretime.add(Calendar.HOUR_OF_DAY,24);
         Log.i("StepCounterActivity","增加24小时后时间："+dateFormat.GetDetailDescription(quaretime));
         query.whereLessThan("time",quaretime.getTime());
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 int sumStep = 0;
                 if(avObjects!=null){
                     Log.i("StepCounterActivity","查询到数据总数："+avObjects.size());
@@ -442,6 +447,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                 }
 
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
 
 
@@ -486,28 +501,38 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>TrackActivity.QueryMaxNum){
-                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>TrackActivity.QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
                 }else{
-                    Log.i("HomeFragment","共查询到：" + count + "条数据。");
+                    Log.i("HomeFragment","共查询到：" + integer + "条数据。");
 //                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
-                    track_now_list = new ArrayList<>(count+1);
-                    int querynum = count/1000 + 1;
+                    track_now_list = new ArrayList<>(integer+1);
+                    int querynum = integer/1000 + 1;
                     Log.i("TrackActivity","查询次数："+querynum);
                     for(int i=0;i<querynum;i++){
                         Log.i("TrackActivity","第"+i+"次查询");
                         int skip = i*1000;
                         query.skip(skip);
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                             @Override
-                            public void done(List<AVObject> avObjects, AVException avException) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<AVObject> avObjects) {
                                 if(avObjects!=null&&avObjects.size()>0) {
                                     track_now_list.addAll(avObjects);
                                     Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+track_now_list.size());
-                                    if(track_now_list.size()==count){
+                                    if(track_now_list.size()==integer){
                                         // 构建热力图 HeatmapTileProvider
                                         HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
                                         builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(track_now_list))); // 设置热力图绘制的数据
@@ -530,11 +555,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                                     }
                                 }
                             }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
                         });
                     }
                 }
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
     }
 
 //    private void Initchart(NestedScrollView nestedScrollView){
@@ -839,17 +885,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query.limit(10); // 根据重要性和截止时间筛选前十的事件
         query.orderByDescending("task_importance"); // 按重要性降序
         query.addAscendingOrder("end_time"); // 按结束时间升序
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                query.findInBackground(new FindCallback<AVObject>() {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.i("HomeFragment","共查询到：" + list.size() + "条数据。");
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.i("HomeFragment","共查询到：" + avObjects.size() + "条数据。");
                             String string = new String();
-                            for(int j=0;j<list.size();j++){
-                                string += ("<p>" + " &#8226; " +  list.get(j).getString("task_name") + "</p>");
+                            for(int j=0;j<avObjects.size();j++){
+                                string += ("<p>" + " &#8226; " +  avObjects.get(j).getString("task_name") + "</p>");
                             }
                             // Html.fromHtml可以将Html代码转换成对应的text
                             card_home_suggest_task_textview.setText(Html.fromHtml(string));
@@ -857,9 +913,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                             card_home_suggest_task_textview.setText("当前无日程，请根据需要添加。");
                         }
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
     }
 
     @Override
@@ -910,25 +987,54 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //        query.orderByAscending("done"); //按是否完成，升序,先false，后true
 //        query.addDescendingOrder("task_importance"); // 按照重要程序降序
 //        query.addAscendingOrder("start_time"); //按开始时间升序
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>=TaskActivity.MaxQuery){
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>=TaskActivity.MaxQuery){
                     Toast.makeText(App.getContext(), "您的任务总数超过系统限制，仅统计前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
                 }
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.d("HomeFragment","共查询到：" + list.size() + "条数据。");
-                            task_now_list.addAll(list);
-                            card_home_task_statistics_today.setText(StatisticsTypeTask(list,"today_undo") + "");
-                            card_home_task_statistics_do.setText(StatisticsTypeTask(list,"today_do") + "");
-                            card_home_task_statistics_undo.setText(StatisticsTypeTask(list,"all_undo") + "");
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.d("HomeFragment","共查询到：" + avObjects.size() + "条数据。");
+                            task_now_list.addAll(avObjects);
+                            card_home_task_statistics_today.setText(StatisticsTypeTask(avObjects,"today_undo") + "");
+                            card_home_task_statistics_do.setText(StatisticsTypeTask(avObjects,"today_do") + "");
+                            card_home_task_statistics_undo.setText(StatisticsTypeTask(avObjects,"all_undo") + "");
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }
@@ -1005,27 +1111,52 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.whereNotEqualTo("done",true); // 计划未完成
         query.limit(TaskActivity.MaxQuery);
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                TaskCounterCountSum = count;
-                if(count>=TaskActivity.MaxQuery){
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                TaskCounterCountSum = integer;
+                if(integer>=TaskActivity.MaxQuery){
                     Toast.makeText(App.getContext(), "您的计数器总数超过系统限制，仅统计前1000条，如需查询所有数据请联系软件作者！", Toast.LENGTH_SHORT).show();
                 }
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.d("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.d("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
                             AVQuery<AVObject> query = new AVQuery<>("PlanCounterLog");
                             query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);// 启动查询缓存
                             query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
                             query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                             query.whereGreaterThanOrEqualTo("createdAt",today.getTime());
-                            query.countInBackground(new CountCallback() {
+                            query.countInBackground().subscribe(new Observer<Integer>() {
                                 @Override
-                                public void done(int count, AVException e) {
-                                    card_home_plan_counter_statistics_today.setText(count + " / " + TaskCounterCountSum);
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(Integer integer) {
+                                    card_home_plan_counter_statistics_today.setText(integer + " / " + TaskCounterCountSum);
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
                                 }
                             });
 //                            query.findInBackground(new FindCallback<AVObject>() {
@@ -1041,9 +1172,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 //                                }
 //                            });
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }
@@ -1064,13 +1214,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
         query_income.limit(1000);
         // 按 createdAt 降序排列
         query_income.orderByDescending("createdAt");
-        query_income.getFirstInBackground(new GetCallback<AVObject>() {
+        query_income.getFirstInBackground().subscribe(new Observer<AVObject>() {
             @Override
-            public void done(AVObject object, AVException e) {
+            public void onSubscribe(Disposable d) {
 
-                if(object!=null){
-                    Date start = object.getCreatedAt();
-                    String income = object.getString("prince");
+            }
+
+            @Override
+            public void onNext(AVObject avObject) {
+                if(avObject!=null){
+                    Date start = avObject.getCreatedAt();
+                    String income = avObject.getString("prince");
 
                     DateFormat dateFormat = new DateFormat();
                     String string_days = dateFormat.daysBetween(start.getTime(),new Date().getTime()) + "天";
@@ -1085,9 +1239,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
                     query_pay.limit(1000);
                     // 按 createdAt 降序排列
                     query_pay.orderByDescending("createdAt");
-                    query_pay.findInBackground(new FindCallback<AVObject>() {
+                    query_pay.findInBackground().subscribe(new Observer<List<AVObject>>() {
                         @Override
-                        public void done(List<AVObject> avObjects, AVException avException) {
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<AVObject> avObjects) {
                             float sum_pays = 0;
                             for (AVObject obj: avObjects){
                                 sum_pays += Float.parseFloat(obj.getString("prince"));
@@ -1108,9 +1267,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener, View
 
                             card_home_bookkeeping_statistics_remaining.setText(string_remaining);
                         }
-                    });
-                }
 
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });

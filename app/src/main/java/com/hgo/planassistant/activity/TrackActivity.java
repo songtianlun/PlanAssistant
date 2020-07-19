@@ -26,14 +26,7 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlayOptions;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CountCallback;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
+
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -45,7 +38,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.datamodel.AVObjectsParcelable;
 import com.hgo.planassistant.tools.PathSmoothTool;
 
 
@@ -57,6 +49,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 
 public class TrackActivity extends BaseActivity implements View.OnClickListener{
@@ -201,28 +200,38 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>QueryMaxNum){
-                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
                 }else{
-                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
-                    now_list = new ArrayList<>(count+1);
-                    int querynum = count/1000 + 1;
+                    Log.i("TrackActivity","共查询到：" + integer + "条数据。");
+                    Toast.makeText(App.getContext(),"共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
+                    now_list = new ArrayList<>(integer+1);
+                    int querynum = integer/1000 + 1;
                     Log.i("TrackActivity","查询次数："+querynum);
                     for(int i=0;i<querynum;i++){
                         Log.i("TrackActivity","第"+i+"次查询");
                         int skip = i*1000;
                         query.skip(skip);
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                             @Override
-                            public void done(List<AVObject> avObjects, AVException avException) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<AVObject> avObjects) {
                                 if(avObjects!=null&&avObjects.size()>0) {
                                     now_list.addAll(avObjects);
                                     Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
-                                    if(now_list.size()==count){
+                                    if(now_list.size()==integer){
                                         initChart(now_list);
                                         List<LatLng> latLngList = GenetateLatLngListFromAvobject(now_list,false);
                                         List<LatLng> latLngList_PathSmooth = GenetateLatLngListFromAvobject(now_list,true);
@@ -249,13 +258,33 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                     }
                                 }
                             }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
                         });
+
                     }
                 }
+            }
 
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
 //
 //        query.findInBackground(new FindCallback<AVObject>() {
 //            @Override
@@ -605,28 +634,38 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         query.whereLessThan("precision",PrecisionLessThen);
         query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
         query.limit(1000);
-        query.countInBackground(new CountCallback() {
+        query.countInBackground().subscribe(new Observer<Integer>() {
             @Override
-            public void done(int count, AVException e) {
-                if(count>QueryMaxNum){
-                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if(integer>QueryMaxNum){
+                    Toast.makeText(App.getContext(),"查询数据过大无法获取，请检查起止时间！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
                 }else{
-                    Log.i("TrackActivity","共查询到：" + count + "条数据。");
-                    Toast.makeText(App.getContext(),"共查询到：" + count + "条数据。",Toast.LENGTH_LONG).show();
-                    now_list = new ArrayList<>(count+1);
-                    int querynum = count/1000 + 1;
+                    Log.i("TrackActivity","共查询到：" + integer + "条数据。");
+                    Toast.makeText(App.getContext(),"共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
+                    now_list = new ArrayList<>(integer+1);
+                    int querynum = integer/1000 + 1;
                     Log.i("TrackActivity","查询次数："+querynum);
                     for(int i=0;i<querynum;i++){
                         Log.i("TrackActivity","第"+i+"次查询");
                         int skip = i*1000;
                         query.skip(skip);
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                             @Override
-                            public void done(List<AVObject> avObjects, AVException avException) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<AVObject> avObjects) {
                                 if(avObjects!=null&&avObjects.size()>0) {
                                     now_list.addAll(avObjects);
                                     Log.i("TrackActivity","分页查询获取到的数据条数："+avObjects.size()+"，数据总条数"+now_list.size());
-                                    if(now_list.size()==count){
+                                    if(now_list.size()==integer){
                                         initChart(now_list);
                                         List<LatLng> latLngList = GenetateLatLngListFromAvobject(now_list,false);
                                         List<LatLng> latLngList_PathSmooth = GenetateLatLngListFromAvobject(now_list,true);
@@ -654,12 +693,32 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                                     }
                                 }
                             }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
                         });
                     }
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
 //        query.findInBackground(new FindCallback<AVObject>() {
 //            @Override
 //            public void done(List<AVObject> list, AVException e) {
@@ -986,29 +1045,52 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         mymap.put("name",map_name);//地图名称
         mymap.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
         mymap.put("type","track_map");
-        mymap.saveInBackground(new SaveCallback() {
+        mymap.saveInBackground().subscribe(new Observer<AVObject>() {
             @Override
-            public void done(AVException e) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVObject avObject) {
                 AVObject track_map = new AVObject("PersonalMap_track");
                 track_map.put("track_start_time",track_start_time);
                 track_map.put("track_stop_time",track_stop_time);
                 track_map.put("track_precision",Percision);
                 track_map.put("UserId",AVUser.getCurrentUser().getObjectId());//用户编号
                 track_map.put("MapId",mymap.getObjectId());
-                track_map.saveInBackground(new SaveCallback() {
+                track_map.saveInBackground().subscribe(new Observer<AVObject>() {
                     @Override
-                    public void done(AVException e) {
-                        if (e != null) {
-                            // 出现错误
-                            mymap.deleteInBackground();
-                            Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
-                        } else {
-                            // 保存成功
-                            Log.d("TrackActivity","地图创建成功！");
-//                                Toast.makeText(track_context,"地图存储成功!",Toast.LENGTH_LONG).show();
-                        }
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(AVObject avObject) {
+                        Log.d("TrackActivity","地图创建成功！");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mymap.deleteInBackground();
+                        Toast.makeText(track_context,"地图创建失败!\n 失败原因: "+e.toString(),Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 
@@ -1103,21 +1185,31 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             query.whereLessThan("time",end_time.getTime());
             query.whereWithinKilometers("point", point, range_num);//查询范围
             // 得到点总个数
-            query.countInBackground(new CountCallback() {
+            query.countInBackground().subscribe(new Observer<Integer>() {
                 @Override
-                public void done(int i, AVException e) {
-                    if (e == null) {
-                        // 查询成功，输出计数
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(Integer integer) {
+                    // 查询成功，输出计数
 //                        Log.d("TrackActivity", "该点"+ range_num +"范围内共有" + i + "个点.");
-                        // 第一参数是 className,第二个参数是 objectId
-                        AVObject point_range = AVObject.createWithoutData("trajectory", obj.getObjectId());
-                        // 修改 content
-                        point_range.put("ranges",i);
-                        // 保存到云端
-                        point_range.saveInBackground();
-                    } else {
-                        // 查询失败
-                    }
+                    // 第一参数是 className,第二个参数是 objectId
+                    AVObject point_range = AVObject.createWithoutData("trajectory", obj.getObjectId());
+                    // 修改 content
+                    point_range.put("ranges",i);
+                    // 保存到云端
+                    point_range.saveInBackground();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
 
                 }
             });

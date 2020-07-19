@@ -19,9 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.RequestEmailVerifyCallback;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -36,6 +33,12 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.RequestEmailVerifyCallback;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class PersonInfoActivity extends BaseActivity implements View.OnClickListener{
 
@@ -249,16 +252,29 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                             .setPositiveButton(getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    AVUser.requestEmailVerifyInBackground(AVUser.getCurrentUser().getEmail(), new RequestEmailVerifyCallback() {
+                                    AVUser.requestEmailVerifyInBackground(AVUser.getCurrentUser().getEmail()).subscribe(new Observer<AVNull>() {
                                         @Override
-                                        public void done(AVException e) {
-                                            if (e == null) {
-                                                // 求重发验证邮件成功
-                                                new AlertDialog.Builder(personinfo_context)
-                                                        .setMessage("邮件发送成功！")
-                                                        .setPositiveButton(getString(R.string.dialog_ok), null)
-                                                        .show();
-                                            }
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(AVNull avNull) {
+                                            // 求重发验证邮件成功
+                                            new AlertDialog.Builder(personinfo_context)
+                                                    .setMessage("邮件发送成功！")
+                                                    .setPositiveButton(getString(R.string.dialog_ok), null)
+                                                    .show();
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
                                         }
                                     });
                                 }

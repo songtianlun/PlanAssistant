@@ -25,13 +25,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
+
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.MainActivity;
 import com.hgo.planassistant.tools.DateFormat;
@@ -44,6 +38,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -235,7 +236,7 @@ public class DataCaptureService extends Service {
 //            track_record.put("interval", 4000); //定位时间间隔
                     track_record.put("createDate",now_str); //文本日期
 //            track_record.saveInBackground();// 保存到服务端
-                    track_record.saveEventually();// 离线保存
+                    track_record.saveInBackground();// 离线保存
                 } else {
                     // 定位失败
                     msg = "定位失败: " + s;
@@ -493,9 +494,14 @@ public class DataCaptureService extends Service {
         query.whereLessThan("time",quaretime.getTime());
         quaretime.add(Calendar.MINUTE,-2);
         query.whereGreaterThan("time",quaretime.getTime());
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 if(avObjects!=null){
                     Log.d("DataCaptureService","查询到当前时刻步数记录条数："+avObjects.size());
 
@@ -513,13 +519,27 @@ public class DataCaptureService extends Service {
                         }else{
                             step_record.put("count",AddStep);
                         }
-                        step_record.saveInBackground(new SaveCallback() {
+                        step_record.saveInBackground().subscribe(new Observer<AVObject>() {
                             @Override
-                            public void done(AVException e) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(AVObject avObject) {
                                 StorageLog("debug","DateCaptureService","存储计步器数据，新建时刻步数：" + step_record.getInt("count"));
                                 Log.d("DataCaptureService","存储计步器数据,新建时刻步数：" + step_record.getInt("count"));
                                 AddStep -= step_record.getInt("count");
-                                // 避免更新数据期间的数据丢失
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
 //                    AddStep = 0;
@@ -531,13 +551,28 @@ public class DataCaptureService extends Service {
                         if(AddStep>0){
                             step_record.put("count",(avObjects.get(0).getInt("count")+AddStep) );
                             AddStep = 0;
-                            step_record.saveInBackground(new SaveCallback() {
+                            step_record.saveInBackground().subscribe(new Observer<AVObject>() {
                                 @Override
-                                public void done(AVException e) {
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(AVObject avObject) {
                                     Log.d("DataCaptureService","存储计步器数据，成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
                                     StorageLog("debug","DateCaptureService","存储计步器数据，成功更新步数，新增步数：" + (step_record.getInt("count") - avObjects.get(0).getInt("count")));
 //                                AddStep -= step_record.getInt("count") - avObjects.get(0).getInt("count");
                                     // 避免更新数据期间的数据丢失
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
                                 }
                             });
                         }else{
@@ -545,6 +580,16 @@ public class DataCaptureService extends Service {
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 //

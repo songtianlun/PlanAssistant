@@ -5,6 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,14 +26,13 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
 import com.umeng.analytics.MobclickAgent;
+
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class LoginActivity extends BaseActivity  implements View.OnClickListener{
 
@@ -112,7 +113,7 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
         spinner_server.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String oldvalue = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE).getString("pref_list_system_server","cn-north-1");
+                String oldvalue = SP_setting.getString("pref_list_system_server","cn-north-2");
 //                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "cn-north");
                 Log.d("LoginActivity","Server Old Value:" + oldvalue);
                 Log.d("LoginActivity","Server new Value:" + spinner_server.getSelectedItem().toString());
@@ -127,10 +128,20 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
 
                                     SP_edit.putString("pref_list_system_server",spinner_server.getSelectedItem().toString());
                                     SP_edit.commit();
-                                    Log.d("LoginActivity","修改后后端："+SP_setting.getString("pref_list_system_server","cn-north-1"));
-                                    final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                                    Log.d("LoginActivity","修改后后端："+ SP_setting.getString("pref_list_system_server","cn-north-2"));
+//                                    final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    startActivity(intent);
+                                    final Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
+
+//                                    Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+//                                    intent.putExtra("REBOOT","reboot");
+//                                    PendingIntent restartIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+//                                    AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//                                    mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
+//                                    android.os.Process.killProcess(android.os.Process.myPid());
                                 }
                             })
                             .show();
@@ -220,18 +231,29 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
         } else {
 //            showProgress(true);
 
-            AVUser.logInInBackground(username, password, new LogInCallback<AVUser>() {
+            AVUser.logIn(username, password).subscribe(new Observer<AVUser>() {
                 @Override
-                public void done(AVUser avUser, AVException e) {
-                    if (e == null) {
-                        LoginActivity.this.finish();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    } else {
-//                        showProgress(false);
-                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(AVUser avUser) {
+                    LoginActivity.this.finish();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onComplete() {
+
                 }
             });
+
         }
     }
     private boolean isPasswordValid(String password) {

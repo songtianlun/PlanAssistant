@@ -153,7 +153,7 @@
 
     <PreferenceCategory android:title="@string/settings_system_title">
         <ListPreference
-            android:defaultValue="international"
+            android:defaultValue="cn-north-2"
             android:dialogTitle="@string/settings_system_server"
             android:entries="@array/settings_list_system_server_title"
             android:entryValues="@array/settings_list_system_server_values"

@@ -19,11 +19,6 @@ import android.widget.Toast;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
@@ -37,6 +32,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by zhang on 2016.08.07.
@@ -220,22 +221,29 @@ public class EnergyEvaluationRecyclerViewAdapter extends RecyclerView.Adapter<Re
                         int score_determination = seekBar_determination.getProgress();
                         //存到云
                         AVObject energyEvaluation = AVObject.createWithoutData("EnergyEvaluation",mItems.get(position).getObjectId());
-                        energyEvaluation.put("UserId",AVUser.getCurrentUser().getObjectId());
+                        energyEvaluation.put("UserId", AVUser.getCurrentUser().getObjectId());
                         energyEvaluation.put("time",evaluation_time.getTime());
                         energyEvaluation.put("thinking",score_thinking);
                         energyEvaluation.put("determination",score_determination);
-                        energyEvaluation.saveInBackground(new SaveCallback() {
+                        energyEvaluation.saveInBackground().subscribe(new Observer<AVObject>() {
                             @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    //成功
-                                    Toast.makeText(App.getContext(), "保存成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                } else {
-                                    // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                    Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(AVObject avObject) {
+                                Toast.makeText(App.getContext(), "保存成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
 
@@ -248,18 +256,25 @@ public class EnergyEvaluationRecyclerViewAdapter extends RecyclerView.Adapter<Re
                     @Override
                     public void onClick(View view) {
                         AVObject delete = AVObject.createWithoutData("EnergyEvaluation",mItems.get(position).getObjectId());
-                        delete.deleteInBackground(new DeleteCallback() {
+                        delete.deleteInBackground().subscribe(new Observer<AVNull>() {
                             @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    //成功
-                                    Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                } else {
-                                    // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                    Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(AVNull avNull) {
+                                Toast.makeText(App.getContext(), "删除成功！（下拉刷新查看）", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(App.getContext(), "失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
                         mBottomSheetDialog.dismiss();
@@ -411,15 +426,27 @@ public class EnergyEvaluationRecyclerViewAdapter extends RecyclerView.Adapter<Re
     public void onItemDismiss(final int position) {
         mItems.remove(position);
         notifyItemRemoved(position);
-
-        mItems.get(position).deleteInBackground(new DeleteCallback() {
+        mItems.get(position).deleteInBackground().subscribe(new Observer<AVNull>() {
             @Override
-            public void done(AVException e) {
-                if(e==null){
-                    Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
-                            .setAction(context.getString(R.string.item_swipe_undo), view -> {
-                            }).show();
-                }
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVNull avNull) {
+                Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
+                        .setAction(context.getString(R.string.item_swipe_undo), view -> {
+                        }).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 

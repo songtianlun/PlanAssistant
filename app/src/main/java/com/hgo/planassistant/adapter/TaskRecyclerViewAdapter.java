@@ -24,11 +24,6 @@ import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -45,6 +40,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by zhang on 2016.08.07.
@@ -529,15 +529,27 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onItemDismiss(final int position) {
         mItems.remove(position);
         notifyItemRemoved(position);
-
-        mItems.get(position).deleteInBackground(new DeleteCallback() {
+        mItems.get(position).deleteInBackground().subscribe(new Observer<AVNull>() {
             @Override
-            public void done(AVException e) {
-                if(e==null){
-                    Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
-                            .setAction(context.getString(R.string.item_swipe_undo), view -> {
-                            }).show();
-                }
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVNull avNull) {
+                Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
+                        .setAction(context.getString(R.string.item_swipe_undo), view -> {
+                        }).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 

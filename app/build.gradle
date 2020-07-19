@@ -98,7 +98,12 @@ dependencies {
     //    }
 
     // LeanCloud 基础包
-    implementation 'cn.leancloud.android:avoscloud-sdk:4.7.15'
+//    implementation 'cn.leancloud.android:avoscloud-sdk:4.7.15'
+    implementation 'cn.leancloud:storage-android:6.5.11'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+//    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+//    implementation 'com.huawei.hms:push:4.0.2.300'
+//    implementation 'com.huawei.agconnect:agcp:1.2.1.301'
 
     // 推送与即时通讯需要的包
 
@@ -109,7 +114,7 @@ dependencies {
     //    compile ('cn.leancloud.android:avoscloud-mixpush:4.7.10@aar'){transitive = true}
 
     // LeanCloud 用户反馈包
-    implementation 'cn.leancloud.android:avoscloud-feedback:4.7.15@aar'
+//    implementation 'cn.leancloud.android:avoscloud-feedback:4.7.15@aar'
 
     // LeanCloud 应用内搜索包
 

@@ -22,12 +22,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -45,6 +39,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MyMapActivity extends BaseActivity {
 
@@ -94,15 +94,31 @@ public class MyMapActivity extends BaseActivity {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(1000);
         query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null){
-                    Log.i("MyMapActivity","共查询到：" + list.size() + "条数据。");
-                    mymap_data = list;
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                if(avObjects!=null){
+                    Log.i("MyMapActivity","共查询到：" + avObjects.size() + "条数据。");
+//                    mymap_data = avObjects;
+                    mymap_data.addAll(avObjects);
                 }
 
                 initView();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 //        data = new ArrayList<>();
@@ -189,15 +205,30 @@ public class MyMapActivity extends BaseActivity {
                 query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                 query.limit(1000);
                 query.orderByDescending("createdAt");// 按时间，降序排列
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                        mymap_data = list;
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                        mymap_data = avObjects;
 //                        adapter.Updatelist(list);
                         adapter=new MyMapRecyclerViewAdapter(mymap_data,MymapContext);
                         mRecyclerView.setAdapter(adapter);
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
 

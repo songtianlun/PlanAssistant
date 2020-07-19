@@ -121,11 +121,6 @@
             android:label="@string/title_activity_track"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service
-            android:name=".service.TencentLocationService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
             android:name=".activity.PersonInfoActivity"
             android:label="@string/title_activity_personinfo"

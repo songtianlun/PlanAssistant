@@ -22,11 +22,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.amap.api.services.core.PoiItem;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
@@ -34,6 +29,12 @@ import com.hgo.planassistant.util.CalendarReminderUtils;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.Calendar;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class TaskAddActivity extends BaseActivity implements View.OnClickListener{
 
@@ -159,38 +160,46 @@ public class TaskAddActivity extends BaseActivity implements View.OnClickListene
                             new_task.put("task_point", new AVGeoPoint(task_latitude, task_longitude));
                         }
 //                        new_task.put("task_cycle",spinner_cycle.getSelectedItemId());
-                        new_task.saveInBackground(new SaveCallback() {
+                        new_task.saveInBackground().subscribe(new Observer<AVObject>() {
                             @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    //成功
-                                    Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
-                                    CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
-                                    switch ((int)spinner_remind.getSelectedItemId()){
-                                        case 0:
-                                            calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime());
-                                            break;
-                                        case 1:
-                                            calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),0);
-                                            break;
-                                        case 2:
-                                            calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),15);
-                                            break;
-                                        case 3:
-                                            calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),60);
-                                            break;
-                                        case 4:
-                                            calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(), 24*60);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                } else {
-                                    // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                    Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            public void onSubscribe(Disposable d) {
+
+
+                            }
+
+                            @Override
+                            public void onNext(AVObject avObject) {
+                                Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
+                                CalendarReminderUtils calendarReminderUtils = new CalendarReminderUtils();
+                                switch ((int)spinner_remind.getSelectedItemId()){
+                                    case 0:
+                                        calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime());
+                                        break;
+                                    case 1:
+                                        calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),0);
+                                        break;
+                                    case 2:
+                                        calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),15);
+                                        break;
+                                    case 3:
+                                        calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(),60);
+                                        break;
+                                    case 4:
+                                        calendarReminderUtils.addCalendarEvent(mContext,edit_name.getText().toString(),TV_description.getText().toString(),edit_location.getText().toString(),task_start_time.getTime().getTime(),task_end_time.getTime().getTime(), 24*60);
+                                        break;
+                                    default:
+                                        break;
                                 }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
                     }

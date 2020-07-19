@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TimePicker;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -20,22 +18,17 @@ import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
 
-import com.avos.avoscloud.AVUser;
-import com.google.android.material.snackbar.Snackbar;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
-import com.hgo.planassistant.activity.MainActivity;
-import com.hgo.planassistant.activity.PlanCounterDetailActivity;
 import com.hgo.planassistant.service.DataCaptureService;
-import com.hgo.planassistant.service.TencentLocationService;
 import com.hgo.planassistant.tools.DateFormat;
 
 import java.util.Calendar;
-import java.util.Date;
 
-import static android.content.Context.MODE_PRIVATE;
+import cn.leancloud.AVUser;
+
 import static com.hgo.planassistant.App.getApplication;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener,
@@ -277,7 +270,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 //                            .show();
 //                }
 
-                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "cn-north-1");
+                String oldvalue = PreferenceManager.getDefaultSharedPreferences(App.getContext()).getString("pref_list_system_server", "cn-north-2");
                 Log.i("SettingFragement","Server Old Value:" + oldvalue);
                 Log.i("SettingFragement","Server new Value:" + newValue.toString());
                 if(!oldvalue.equals(newValue.toString())){
@@ -367,7 +360,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         findPreference("pref_list_location_query_precision").setDefaultValue(SP_setting.getString("settings_location_query_precision","300"));
         findPreference("pref_location_background_switch").setDefaultValue(SP_setting.getBoolean("pref_location_background_switch",false));
         findPreference("pref_list_location_ali_type").setDefaultValue(SP_setting.getString("pref_list_location_ali_type","Battery_Saving"));
-        findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","cn-north-1"));
+        findPreference("pref_list_system_server").setDefaultValue(SP_setting.getString("pref_list_system_server","cn-north-2"));
         findPreference("pref_list_location_time").setDefaultValue(SP_setting.getString("pref_list_location_time","4000"));
         findPreference("pref_list_personal_step_target").setDefaultValue(SP_setting.getInt("pref_personal_step_target",4000));
         findPreference("pref_seek_personal_urgent_day").setDefaultValue(SP_setting.getInt("pref_seek_personal_urgent_day",10));
@@ -397,7 +390,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         onPreferenceChange(findPreference("pref_list_location_query_precision"), preferences.getString("pref_list_location_query_precision", ""));
         onPreferenceChange(findPreference("pref_list_location_ali_type"), preferences.getString("pref_list_location_ali_type", "Battery_Saving"));
         onPreferenceChange(findPreference("pref_list_location_time"), preferences.getString("pref_list_location_time", ""));
-        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north-1"));
+        onPreferenceChange(findPreference("pref_list_system_server"), preferences.getString("pref_list_system_server", "cn-north-2"));
         onPreferenceChange(findPreference("pref_list_personal_step_target"), (preferences.getInt("pref_list_personal_step_target",4000)));
         onPreferenceChange(findPreference("pref_seek_personal_urgent_day"), preferences.getInt("pref_seek_personal_urgent_day",10));
 

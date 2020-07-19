@@ -12,13 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avos.avoscloud.AVObject;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.activity.DetailPMapActivity;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
 
 public class MyMapRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
@@ -75,7 +76,7 @@ public class MyMapRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             //加载名称、备注、事件
             recyclerViewHolder.TV_title.setText(mItems.get(position).get("name").toString());
             recyclerViewHolder.TV_remarks.setText(mItems.get(position).get("remarks").toString());
-            recyclerViewHolder.TV_date.setText("创建时间："+ DateFormat.getDateTimeInstance().format((Date)mItems.get(position).get("createdAt")));
+            recyclerViewHolder.TV_date.setText("创建时间："+ DateFormat.getDateTimeInstance().format(mItems.get(position).getDate("createdAt")));
 
 
             //监听项目点击事件

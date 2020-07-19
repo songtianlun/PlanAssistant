@@ -19,12 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
+
 import com.baidu.aip.nlp.AipNlp;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,12 +41,16 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.avos.avoscloud.LogUtil.log.show;
 
 public class MoodWhisperActivity extends BaseActivity {
 
@@ -161,14 +160,29 @@ public class MoodWhisperActivity extends BaseActivity {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(1000);
         query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null){
-                    Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                    whisper_data.addAll(list);
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                if(avObjects!=null){
+                    Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                    whisper_data.addAll(avObjects);
                 }
                 initView();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
 //        data = new ArrayList<>();
@@ -191,15 +205,30 @@ public class MoodWhisperActivity extends BaseActivity {
                 query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                 query.limit(1000);
                 query.orderByDescending("createdAt");// 按时间，降序排列
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                        whisper_data.addAll(list);
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                        whisper_data.addAll(avObjects);
 //                        adapter.Updatelist(list);
                         adapter=new MoodWhisperRecyclerViewAdapter(whisper_data, MoodWhisperContext);
                         mRecyclerView.setAdapter(adapter);
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
 
@@ -232,10 +261,14 @@ public class MoodWhisperActivity extends BaseActivity {
                 MoodWhisper.put("negative_prob",emotionalTrendResultsItems.getNegative_prob());
                 MoodWhisper.put("confidence",emotionalTrendResultsItems.getConfidence());
                 MoodWhisper.put("sentiment",emotionalTrendResultsItems.getSentiment()); //表示情感极性分类结果，0:负向，1:中性，2:正向
-
-                MoodWhisper.saveInBackground(new SaveCallback() {
+                MoodWhisper.saveInBackground().subscribe(new Observer<AVObject>() {
                     @Override
-                    public void done(AVException e) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(AVObject avObject) {
                         loadMoreData();
                         if(emotionalTrendResultsItems.getSentiment()==0){
                             new AlertDialog.Builder(MoodWhisperContext)
@@ -246,9 +279,19 @@ public class MoodWhisperActivity extends BaseActivity {
                         }else{
                             Toast.makeText(MoodWhisperContext, "保存成功！",Toast.LENGTH_LONG).show();
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
+
             }
         }).start();
 

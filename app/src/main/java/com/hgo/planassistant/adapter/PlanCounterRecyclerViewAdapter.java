@@ -22,11 +22,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.SaveCallback;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
@@ -41,6 +37,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by zhang on 2016.08.07.
@@ -135,7 +136,7 @@ public class PlanCounterRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 Log.i("LIRVAdapter",objectID);
                 Intent intent = new Intent(context, PlanCounterDetailActivity.class);
                 intent.putExtra("objectid", objectID);
-                intent.putExtra("object",mItems.get(position));
+//                intent.putExtra("object",mItems.get(position));
                 context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation
                         ((Activity) context, recyclerViewHolder.rela_round, "shareView").toBundle());
             });
@@ -164,18 +165,29 @@ public class PlanCounterRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public void onItemDismiss(final int position) {
         mItems.remove(position);
         notifyItemRemoved(position);
-
-        mItems.get(position).deleteInBackground(new DeleteCallback() {
+        mItems.get(position).deleteInBackground().subscribe(new Observer<AVNull>() {
             @Override
-            public void done(AVException e) {
-                if(e==null){
-                    Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
-                            .setAction(context.getString(R.string.item_swipe_undo), view -> {
-                            }).show();
-                }
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVNull avNull) {
+                Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
+                        .setAction(context.getString(R.string.item_swipe_undo), view -> {
+                        }).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
-
 
     }
 

@@ -15,11 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -44,6 +40,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -325,9 +327,14 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.orderByDescending("updateAt"); //按修改时间降序排列
         query.limit(100);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 if (avObjects!=null){
                     // Thinking
                     int[] ThinkingScore = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
@@ -357,7 +364,18 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
                     initEmotionLineChart(ThinkingScore,Determination);
                 }
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
     }
     private void initEmotionLineChart(int[] thinking, int[] determination){
         AVQuery<AVObject> query = new AVQuery<>("MoodWhisper");
@@ -367,9 +385,14 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.orderByDescending("updateAt"); //按修改时间降序排列
         query.limit(100);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 int[] Score = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
                 for(int i=0;i<avObjects.size();i++){
                     Calendar time = Calendar.getInstance();
@@ -386,7 +409,18 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
                 // 联动体能精力
                 initPhysicalLineChart(Score,thinking,determination);
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
     }
     private void initPhysicalLineChart(int[] emotional, int[] thinking, int[] determination){
         AVQuery<AVObject> query = new AVQuery<>("stepcounter");
@@ -396,9 +430,14 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.orderByDescending("updateAt"); //按修改时间降序排列
         query.limit(100);
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> avObjects, AVException avException) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
                 if(avObjects!=null){
                     int[] StepCounter = new int[24]; // 初始化一个24大小数组，用来存储24小时中各个时刻的精力评分均值
                     int sumStep = 0;
@@ -439,9 +478,19 @@ public class EnergyFragment extends Fragment implements View.OnClickListener, On
                     LoadLineChartData(PhysicalLineChart,Score);
                     initEnergyLineChart(Score,emotional,thinking,determination);
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
     }
     private void LoadLineChartData(LineChart chart, int[] chartdata){
 //        Log.i("EnergyFragement","Load liveline chart");

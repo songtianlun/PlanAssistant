@@ -12,13 +12,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
+
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,6 +48,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVGeoPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MapCheckActivity extends BaseActivity {
 
@@ -130,10 +131,25 @@ public class MapCheckActivity extends BaseActivity {
             track_record.put("cityCode", jsonObject.getString("cityCode"));
             JSONObject latlon_json = jsonObject.getJSONObject("latLonPoint");
             track_record.put("latLonPoint", new AVGeoPoint(latlon_json.getDouble("latitude"), latlon_json.getDouble("longitude")));
-            track_record.saveInBackground(new SaveCallback() {
+            track_record.saveInBackground().subscribe(new Observer<AVObject>() {
                 @Override
-                public void done(AVException e) {
-                    initData();
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(AVObject avObject) {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
                 }
             });
         }
@@ -237,18 +253,34 @@ public class MapCheckActivity extends BaseActivity {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(1000);
         query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null){
-                    Log.d("MyMapActivity","共查询到：" + list.size() + "条数据。");
-                    location_list.addAll(list);
-                    LoadToMarker(list);
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                if(avObjects!=null){
+                    Log.d("MyMapActivity","共查询到：" + avObjects.size() + "条数据。");
+                    location_list.addAll(avObjects);
+                    LoadToMarker(avObjects);
                 }
 
                 initView();
             }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
 //        data = new ArrayList<>();
 //        for (int i = 1; i <= 20; i++) {
 //            data.add(i + "");
@@ -267,20 +299,37 @@ public class MapCheckActivity extends BaseActivity {
                 query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
                 query.limit(1000);
                 query.orderByDescending("createdAt");// 按时间，降序排列
-                query.findInBackground(new FindCallback<AVObject>() {
+                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                     @Override
-                    public void done(List<AVObject> list, AVException e) {
-                        if(list!=null){
-                            Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                            location_list.addAll(list);
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<AVObject> avObjects) {
+                        if(avObjects!=null){
+                            Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                            location_list.addAll(avObjects);
                             adapter=new MapCheckRecyclerViewAdapter(location_list,context);
                             mRecyclerView.setAdapter(adapter);
-                            LoadToMarker(list);
+                            LoadToMarker(avObjects);
                         }
+
 
                         swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+
             }
         }, 1500);
     }

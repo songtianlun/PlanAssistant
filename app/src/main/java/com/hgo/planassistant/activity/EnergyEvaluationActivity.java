@@ -21,12 +21,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,6 +37,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class EnergyEvaluationActivity extends BaseActivity {
 
@@ -80,14 +80,29 @@ public class EnergyEvaluationActivity extends BaseActivity {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(1000);
         query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                if(list!=null){
-                    Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                    now_list.addAll(list);
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                if(avObjects!=null){
+                    Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                    now_list.addAll(avObjects);
                 }
                 initView();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
         loadTimes = 0;
@@ -157,19 +172,26 @@ public class EnergyEvaluationActivity extends BaseActivity {
                     energyEvaluation.put("time",evaluation_time.getTime());
                     energyEvaluation.put("thinking",score_thinking);
                     energyEvaluation.put("determination",score_determination);
-                    energyEvaluation.saveInBackground(new SaveCallback() {
+                    energyEvaluation.saveInBackground().subscribe(new Observer<AVObject>() {
                         @Override
-                        public void done(AVException e) {
-                            if (e == null) {
-                                //成功
-                                Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
-                                loadMoreData();
-//                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                            } else {
-                                // 失败的原因可能有多种，常见的是用户名已经存在。
-//                        showProgress(false);
-                                Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(AVObject avObject) {
+                            Toast.makeText(App.getContext(), "保存成功！", Toast.LENGTH_SHORT).show();
+                            loadMoreData();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(App.getContext(), "保存失败，原因：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
                         }
                     });
 
@@ -229,14 +251,29 @@ public class EnergyEvaluationActivity extends BaseActivity {
         query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
         query.limit(1000);
         query.orderByDescending("createdAt");// 按时间，降序排列
-        query.findInBackground(new FindCallback<AVObject>() {
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             @Override
-            public void done(List<AVObject> list, AVException e) {
-                Log.i("LiveLIneActivity","共查询到：" + list.size() + "条数据。");
-                now_list.addAll(list);
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                Log.i("LiveLIneActivity","共查询到：" + avObjects.size() + "条数据。");
+                now_list.addAll(avObjects);
                 adapter=new EnergyEvaluationRecyclerViewAdapter(now_list,mContext);
                 mRecyclerView.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);//加载成功后再消失
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }

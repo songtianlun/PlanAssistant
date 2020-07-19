@@ -21,13 +21,6 @@ import android.widget.Toast;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.avos.avoscloud.AVCloudQueryResult;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.CloudQueryCallback;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.hgo.planassistant.App;
@@ -43,6 +36,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by zhang on 2016.08.07.
@@ -264,29 +263,40 @@ public class LiveLineRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                         liveline.put("livetime",now_date);
                         liveline.put("score",score);
                         liveline.put("remarks",TV_dialog_button_liveline_score_remark.getText());
-                        liveline.saveInBackground(new SaveCallback() {
+                        liveline.saveInBackground().subscribe(new Observer<AVObject>() {
                             @Override
-                            public void done(AVException e) {
-                                if (e == null) {
-                                    //成功
-                                    Snackbar.make(view, context.getString(R.string.succefully), Snackbar.LENGTH_LONG)
-                                            .setAction(context.getString(R.string.main_snack_bar_action), view -> {
-                                            }).show();
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(AVObject avObject) {
+                                //成功
+                                Snackbar.make(view, context.getString(R.string.succefully), Snackbar.LENGTH_LONG)
+                                        .setAction(context.getString(R.string.main_snack_bar_action), view -> {
+                                        }).show();
 //                                    changeItem(position,liveline);
-                                    Updatelist(mItems);
+                                Updatelist(mItems);
 //                                    RemoveItem(position);
 //                                    addItem(liveline);
 //                                    Updatelist(mItems);
 //                                adapter.addItem(linearLayoutManager.findFirstVisibleItemPosition() + 1, insertData);
-                                } else {
-                                    // 失败的原因可能有多种，常见的是用户名已经存在。
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                // 失败的原因可能有多种，常见的是用户名已经存在。
 //                        showProgress(false);
-                                    Toast.makeText(App.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                Toast.makeText(App.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                mBottomSheetDialog.dismiss();
                             }
                         });
 
-                        mBottomSheetDialog.dismiss();
+
                     }
                 });
                 btn_dialog_bottom_sheet_delete.setOnClickListener(new View.OnClickListener() {
@@ -294,19 +304,29 @@ public class LiveLineRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     public void onClick(View v) {
                         mBottomSheetDialog.dismiss();
                         AVObject del_obj = mItems.get(position);
-
-                        del_obj.deleteInBackground(new DeleteCallback() {
+                        del_obj.deleteInBackground().subscribe(new Observer<AVNull>() {
                             @Override
-                            public void done(AVException e) {
-                                if(e==null){
-                                    Snackbar.make(view, context.getString(R.string.succefully), Snackbar.LENGTH_LONG)
-                                            .setAction(context.getString(R.string.main_snack_bar_action), view -> {
-                                            }).show();
-                                    RemoveItem(position);
-                                    Updatelist(mItems);
-                                }else{
-                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(AVNull avNull) {
+                                Snackbar.make(view, context.getString(R.string.succefully), Snackbar.LENGTH_LONG)
+                                        .setAction(context.getString(R.string.main_snack_bar_action), view -> {
+                                        }).show();
+                                RemoveItem(position);
+                                Updatelist(mItems);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
                             }
                         });
                     }
@@ -354,19 +374,29 @@ public class LiveLineRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onItemDismiss(final int position) {
         mItems.remove(position);
         notifyItemRemoved(position);
-
-        mItems.get(position).deleteInBackground(new DeleteCallback() {
+        mItems.get(position).deleteInBackground().subscribe(new Observer<AVNull>() {
             @Override
-            public void done(AVException e) {
-                if(e==null){
-                    Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
-                            .setAction(context.getString(R.string.item_swipe_undo), view -> {
-                            }).show();
-                }
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(AVNull avNull) {
+                Snackbar.make(parentView, context.getString(R.string.item_swipe_dismissed), Snackbar.LENGTH_LONG)
+                        .setAction(context.getString(R.string.item_swipe_undo), view -> {
+                        }).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
-
-
     }
 
 

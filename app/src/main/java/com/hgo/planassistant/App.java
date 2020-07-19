@@ -2,23 +2,16 @@ package com.hgo.planassistant;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 
-import androidx.appcompat.app.AlertDialog;
-
-import com.avos.avoscloud.AVOSCloud;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
-import com.hgo.planassistant.service.TencentLocationService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
@@ -26,8 +19,9 @@ import com.umeng.message.PushAgent;
 
 import org.litepal.LitePal;
 
-import java.lang.reflect.Array;
 import java.util.concurrent.Executor;
+
+import cn.leancloud.AVOSCloud;
 
 /**
  * Created by zhangxiao on 2019/4/2
@@ -128,25 +122,32 @@ public class App extends Application {
         //MODE_MULTI_PROCESS 允许多个进程访问同一个SharedPrecferences
         SharedPreferences SP_setting = App.getApplication().getSharedPreferences("setting",MODE_PRIVATE);
         String Server = SP_setting.getString("pref_list_system_server","cn-north-2"); // 检测当前设置的服务器类型
-
+        Log.d("App","读取到后端信息："+ Server);
         if(Server.equals("cn-north-1")){
             // leancloud cn init
-            AVOSCloud.initialize(this,"eR1JFxB61gInL1GhmaURGdAx-gzGzoHsz","1nddY6z37rpVV2OzxXuWPdSI");
+//            AVOSCloud.initialize(this,"eR1JFxB61gInL1GhmaURGdAx-gzGzoHsz","1nddY6z37rpVV2OzxXuWPdSI");
+            AVOSCloud.initialize(this, "eR1JFxB61gInL1GhmaURGdAx-gzGzoHsz", "1nddY6z37rpVV2OzxXuWPdSI", "https://paapi.leancloud.frytea.com");
+            Log.d("App","当前后端：华北一区");
         }else if(Server.equals("international")){
             // leancloud international init
-            AVOSCloud.initialize(this,"dRmA0kDOgX827gAlEM4JnX5Y-MdYXbMMI","HU07vgGnTDbGIl9faMgxhgzp");
+//            AVOSCloud.initialize(this,"dRmA0kDOgX827gAlEM4JnX5Y-MdYXbMMI","HU07vgGnTDbGIl9faMgxhgzp");
+            AVOSCloud.initialize(this, "dRmA0kDOgX827gAlEM4JnX5Y-MdYXbMMI", "HU07vgGnTDbGIl9faMgxhgzp");
+            Log.d("App","当前后端：国际区");
         }else if(Server.equals("cn-north-2")){
-            AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
+//            AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
+            AVOSCloud.initialize(this, "qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz", "IK2b5Y150czy6g3g6cKpbCEg", "https://paapi.leancloud.frytea.com");
+            Log.d("App","当前后端：华北二区");
         }else if(Server.equals("cn-north-3")) {
-            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e");
+//            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e");
+            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e", "https://paapi.leancloud.frytea.com");
+            Log.d("App","当前后端：华北三区");
         }
         else{
             // coming soon
             AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
+            Log.d("App","当前后端数据异常，切为默认区：华北二区");
         }
 
-        // 正式发布前去除
-        AVOSCloud.setDebugLogEnabled(false);
 
 
         //Bugly false为调试模式
