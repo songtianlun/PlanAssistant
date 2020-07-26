@@ -8,7 +8,7 @@ PACKAGE_DIR="app/release" # 安装包位置
 # App 的 bundleId 或 包名
 BUNDLE_ID="com.hgo.planassistant"
 
-package_path="${PACKAGE_DIR}${new_filename}"
+package_path="${PACKAGE_DIR}/${ORIGINAL_FILENAME}"
 UPLOAD_URL="https://www.pgyer.com/apiv1/app/upload"
 
 # Upload package
