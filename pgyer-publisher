@@ -1,0 +1,23 @@
+#!/bin/bash
+
+API_KEY="914f363e04f97a17bceb50b9d5170218"
+USER_KEY="0d37385680eba5d8cd60f29937dfba3e"
+ORIGINAL_FILENAME="app-release.apk" # github 自动编译测试包生成的 apk 名字
+PACKAGE_DIR="app/release" # 安装包位置
+
+# App 的 bundleId 或 包名
+BUNDLE_ID="com.hgo.planassistant"
+
+package_path="${PACKAGE_DIR}${ORIGINAL_FILENAME}"
+UPLOAD_URL="https://www.pgyer.com/apiv1/app/upload"
+
+# Upload package
+echo 'Uploading...'
+echo '✈ -------------------------------------------- ✈'
+
+response=$(curl -F "file=@${package_path}" \
+-F "uKey=${API_KEY}" \
+-F "_api_key=${USER_KEY}" \
+${UPLOAD_URL}
+)
+echo $response;
