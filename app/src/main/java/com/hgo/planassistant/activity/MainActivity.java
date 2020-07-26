@@ -44,6 +44,8 @@ import com.hgo.planassistant.fragement.HomeFragment;
 import com.hgo.planassistant.fragement.TaskFragment;
 import com.hgo.planassistant.service.DataCaptureService;
 import com.hgo.planassistant.tools.DateFormat;
+import com.pgyersdk.feedback.PgyerFeedbackManager;
+import com.pgyersdk.update.PgyUpdateManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,6 +95,11 @@ public class MainActivity extends BaseActivity
         initPermission(); // 动态获取权限
         loadsetting(); // 载入设置
         StartService(); //启动后台服务
+
+        // 摇一摇弹出 Dialog 方式 收集用户反馈
+        new PgyerFeedbackManager.PgyerFeedbackBuilder().builder().register();
+        // 检查更新
+        new PgyUpdateManager.Builder().register();
     }
 
     @Override

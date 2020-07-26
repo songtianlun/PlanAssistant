@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 后台位置记录 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序录制音频 -->
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
@@ -164,6 +165,10 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e553357a276042ba68761f55dfd17720" />
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="ae51c190d1be500df5545dfc35288f81" />
     </application>
+
 
 </manifest>

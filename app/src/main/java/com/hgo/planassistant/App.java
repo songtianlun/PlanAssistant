@@ -12,6 +12,7 @@ import android.util.Log;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
+import com.pgyersdk.crash.PgyCrashManager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
@@ -42,6 +43,9 @@ public class App extends Application {
 
         initServer();
         initUM();
+
+        // 蒲公英 应用更新+bug获取+统计
+        PgyCrashManager.register();
 
         // 初始化 LitePal
         LitePal.initialize(this);

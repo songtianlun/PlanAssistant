@@ -181,6 +181,9 @@ dependencies {
     // 黄油刀
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+
+    // 蒲公英
+    implementation 'com.pgyersdk:sdk:3.0.10'
 }
 
 

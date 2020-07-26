@@ -7,6 +7,7 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
