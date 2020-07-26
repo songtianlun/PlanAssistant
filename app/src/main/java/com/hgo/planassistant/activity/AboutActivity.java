@@ -157,10 +157,10 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.card_about_1_version:
                 startActivity(new Intent(this, AppLogActivity.class));
-                FirUpdater.getInstance(this_context)
-                        .apiToken(DataSource.fir_im_API_TOKEN)
-                        .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
-                        .checkVersion();
+//                FirUpdater.getInstance(this_context)
+//                        .apiToken(DataSource.fir_im_API_TOKEN)
+//                        .appId(DataSource.fir_im_FIR_UPDATER_APP_ID)
+//                        .checkVersion();
                 Log.i("AboutActivity","Check Update.");
                 break;
 

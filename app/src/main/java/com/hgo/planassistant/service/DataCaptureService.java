@@ -661,7 +661,8 @@ public class DataCaptureService extends Service {
 
     private void StorageLog(String grade, String label, String log){
         com.hgo.planassistant.model.Log save_log = new com.hgo.planassistant.model.Log();
-        save_log.setUseId(AVUser.getCurrentUser().getObjectId());
+        if(AVUser.getCurrentUser().getObjectId()!=null)
+            save_log.setUseId(AVUser.getCurrentUser().getObjectId());
         save_log.setGrade(grade);
         save_log.setLabel(label);
         save_log.setTime(Calendar.getInstance().getTime());

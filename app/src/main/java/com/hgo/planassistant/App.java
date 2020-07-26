@@ -144,7 +144,7 @@ public class App extends Application {
         }
         else{
             // coming soon
-            AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
+            AVOSCloud.initialize(this, "qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz", "IK2b5Y150czy6g3g6cKpbCEg", "https://paapi.leancloud.frytea.com");
             Log.d("App","当前后端数据异常，切为默认区：华北二区");
         }
 
