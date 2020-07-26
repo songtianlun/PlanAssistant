@@ -155,16 +155,16 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
         });
 
     }
-    @Override // back button
-    public void onBackPressed()
-    {
-        // super.onBackPressed();
-        // 注释掉这行,back键不退出activity
-        // Log.i(LOG_TAG, "onBackPressed");
-        Intent skip_intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(skip_intent);
-        finish();
-    }
+//    @Override // back button
+//    public void onBackPressed()
+//    {
+//        // super.onBackPressed();
+//        // 注释掉这行,back键不退出activity
+//        // Log.i(LOG_TAG, "onBackPressed");
+////        Intent skip_intent = new Intent(LoginActivity.this, MainActivity.class);
+////        startActivity(skip_intent);
+//        finish();
+//    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
