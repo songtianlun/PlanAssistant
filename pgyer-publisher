@@ -3,7 +3,7 @@
 API_KEY="5625af52e1b97a58c99ba885cd2fbe98"
 USER_KEY="0d37385680eba5d8cd60f29937dfba3e"
 ORIGINAL_FILENAME="app-release.apk" # github 自动编译测试包生成的 apk 名字
-PACKAGE_DIR="app/release" # 安装包位置
+PACKAGE_DIR="app/build/outputs/apk/release" # 安装包位置
 
 # App 的 bundleId 或 包名
 BUNDLE_ID="com.hgo.planassistant"
