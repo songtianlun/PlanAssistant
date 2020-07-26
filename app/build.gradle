@@ -138,7 +138,7 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
     // fir.im 内测推送
-    implementation 'com.sunfusheng:FirUpdater:latest.integration'
+//    implementation 'com.sunfusheng:FirUpdater:latest.integration'
     implementation files('libs/BaiduLBS_Android.jar')
 
     //    implementation 'com.tencent.bugly:crashreport:latest.release' //Bugly SDK最新版本版本

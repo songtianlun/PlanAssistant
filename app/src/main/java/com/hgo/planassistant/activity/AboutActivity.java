@@ -28,7 +28,7 @@ import com.hgo.planassistant.Constant;
 import com.hgo.planassistant.DataSource;
 import com.hgo.planassistant.R;
 import com.hgo.planassistant.util.AppUtils;
-import com.sunfusheng.FirUpdater;
+//import com.sunfusheng.FirUpdater;
 import com.umeng.analytics.MobclickAgent;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
