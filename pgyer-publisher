@@ -16,8 +16,8 @@ echo 'Uploading...'
 echo '✈ -------------------------------------------- ✈'
 
 response=$(curl -F "file=@${package_path}" \
--F "uKey=${API_KEY}" \
--F "_api_key=${USER_KEY}" \
+-F "uKey=${USER_KEY}" \
+-F "_api_key=${API_KEY}" \
 ${UPLOAD_URL}
 )
 echo $response;
