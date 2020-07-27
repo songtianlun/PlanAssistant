@@ -17,7 +17,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: Upload to Pgyer
-        run: chmod +x pgyer_upload.sh && ./pgyer_upload.sh "app/build/outputs/apk/release/app-release.apk" ${{ secrets.PGYER_API_KEY }} github.event.head_commit.message
+        run: chmod +x pgyer_upload.sh && ./pgyer_upload.sh
     - uses: actions/cache@preview
       id: cache
       with:
