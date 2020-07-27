@@ -377,6 +377,18 @@ public class MainActivity extends BaseActivity
                 startActivity(intent);
                 break;
             case R.id.action_main_feedback:
+                new PgyerFeedbackManager.PgyerFeedbackBuilder()
+                        .setShakeInvoke(false)       //fasle 则不触发摇一摇，最后需要调用 invoke 方法
+                        // true 设置需要调用 register 方法使摇一摇生效
+                        .setBarBackgroundColor("#FF0000")      // 设置顶部按钮和底部背景色，默认颜色为 #2E2D2D
+                        .setBarButtonPressedColor("#FF0000")        //设置顶部按钮和底部按钮按下时的反馈色 默认颜色为 #383737
+                        .setColorPickerBackgroundColor("#FF0000")   //设置颜色选择器的背景色,默认颜色为 #272828
+                        .setBarImmersive(true)              //设置activity 是否以沉浸式的方式打开，默认为 false
+                        .setDisplayType(PgyerFeedbackManager.TYPE.ACTIVITY_TYPE)   //设置以 Activity 的方式打开
+                        .setMoreParam("KEY1","VALUE1")      //自定义的反馈数据
+                        .setMoreParam("KEY2","VALUE2")      //自定义的反馈数据
+                        .builder()
+                        .invoke();                  //激活直接显示的方式
                 break;
         }
         return super.onOptionsItemSelected(item);
