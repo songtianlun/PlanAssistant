@@ -1,7 +1,7 @@
 # !/bin/bash
 
 FILEPATH="app/build/outputs/apk/release/app-release.apk"
-API_KEY=${{ secrets.PGYER_API_KEY }}
+API_KEY=$1
 
 result=$(curl -S "http://www.pgyer.com/apiv2/app/upload" -F "file=@${FILEPATH}" -F "_api_key=${API_KEY}" -F "updateDescription=$(git log -1 --pretty=format:"%s")")
 
