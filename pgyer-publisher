@@ -1,7 +1,7 @@
 #!/bin/bash
 
-API_KEY="5625af52e1b97a58c99ba885cd2fbe98"
-USER_KEY="0d37385680eba5d8cd60f29937dfba3e"
+API_KEY=$1
+USER_KEY=$2
 ORIGINAL_FILENAME="app-release.apk" # github 自动编译测试包生成的 apk 名字
 PACKAGE_DIR="app/build/outputs/apk/release" # 安装包位置
 
@@ -18,6 +18,7 @@ echo '✈ -------------------------------------------- ✈'
 response=$(curl -F "file=@${package_path}" \
 -F "uKey=${USER_KEY}" \
 -F "_api_key=${API_KEY}" \
+-F "updateDescription=$(git log -1 --pretty=format:"%s")" \
 ${UPLOAD_URL}
 )
 echo $response;
