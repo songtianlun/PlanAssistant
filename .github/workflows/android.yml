@@ -17,7 +17,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: Upload to Pgyer
-        run: chmod +x pgyer_upload && ./pgyer_upload
+      run: chmod +x pgyer_upload && ./pgyer_upload
     - uses: actions/cache@preview
       id: cache
       with:
