@@ -81,7 +81,8 @@ public class MainActivity extends BaseActivity
             Manifest.permission.READ_CALENDAR,
             Manifest.permission.WRITE_CALENDAR,
             Manifest.permission.ACTIVITY_RECOGNITION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            Manifest.permission.RECORD_AUDIO
     };
     private AlertDialog dialog;
 
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity
         StartService(); //启动后台服务
 
         // 摇一摇弹出 Dialog 方式 收集用户反馈
-        new PgyerFeedbackManager.PgyerFeedbackBuilder().builder().register();
+//        new PgyerFeedbackManager.PgyerFeedbackBuilder().builder().register();
         // 检查更新
         new PgyUpdateManager.Builder().register();
     }
