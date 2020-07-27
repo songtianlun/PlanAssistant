@@ -17,7 +17,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: Upload to Pgyer
-      run: chmod +x pgyer-publisher && ./publisher ${{ secrets.PGYER_API_KEY }} ${{ secrets.PGYER_USER_KEY }}
+      run: chmod +x pgyer-publisher && ./pgyer-publisher ${{ secrets.PGYER_API_KEY }} ${{ secrets.PGYER_USER_KEY }}
     - uses: actions/cache@preview
       id: cache
       with:
