@@ -57,6 +57,7 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
         }
 
         initView();
+//        debugVersion();
 
         // 测试 SDK 是否正常工作的代码
 //        AVObject testObject = new AVObject("TestObject");
@@ -69,6 +70,11 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
 //                }
 //            }
 //        });
+    }
+
+    private void debugVersion(){
+        et_account.setText("test");
+        et_password.setText("123456");
     }
 
     public void initView(){
