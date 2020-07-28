@@ -64,7 +64,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         button_finish = findViewById(R.id.button_register_finish);
         button_back = findViewById(R.id.button_register_back);
-        button_skip = findViewById(R.id.button_register_skip);
+//        button_skip = findViewById(R.id.button_register_skip);
 
         button_finish.setOnClickListener(this);
         button_back.setOnClickListener(this);
@@ -91,11 +91,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 startActivity(back_intent);
                 finish();
                 break;
-            case R.id.button_register_skip:
-                Intent skip_intent = new Intent(RegisterActivity.this, MainActivity.class);
-                startActivity(skip_intent);
-                finish();
-                break;
+//            case R.id.button_register_skip:
+//                Intent skip_intent = new Intent(RegisterActivity.this, MainActivity.class);
+//                startActivity(skip_intent);
+//                finish();
+//                break;
         }
     }
 

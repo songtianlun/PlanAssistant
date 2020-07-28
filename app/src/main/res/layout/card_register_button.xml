@@ -36,14 +36,14 @@
                 android:text="@string/card_register_button_back"
                 android:clickable="true"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_register_skip"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_common_small"
-                android:text="@string/card_register_button_skip"
-                android:clickable="true"/>
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/button_register_skip"-->
+<!--                style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="@dimen/dimen_common_small"-->
+<!--                android:text="@string/card_register_button_skip"-->
+<!--                android:clickable="true"/>-->
         </LinearLayout>
     </RelativeLayout>
 
