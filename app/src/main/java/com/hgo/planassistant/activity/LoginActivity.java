@@ -75,6 +75,7 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
     private void debugVersion(){
         et_account.setText("test");
         et_password.setText("123456");
+        attemptLogin();
     }
 
     public void initView(){
