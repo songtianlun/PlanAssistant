@@ -312,8 +312,27 @@ public class DataCaptureService extends Service {
                             track_record.put("floor",aMapLocation.getFloor());//获取当前室内定位的楼层
                             track_record.put("gpsaccuracystatus",aMapLocation.getGpsAccuracyStatus());//获取GPS的当前状态
                             // 保存到服务端
-                            track_record.saveInBackground();
-                            track_record.saveInBackground();
+                            track_record.saveInBackground().subscribe(new Observer<AVObject>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(AVObject avObject) {
+                                    Log.d("DataCaptureService","数据成功存至云端：" + avObject.toString());
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e("DataCaptureService","位置存储失败，原因：" + e.toString());
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
 //                        track_record.saveEventually();// 离线保存
                             //获取定位时间
 //                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

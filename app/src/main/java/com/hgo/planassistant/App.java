@@ -139,16 +139,16 @@ public class App extends Application {
             Log.d("App","当前后端：国际区");
         }else if(Server.equals("cn-north-2")){
 //            AVOSCloud.initialize(this,"qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz","IK2b5Y150czy6g3g6cKpbCEg");
-            AVOSCloud.initialize(this, "qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz", "IK2b5Y150czy6g3g6cKpbCEg", "https://paapi.leancloud.frytea.com");
+            AVOSCloud.initialize(this, "qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz", "IK2b5Y150czy6g3g6cKpbCEg", "https://pacn2api.leancloud.frytea.com");
             Log.d("App","当前后端：华北二区");
         }else if(Server.equals("cn-north-3")) {
 //            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e");
-            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e", "https://paapi.leancloud.frytea.com");
+            AVOSCloud.initialize(this, "ByRMx627tHHJX9RUBCVeT1jT-gzGzoHsz", "2Rr1nQcDheb42EOrCOjsk61e", "https://pacn3api.leancloud.frytea.com");
             Log.d("App","当前后端：华北三区");
         }
         else{
             // coming soon
-            AVOSCloud.initialize(this, "qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz", "IK2b5Y150czy6g3g6cKpbCEg", "https://paapi.leancloud.frytea.com");
+            AVOSCloud.initialize(this, "qk9hVb8Gh93X5LB0tNdR4j1e-gzGzoHsz", "IK2b5Y150czy6g3g6cKpbCEg", "https://pacn2api.leancloud.frytea.com");
             Log.d("App","当前后端数据异常，切为默认区：华北二区");
         }
 
