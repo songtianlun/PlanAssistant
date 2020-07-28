@@ -68,7 +68,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         button_finish.setOnClickListener(this);
         button_back.setOnClickListener(this);
-        button_skip.setOnClickListener(this);
+//        button_skip.setOnClickListener(this);
     }
     @Override // back button
     public void onBackPressed()
