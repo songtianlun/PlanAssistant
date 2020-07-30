@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.MenuItem;
@@ -53,6 +54,9 @@ import java.util.List;
 
 import cn.leancloud.AVUser;
 import cn.leancloud.callback.RequestPasswordResetCallback;
+import cn.leancloud.types.AVNull;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -405,7 +409,37 @@ public class MainActivity extends BaseActivity
                 MainActivity.this.finish();
                 break;
             case R.id.nav_changepassword:
-                AVUser.requestPasswordResetInBackground(AVUser.getCurrentUser().getEmail()).blockingSubscribe();
+                AVUser.requestPasswordResetInBackground(AVUser.getCurrentUser().getEmail()).subscribe(new Observer<AVNull>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(AVNull avNull) {
+                        String message =  "重置密码邮件已发送到您的邮箱：" + AVUser.getCurrentUser().getEmail() + ", 请查收邮件并进行重置操作！";
+                        new AlertDialog.Builder(mainactivity_context)
+                                .setTitle("重置密码")
+                                .setMessage(message)
+                                .setPositiveButton(mainactivity_context.getString(R.string.dialog_ok), null)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        String message =  "重置申请失败，失败原因：" + e.getMessage();
+                        new AlertDialog.Builder(mainactivity_context)
+                                .setTitle("重置密码")
+                                .setMessage(message)
+                                .setPositiveButton(mainactivity_context.getString(R.string.dialog_ok), null)
+                                .show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 //                AVUser.requestPasswordResetInBackground(AVUser.getCurrentUser().getEmail(), new RequestPasswordResetCallback() {
 //                    @Override
 //                    public void done(AVException e) {
