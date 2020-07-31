@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.hgo.planassistant.App;
 import com.hgo.planassistant.R;
+import com.hgo.planassistant.tools.SuggestionPopup;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.leancloud.AVUser;
@@ -38,6 +39,8 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
 
     private CheckBox checkBox_showcode;
     private Button button_signin, button_signout;
+    private Button button_privacy_policy;
+    private Button button_user_agreement;
 //    private Button button_skip;
     private EditText et_account,et_password;
     private AppCompatSpinner spinner_server;
@@ -90,6 +93,8 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
         checkBox_showcode = findViewById(R.id.checkbox_login_showcode);
         button_signin = findViewById(R.id.button_login_login);
         button_signout = findViewById(R.id.button_login_signout);
+        button_privacy_policy = findViewById(R.id.button_login_privacy_policy);
+        button_user_agreement = findViewById(R.id.button_login_user_agreement);
 //        button_skip = findViewById(R.id.button_login_skip);
         et_account = findViewById(R.id.et_card_login_account);
         et_password = findViewById(R.id.et_card_login_password);
@@ -98,6 +103,8 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
         checkBox_showcode.setOnClickListener(this);
         button_signin.setOnClickListener(this);
         button_signout.setOnClickListener(this);
+        button_user_agreement.setOnClickListener(this);
+        button_privacy_policy.setOnClickListener(this);
 //        button_skip.setOnClickListener(this);
 
         SharedPreferences SP_setting = getApplication().getSharedPreferences("setting",App.getContext().MODE_PRIVATE);
@@ -190,6 +197,12 @@ public class LoginActivity extends BaseActivity  implements View.OnClickListener
                 Intent register_intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(register_intent);
                 finish();
+                break;
+            case R.id.button_login_privacy_policy:
+                SuggestionPopup.GetPrivacyPolicyPopup(context);
+                break;
+            case R.id.button_login_user_agreement:
+                SuggestionPopup.GetUserAgreementPopup(context);
                 break;
 //            case R.id.button_login_skip:
 //                Intent skip_intent = new Intent(LoginActivity.this, MainActivity.class);

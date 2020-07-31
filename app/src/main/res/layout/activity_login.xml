@@ -30,7 +30,7 @@
             <ImageView
                 android:id="@+id/img_login_account"
                 android:layout_width="match_parent"
-                android:layout_height="116dp"
+                android:layout_height="58dp"
                 android:src="@drawable/account_circle_outline"
                 android:layout_centerHorizontal="true"/>
 
@@ -44,6 +44,8 @@
             <include layout="@layout/card_login_avuser" />
 
             <include layout="@layout/card_login_button" />
+
+            <include layout="@layout/card_login_policy" />
 
 
         </LinearLayout>

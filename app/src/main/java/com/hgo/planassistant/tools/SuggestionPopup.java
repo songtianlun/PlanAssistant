@@ -11,19 +11,19 @@ import java.util.List;
 import java.util.Random;
 
 public class SuggestionPopup {
-    private String[] PhysicalEnergyTitle = new String[3];
-    private String[] PhysicalEnergyDescription = new String[3];
-    private String[] EmotionEnergyTitle = new String[3];
-    private String[] EmotionEnergyDescription = new String[3];
-    private String[] ThinkingEnergyTitle = new String[1];
-    private String[] ThinkingEnergyDescription = new String[1];
-    private String[] DeterminationEnergyTitle = new String[1];
-    private String[] DeterminationEnergyDescription = new String[1];
+    private static String[] PhysicalEnergyTitle = new String[3];
+    private static String[] PhysicalEnergyDescription = new String[3];
+    private static String[] EmotionEnergyTitle = new String[3];
+    private static String[] EmotionEnergyDescription = new String[3];
+    private static String[] ThinkingEnergyTitle = new String[1];
+    private static String[] ThinkingEnergyDescription = new String[1];
+    private static String[] DeterminationEnergyTitle = new String[1];
+    private static String[] DeterminationEnergyDescription = new String[1];
 
-    private String urgent_important = new String();
-    private String noturgent_important = new String();
-    private String urgent_unimportant = new String();
-    private String noturgent_unimportant = new String();
+    private static String urgent_important = new String();
+    private static String noturgent_important = new String();
+    private static String urgent_unimportant = new String();
+    private static String noturgent_unimportant = new String();
 
     public SuggestionPopup(){
         PhysicalEnergyTitle[0] = "调整饮食方式。";
@@ -80,6 +80,8 @@ public class SuggestionPopup {
                 "<p> &#8226; 完全不负责任 </p>" +
                 "<p> &#8226; 被炒鱿鱼 </p>" +
                 "<p> &#8226; 基本生活都需要依赖他人或社会机构 </p>";
+
+
     }
 
     public String[] getPhysicalEnergyTitle() {
@@ -114,31 +116,31 @@ public class SuggestionPopup {
         return ThinkingEnergyTitle;
     }
 
-    public String getPhysicalTitle(int i){
+    public static String getPhysicalTitle(int i){
         return PhysicalEnergyTitle[i];
     }
-    public String getPhysicalDescription(int i){
+    public static String getPhysicalDescription(int i){
         return PhysicalEnergyDescription[i];
     }
-    public String getEmotionalTitle(int i){
+    public static String getEmotionalTitle(int i){
         return EmotionEnergyTitle[i];
     }
-    public String getEmotionalDescription(int i){
+    public static String getEmotionalDescription(int i){
         return EmotionEnergyDescription[i];
     }
-    public String getThinkingTitle(int i){
+    public static String getThinkingTitle(int i){
         return ThinkingEnergyTitle[i];
     }
-    public String getThinkingDescription(int i){
+    public static String getThinkingDescription(int i){
         return ThinkingEnergyDescription[i];
     }
-    public String getDeterminationTitle(int i){
+    public static String getDeterminationTitle(int i){
         return DeterminationEnergyTitle[i];
     }
-    public String getDeterminationDescription(int i){
+    public static String getDeterminationDescription(int i){
         return DeterminationEnergyDescription[i];
     }
-    public void RandomPhysicalPopup(Context context){
+    public static void RandomPhysicalPopup(Context context){
         Random random = new Random();//默认构造方法
         int index = random.nextInt(3); //获取[0, 3)之间的int整数
         new AlertDialog.Builder(context)
@@ -147,7 +149,7 @@ public class SuggestionPopup {
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
-    public void RandomEmotionalPopup(Context context){
+    public static void RandomEmotionalPopup(Context context){
         Random random = new Random();//默认构造方法
         int index = random.nextInt(3); //获取[0, 3)之间的int整数
         new AlertDialog.Builder(context)
@@ -156,7 +158,7 @@ public class SuggestionPopup {
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
-    public void RandomThinkingPopup(Context context){
+    public static void RandomThinkingPopup(Context context){
         Random random = new Random();//默认构造方法
         int index = random.nextInt(1); //获取[0, 3)之间的int整数
         new AlertDialog.Builder(context)
@@ -165,7 +167,7 @@ public class SuggestionPopup {
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
-    public void RandomDeterminationPopup(Context context){
+    public static void RandomDeterminationPopup(Context context){
         Random random = new Random();//默认构造方法
         int index = random.nextInt(1); //获取[0, 3)之间的int整数
         new AlertDialog.Builder(context)
@@ -175,31 +177,45 @@ public class SuggestionPopup {
                 .show();
     }
 
-    public void GetUrgentImportantPopup(Context context){
+    public static void GetUrgentImportantPopup(Context context){
         new AlertDialog.Builder(context)
                 .setTitle("紧迫又重要类日程")
                 .setMessage( Html.fromHtml(urgent_important))
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
-    public void GetNotUrgentImportantPopup(Context context){
+    public static void GetNotUrgentImportantPopup(Context context){
         new AlertDialog.Builder(context)
                 .setTitle("不紧迫重要类日程")
                 .setMessage( Html.fromHtml(noturgent_important))
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
-    public void GetUrgentUnimportantPopup(Context context){
+    public static void GetUrgentUnimportantPopup(Context context){
         new AlertDialog.Builder(context)
                 .setTitle("紧迫不重要类日程")
                 .setMessage( Html.fromHtml(urgent_unimportant))
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
-    public void GetNotUrgentUnimportantPopup(Context context){
+    public static void GetNotUrgentUnimportantPopup(Context context){
         new AlertDialog.Builder(context)
                 .setTitle("不紧迫又不重要类日程")
                 .setMessage( Html.fromHtml(noturgent_unimportant))
+                .setPositiveButton(context.getString(R.string.dialog_ok), null)
+                .show();
+    }
+    public static void GetPrivacyPolicyPopup(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("《隐私政策》")
+                .setMessage( Html.fromHtml(context.getResources().getString(R.string.privacy_policy)))
+                .setPositiveButton(context.getString(R.string.dialog_ok), null)
+                .show();
+    }
+    public static void GetUserAgreementPopup(Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("《用户许可协议》")
+                .setMessage( Html.fromHtml(context.getResources().getString(R.string.user_agreement)))
                 .setPositiveButton(context.getString(R.string.dialog_ok), null)
                 .show();
     }
