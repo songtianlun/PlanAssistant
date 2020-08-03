@@ -12,7 +12,7 @@ Material Designer + MapBox + LeanCloud.
 
 ## Download
 
-[![PlanAssistant-QRCode](http://www.pgyer.com/app/qrcode/PlanAssistant)](http://fir.im/xm19)
+[![PlanAssistant-QRCode](http://www.pgyer.com/app/qrcode/PlanAssistant)](http://firim.frytea.com/xm19)
 
 ## Dev Environment
 
