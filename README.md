@@ -12,7 +12,7 @@ Material Designer + MapBox + LeanCloud.
 
 ## Download
 
-[![B2654C2C-4076-44A0-89EB-50F71F39833A.png](http://frytea-data.test.upcdn.net/8A509086-6E86-403C-B633-4A346A0255F2.png)](http://fir.im/xm19)
+[![PlanAssistant-QRCode](http://www.pgyer.com/app/qrcode/PlanAssistant)](http://firim.frytea.com/xm19)
 
 ## Dev Environment
 
