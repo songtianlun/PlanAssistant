@@ -468,8 +468,12 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.nav_logout:
                 AVUser.getCurrentUser().logOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                MainActivity.this.finish();
+//                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                MainActivity.this.finish();
+                stopService();
+                final Intent intent = mainactivity_context.getPackageManager().getLaunchIntentForPackage(mainactivity_context.getPackageName());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
             case R.id.nav_menu_track:
                 startActivity(new Intent(MainActivity.this, TrackActivity.class));

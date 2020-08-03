@@ -75,7 +75,13 @@ public class MyMapRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
             //加载名称、备注、事件
             recyclerViewHolder.TV_title.setText(mItems.get(position).get("name").toString());
-            recyclerViewHolder.TV_remarks.setText(mItems.get(position).get("remarks").toString());
+            if(mItems.get(position).get("remarks")!=null)
+            {
+                recyclerViewHolder.TV_remarks.setText(mItems.get(position).get("remarks").toString());
+            }else
+            {
+                recyclerViewHolder.TV_remarks.setText("no description");
+            }
             recyclerViewHolder.TV_date.setText("创建时间："+ DateFormat.getDateTimeInstance().format(mItems.get(position).getDate("createdAt")));
 
 

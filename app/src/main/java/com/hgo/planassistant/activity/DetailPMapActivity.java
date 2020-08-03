@@ -123,122 +123,141 @@ public class DetailPMapActivity extends BaseActivity {
         amap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         amap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+//        if(avObject.getString("type")==null)
+//        {
+//            avObject.put("type","track_map");
+//            avObject.save();
+//            Log.i("DetailPMapActivity","add map type：" + avObject.getString("type"));
+//        }
+//        if(avObject.getString("type")!=null) {
+//            if(avObject.getString("type").equals("track_map"))
+//                Log.i("DetailPMapActivity","map type：" + avObject.getString("type"));
+//            switch (avObject.getString("type")){
+//                case "point_map":
+//                    break;
+//                //case "track_map":
+//                default:
+//                    break;
+//            }
+//
+//        }
+//        else{
+//
+//        }
 
-        switch (avObject.getString("type")){
-            case "track_map":
-                AVQuery<AVObject> query = new AVQuery<>("PersonalMap_track");
-                query.whereEqualTo("MapId", avObject.getObjectId());//地图id
-                query.findInBackground().subscribe(new Observer<List<AVObject>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        AVQuery<AVObject> query = new AVQuery<>("PersonalMap_track");
+        query.whereEqualTo("MapId", avObject.getObjectId());//地图id
+        query.findInBackground().subscribe(new Observer<List<AVObject>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(List<AVObject> avObjects) {
-                        if(avObjects.size()>0){
-                            avObjects.get(0);
-                            AVQuery<AVObject> query_track = new AVQuery<>("trajectory");
-                            query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-                            query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
-                            query.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
-                            query.whereGreaterThan("time",avObjects.get(0).getDate("track_start_time").getTime());
-                            query.whereLessThan("time",avObjects.get(0).getDate("track_stop_time").getTime());
-                            query.whereGreaterThan("precision",1);
-                            query.whereLessThan("precision",avObjects.get(0).getInt("track_precision"));
-                            query.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
-                            query.limit(1000);
-                            query.countInBackground().subscribe(new Observer<Integer>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+            @Override
+            public void onNext(List<AVObject> avObjects) {
+                if(avObjects.size()>0){
+                    avObjects.get(0);
+                    AVQuery<AVObject> query_track = new AVQuery<>("trajectory");
+                    query_track.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+                    query_track.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
+                    query_track.whereEqualTo("UserId", AVUser.getCurrentUser().getObjectId());
+                    query_track.whereGreaterThan("time",avObjects.get(0).getDate("track_start_time"));
+                    query_track.whereLessThan("time",avObjects.get(0).getDate("track_stop_time"));
+                    query_track.whereGreaterThan("precision",1);
+                    query_track.whereLessThan("precision",avObjects.get(0).getInt("track_precision"));
+                    query_track.selectKeys(Arrays.asList("point", "time", "precision","geo_coordinate"));
+                    query_track.limit(1000);
+                    Log.i("DetailPMapActivity","start time：" + avObjects.get(0).getDate("track_start_time").toString());
+                    Log.i("DetailPMapActivity","stop time：" + avObjects.get(0).getDate("track_stop_time").toString());
+                    query_track.countInBackground().subscribe(new Observer<Integer>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                                }
-
-                                @Override
-                                public void onNext(Integer integer) {
-                                    if(integer> TrackActivity.QueryMaxNum){
-                                        Toast.makeText(App.getContext(),"查询数据过大无法获取！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
-                                    }else{
-                                        Log.i("TrackActivity","共查询到：" + integer + "条数据。");
-                                        Toast.makeText(App.getContext(),"共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
-                                        int querynum = integer/1000 + 1;
-                                        Log.i("TrackActivity","查询次数："+querynum);
-                                        for(int i=0;i<querynum;i++){
-                                            Log.i("TrackActivity","第"+i+"次查询");
-                                            int skip = i*1000;
-                                            query.skip(skip);
-                                            query.findInBackground().subscribe(new Observer<List<AVObject>>() {
-                                                @Override
-                                                public void onSubscribe(Disposable d) {
-
-                                                }
-
-                                                @Override
-                                                public void onNext(List<AVObject> avObjects) {
-                                                    if(avObjects!=null&&avObjects.size()>0) {
-                                                        Log.i("TrackActivity","共查询到：" + avObjects.size() + "条数据。");
-                                                        Toast.makeText(App.getContext(),"共查询到：" + avObjects.size() + "条数据。",Toast.LENGTH_LONG).show();
-                                                        // 构建热力图 HeatmapTileProvider
-                                                        HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
-                                                        builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(avObjects))); // 设置热力图绘制的数据
-                                                        // 构造热力图对象
-                                                        HeatmapTileProvider heatmapTileProvider = builder.build();
-                                                        // 初始化 TileOverlayOptions
-                                                        TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
-                                                        tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
-                                                        // 向地图上添加 TileOverlayOptions 类对象
-                                                        amap.addTileOverlay(tileOverlayOptions);
-
-                                                        // 全幅显示
-                                                        com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(avObjects);
-                                                        amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
-
-                                                        // 显示轨迹线
-                                                        Polyline polyline =amap.addPolyline(new PolylineOptions().
-                                                                addAll(Arrays.asList(GenetateLatLngArratFromAvobject(avObjects))).width(10).color(Color.argb(255, 1, 1, 1)));
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onError(Throwable e) {
-
-                                                }
-
-                                                @Override
-                                                public void onComplete() {
-
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-
-                                }
-
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onNext(Integer integer) {
+                            if(integer> TrackActivity.QueryMaxNum){
+                                Toast.makeText(App.getContext(),"查询数据过大无法获取！共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
+                            }else{
+                                Log.i("DetailPMapActivity","共查询到：" + integer + "条数据。");
+                                Toast.makeText(App.getContext(),"共查询到：" + integer + "条数据。",Toast.LENGTH_LONG).show();
+                                int querynum = integer/1000 + 1;
+                                Log.i("DetailPMapActivity","查询次数："+querynum);
+                                for(int i=0;i<querynum;i++){
+                                    Log.i("DetailPMapActivity","第"+i+"次查询");
+                                    int skip = i*1000;
+                                    query_track.skip(skip);
+                                    query_track.findInBackground().subscribe(new Observer<List<AVObject>>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
 
-                    }
+                                        }
 
-                    @Override
-                    public void onComplete() {
+                                        @Override
+                                        public void onNext(List<AVObject> avObjects) {
+                                            if(avObjects!=null&&avObjects.size()>0) {
+                                                Log.i("TrackActivity","共查询到：" + avObjects.size() + "条数据。");
+                                                Toast.makeText(App.getContext(),"共查询到：" + avObjects.size() + "条数据。",Toast.LENGTH_LONG).show();
+                                                // 构建热力图 HeatmapTileProvider
+                                                HeatmapTileProvider.Builder builder = new HeatmapTileProvider.Builder();
+                                                builder.data(Arrays.asList(GenetateLatLngArratFromAvobject(avObjects))); // 设置热力图绘制的数据
+                                                // 构造热力图对象
+                                                HeatmapTileProvider heatmapTileProvider = builder.build();
+                                                // 初始化 TileOverlayOptions
+                                                TileOverlayOptions tileOverlayOptions = new TileOverlayOptions();
+                                                tileOverlayOptions.tileProvider(heatmapTileProvider); // 设置瓦片图层的提供者
+                                                // 向地图上添加 TileOverlayOptions 类对象
+                                                amap.addTileOverlay(tileOverlayOptions);
 
-                    }
-                });
-            default:
-                break;
-        }
+                                                // 全幅显示
+                                                com.amap.api.maps.model.LatLngBounds bounds = getLatLngBounds(avObjects);
+                                                amap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+
+                                                // 显示轨迹线
+                                                Polyline polyline =amap.addPolyline(new PolylineOptions().
+                                                        addAll(Arrays.asList(GenetateLatLngArratFromAvobject(avObjects))).width(10).color(Color.argb(255, 1, 1, 1)));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
     }
     private com.amap.api.maps.model.LatLng[] GenetateLatLngArratFromAvobject(List<AVObject> list){
         int sum = list.size();
