@@ -142,7 +142,7 @@
         "\nThe material is grounded in tactile reality, inspired by the study of paper and ink, yet technologically advanced and open to imagination and magic."</string>
     <string name="main_dialog_single_choice">Single choice dialog</string>
     <string name="main_dialog_multi_choice">Multi choice dialog</string>
-    <string name="main_dialog_progress_title">Progress dialog…</string>
+    <string name="main_dialog_progress_title">Loading…</string>
     <string name="main_dialog_progress">Progress dialog</string>
     <string name="main_dialog_data_picker">Date Picker Dialog</string>
     <string name="main_dialog_data_time">Time Picker Dialog</string>

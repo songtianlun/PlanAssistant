@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -85,6 +86,8 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
     private BarChart chart;
 
+    private ProgressDialog progressDialog;
+
     //MarkerQuare
     public int range_point_num_max = 0; //范围查询时的最大点个数，中间变量
 
@@ -136,8 +139,6 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     }
 
     void initView(Bundle savedInstanceState){
-
-
         chart = findViewById(R.id.card_activity_track_bar_chart_chart);
         aMapView = findViewById(R.id.card_track_amapView);
 //        mapView = (MapView) findViewById(R.id.card_track_mapView);
@@ -164,6 +165,8 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
         start_time.add(Calendar.HOUR_OF_DAY, -6); //讲起始时间推算为当前时间前n小时
 
         track_context = this;
+
+        ShowProgress();
 
         refresh();
         //Log.i("TrackActivity",start_time.get(Calendar.YEAR) + "-" + start_time.get(Calendar.MONTH) + "-" + start_time.get(Calendar.DATE));
@@ -223,7 +226,6 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
                         query.findInBackground().subscribe(new Observer<List<AVObject>>() {
                             @Override
                             public void onSubscribe(Disposable d) {
-
                             }
 
                             @Override
@@ -257,11 +259,12 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
                                     }
                                 }
+                                DismissProgress();
                             }
 
                             @Override
                             public void onError(Throwable e) {
-
+                                DismissProgress();
                             }
 
                             @Override
@@ -621,6 +624,7 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
     }
     private void mapfresh(){
 
+        ShowProgress();
         amap.clear();
 
         AVQuery<AVObject> query = new AVQuery<>("trajectory");
@@ -692,11 +696,12 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
 
                                     }
                                 }
+                                DismissProgress();
                             }
 
                             @Override
                             public void onError(Throwable e) {
-
+                                DismissProgress();
                             }
 
                             @Override
@@ -1234,6 +1239,21 @@ public class TrackActivity extends BaseActivity implements View.OnClickListener{
             Log.e("TrackActivity","Exception loading GeoJSON: %s"+  exception.toString());
             exception.printStackTrace();
             return null;
+        }
+    }
+
+    private void ShowProgress()
+    {
+        progressDialog = new ProgressDialog(track_context);
+        progressDialog.setMessage(getString(R.string.main_dialog_progress_title));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+    private void DismissProgress()
+    {
+        if(progressDialog!=null)
+        {
+            progressDialog.dismiss();
         }
     }
 //    public void initHeatmapColors() {
