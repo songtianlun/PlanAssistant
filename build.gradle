@@ -23,7 +23,7 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' } // 阿里云公共maven仓库
+//        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' } // 阿里云公共maven仓库
         maven { url "https://maven.google.com" }
         maven { url 'https://jitpack.io' }
         maven { url 'https://dl.bintray.com/sfsheng0322/maven' } //fir.im 内测推送
